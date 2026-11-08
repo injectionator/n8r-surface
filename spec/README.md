@@ -84,6 +84,19 @@ distinguish matches, known non-matches and unresolved coverage.
 Formal schema validity and fitness for a task are separate. A small description
 can support inventory lookup while lacking enough configuration for recreation.
 
+## Surface description names
+
+**Capability Surface** describes supported possibilities without asserting instance
+bindings. **Bound Surface** describes configured relationships for an instance;
+configuration is sufficient evidence, without proof of runtime use. **Observed
+Surface** names a future dated description of inspected instance configuration and
+state; it is deferred from the current delivery. These are descriptions within
+the one AI Surface Model, independent of depth or skeleton size.
+
+See the [agreed intent and verification](../docs/n8r-surface/surface-descriptions.md)
+for privacy boundaries, planned outputs and the three delivery tasks. Existing
+experimental contracts do not yet establish support for these new outputs.
+
 ## Output profiles and size
 
 Named output profiles select useful content from the one AI Surface Model; they

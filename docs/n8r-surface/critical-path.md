@@ -1,5 +1,11 @@
 # n8r-surface critical path
 
+The next installed-skill delivery agreed on 8 November 2026 is
+[Capability and Bound Surfaces from workspace artifacts](surface-descriptions.md),
+tracked by #50 → #51 → #52 under #17. Observed Surface is deferred. The earlier
+CLI sequence and evidence below remain historical context, not this increment's
+completion criteria.
+
 The user updated delivery order on 5 November 2026: standalone Codex research,
 Markdown save/reopen, then partial Surface generation and a complete fresh-session
 revision proof. npm distribution ([#27](https://github.com/injectionator/n8r-surface/issues/27))
