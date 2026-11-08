@@ -24,7 +24,7 @@ function fixture(t, version = '0.1.0-experimental.1', privatePackage = true) {
   const tag = `v${version}`;
   git('tag', '-a', tag, '-m', tag);
   const payload = join(temp, 'package'); mkdirSync(payload);
-  const packages = ['@n8r/surface', 'n8r-surface'].map((name, i) => {
+  const packages = (['0.1.0-experimental.1','0.1.0-experimental.2'].includes(version)?['@n8r/surface','n8r-surface']:['@n8r/surface']).map((name, i) => {
     writeFileSync(join(payload, 'package.json'), JSON.stringify({...manifest, name}));
     const filename = `${i}.tgz`;
     execFileSync('tar', ['-czf', join(out, filename), '-C', temp, 'package']);
@@ -85,7 +85,7 @@ test('public immutable release and stable version metadata can pass', async t =>
   const f = fixture(t, '1.2.3', false);
   assert.deepEqual(checkRelease(f.root,f.out,f.release), {
     version:'1.2.3',revision:f.report.revision,tag:'v1.2.3',draft:false,
-    packages:['@n8r/surface','n8r-surface']
+    packages:['@n8r/surface']
   });
 });
 
@@ -153,4 +153,12 @@ if (JSON.stringify(args) === JSON.stringify(['release','view',release.tag_name,'
   assert.notEqual(run({FIXTURE_NO_TAG:'1'}).status,0,'same-named branch cannot replace missing remote tag');
   assert.notEqual(run({FIXTURE_WRONG_SHA:'1'}).status,0,'remote tag SHA must match');
   assert.notEqual(run({FIXTURE_BAD_TYPE:'1'}).status,0,'tag must resolve to a commit');
+});
+
+test('next release verifies only scoped bytes and refuses an added unscoped package',async t=>{
+ const {checkRelease}=await import('../scripts/check-release.mjs');
+ const f=fixture(t,'0.1.0-experimental.3');
+ assert.deepEqual(checkRelease(f.root,f.out,f.release).packages,['@n8r/surface']);
+ f.report.packages.push({...f.report.packages[0],name:'n8r-surface'});f.save();
+ assert.throws(()=>checkRelease(f.root,f.out,f.release));
 });

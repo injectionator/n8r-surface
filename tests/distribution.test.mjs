@@ -6,7 +6,7 @@ import {join} from 'node:path';
 import {execFileSync, spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 
-for (const publishable of [false, true]) test(`candidate tarballs have equivalent ${publishable ? 'publishable' : 'private'} manifests and exact payload bytes`, t => {
+for (const publishable of [false, true]) test(`scoped candidate has checked ${publishable ? 'publishable' : 'private'} manifests and exact payload bytes`, t => {
   const temp = mkdtempSync(join(tmpdir(), 'n8r-distribution-'));
   t.after(() => rmSync(temp, {recursive: true, force: true}));
   const stale = 'dist/obsolete-candidate-check.js';
@@ -16,7 +16,7 @@ for (const publishable of [false, true]) test(`candidate tarballs have equivalen
   const result = spawnSync(process.execPath, ['scripts/pack-candidates.mjs', out, ...(publishable ? ['--publishable'] : [])], {encoding: 'utf8'});
   assert.equal(result.status, 0, result.stderr);
   const report = JSON.parse(readFileSync(join(out, 'candidates.json'), 'utf8'));
-  assert.deepEqual(report.packages.map(p => p.name), ['@n8r/surface', 'n8r-surface']);
+  assert.deepEqual(report.packages.map(p => p.name), ['@n8r/surface']);
   assert.match(report.revision, /^[a-f0-9]{40}$/);
   assert.equal(typeof report.dirty, 'boolean');
   const payloads = report.packages.map((p, i) => {
@@ -41,7 +41,7 @@ for (const publishable of [false, true]) test(`candidate tarballs have equivalen
     }
     return {manifest, files: files(root).filter(([name]) => name !== 'package.json')};
   });
-  assert.deepEqual(payloads[0], payloads[1]);
+  assert.deepEqual(readdirSync(out).sort(),['candidates.json','scoped']);
   assert.ok(!payloads[0].files.some(([name]) => name === 'dist/obsolete-candidate-check.js'));
   assert.ok(payloads[0].files.some(([name]) => name === 'dist/cli.js'));
   const before = readFileSync(join(out, 'candidates.json'));

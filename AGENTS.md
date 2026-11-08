@@ -288,7 +288,7 @@ references, revision checks, HTML/data conflicts and synthetic fixtures. The
 package check builds, packs and installs in a temporary directory using the local
 npm cache with scripts disabled, then exercises built exports and bundled assets.
 It removes its temporary directory. Candidate generation requires Git and POSIX
-`tar`; `npm run pack:candidates -- NEW_DIRECTORY` retains both tarballs and a
+`tar`; `npm run pack:candidates -- NEW_DIRECTORY` retains the scoped tarball and a
 revision/digest report without publishing. See the
 [distribution procedure](docs/n8r-surface/npm-distribution.md). Repeat against each supported Node major for
 distribution changes; see [contributor commands](CONTRIBUTING.md#researcher-contract-library).
@@ -366,7 +366,7 @@ raw results. See the [human review procedure](docs/n8r-surface/skill-workspace-a
 `npm run check:version` validates the authoritative package version and lockfile;
 it also runs in `npm test` and before candidate packing. From a clean tagged
 checkout, `npm run check:release -- CANDIDATE_DIRECTORY` reads GitHub to verify
-release metadata, tag/commit identity and both retained archive hashes. It needs
+release metadata, tag/commit identity and retained archive hashes (both for historical .1/.2 releases). It needs
 GitHub CLI read access and never publishes. An optional second argument supplies
 an offline release JSON response and explicitly limits the result to rehearsal.
 See [version policy, prerequisites and human verification](docs/n8r-surface/versioning.md).
@@ -374,8 +374,8 @@ See [version policy, prerequisites and human verification](docs/n8r-surface/vers
 ## Scoped-only release scope
 
 Publish only `@n8r/surface`; the executable remains `n8r-surface`. Unscoped
-publication and name reservation are not planned. Remove dual-package behavior
-from release tooling before another release, preserving existing tagged artifacts.
+publication and name reservation are not planned. Current tooling prepares only the scoped package while preserving verification
+of existing tagged dual archives.
 The commands below describe the historical first-release tooling, not permission
 to rerun it for an already released version.
 
