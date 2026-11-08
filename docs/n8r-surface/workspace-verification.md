@@ -42,7 +42,7 @@ subsequently replaced with explicit PM authorization, as recorded below. CLI/Lab
 | Create; missing/empty | `tests/workspace.test.mjs`: actual files, record readback and no scaffolds | Candidate empty and missing destination creation passed |
 | Repeat with note | Same suite: byte-preserving reuse and unknown fields | Candidate PM repeat passed; independent hashes unchanged |
 | Fresh reopen; moved identity | Same suite: separate process and moved folder inspection | Candidate fresh-chat reopen passed after destination clarification; move trial pending |
-| Adoption question and both choices | Same suite: no-write refusal, in-place and alternative destination | Candidate PM pending |
+| Adoption question and both choices | Same suite: no-write refusal, in-place and alternative destination | In-place adoption passed; alternative choice pending |
 | Malformed/conflicting/unsupported | Same suite: complete before/after snapshots | Candidate PM pending |
 | Interrupted setup | Same suite: publication failure and no-overwrite guard | Technical evidence only |
 | Installed helper availability | Same suite: copied helper with no checkout dependencies; package smoke | Installed-skill invocation pending |
@@ -243,3 +243,21 @@ hashes remain unchanged. The five visible experience criteria are met. Private
 receipts, inventories and PM feedback are retained. Adoption fixtures were also
 rechecked: each still contains only its unchanged synthetic note. Their product
 trials, refusal cases and moved-folder recognition remain pending.
+
+## PM in-place adoption — 8 November 2026
+
+**Outcome: Pass. Visible experience criteria met; no separate PM rating supplied.**
+The installed `0.1.9` helper first returned exit 3 for the nonempty unrecognized
+fixture. The assistant asked for the destination choice. Independent inspection
+before the PM answered found exactly the original note, with unchanged bytes and
+no metadata. That first turn took 21.636 seconds.
+
+After the PM said “Initialize here,” the installed helper ran `setup --adopt`
+against the same destination; exit 0, 11.461-second turn. Independent readback
+verified the reported UUID v4, supported format, folder-derived name and supplied
+purpose. Only `.n8r/workspace.json` and its parent directory were added; the
+original note is byte-for-byte unchanged. The response links the location and
+separates research/attachment. No repeated permission or technical rescue occurred.
+Both turn receipts and the before-choice/after-choice inventories are retained
+privately. The alternative-choice fixtures remain untouched and inventoried for
+the next trial. Alternative adoption, refusal and move trials remain pending.
