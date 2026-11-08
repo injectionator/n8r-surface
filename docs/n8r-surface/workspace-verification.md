@@ -39,7 +39,7 @@ subsequently replaced with explicit PM authorization, as recorded below. CLI/Lab
 
 | Canonical scenario | Deterministic supporting evidence | Product/experience evidence |
 | --- | --- | --- |
-| Create; missing/empty | `tests/workspace.test.mjs`: actual files, record readback and no scaffolds | Candidate create passed; missing destination pending |
+| Create; missing/empty | `tests/workspace.test.mjs`: actual files, record readback and no scaffolds | Candidate empty and missing destination creation passed |
 | Repeat with note | Same suite: byte-preserving reuse and unknown fields | Candidate PM repeat passed; independent hashes unchanged |
 | Fresh reopen; moved identity | Same suite: separate process and moved folder inspection | Candidate fresh-chat reopen passed after destination clarification; move trial pending |
 | Adoption question and both choices | Same suite: no-write refusal, in-place and alternative destination | Candidate PM pending |
@@ -226,3 +226,20 @@ missing destination, both adoption choices and malformed/conflicting/unsupported
 product refusal trials are still pending, as is overall PM acceptance. Automated
 coverage for those cases is supporting evidence, not a substitute. PR remains
 draft; no merge, release or cleanup.
+
+## PM missing-destination creation — 8 November 2026
+
+**Outcome: Pass. Experience: Pass.** The PM reported “looks good.” A separate
+product chat loaded installed `0.1.9` and its workspace reference, then ran the
+bundled helper's `setup` at the explicitly supplied missing destination; exit 0.
+One turn took 20.101 seconds, without additional questions or technical rescue.
+
+The preparation inventory recorded this destination as absent. Independent
+readback now finds only `.n8r/workspace.json`: exact supported format, a valid
+UUID v4 distinct from the first workspace, folder-derived name and supplied
+purpose. The final response matches that readback, links the location and keeps
+research and attachment separate. Existing first-workspace metadata and note
+hashes remain unchanged. The five visible experience criteria are met. Private
+receipts, inventories and PM feedback are retained. Adoption fixtures were also
+rechecked: each still contains only its unchanged synthetic note. Their product
+trials, refusal cases and moved-folder recognition remain pending.
