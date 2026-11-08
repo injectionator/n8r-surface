@@ -94,8 +94,10 @@ state; it is deferred from the current delivery. These are descriptions within
 the one AI Surface Model, independent of depth or skeleton size.
 
 See the [agreed intent and verification](../docs/n8r-surface/surface-descriptions.md)
-for privacy boundaries, planned outputs and the three delivery tasks. Existing
-experimental contracts do not yet establish support for these new outputs.
+for privacy boundaries, planned outputs and the three delivery tasks.
+The bounded [contract 0.2](../docs/n8r-surface/surface-description-contract.md)
+represents these distinctions in JSON; installed-skill artifact production and
+acceptance remain separate work.
 
 ## Output profiles and size
 

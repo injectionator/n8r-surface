@@ -1,7 +1,8 @@
 # Capability and Bound Surface delivery
 
-Agreed intent, 8 November 2026. This is planned behavior, not evidence that the
-installed skill implements or has passed these outcomes. Parent: [#17](https://github.com/injectionator/n8r-surface/issues/17).
+Agreed intent, 8 November 2026. The contract layer is implemented separately;
+these installed-skill outcomes remain planned, not evidence of product acceptance.
+Parent: [#17](https://github.com/injectionator/n8r-surface/issues/17).
 
 ## Intent and names
 
@@ -54,9 +55,9 @@ capture and live/runtime inspection; no continuous synchronization is promised.
 The [current experimental contract](contracts.md) represents selected definitions
 and leaves deployment bindings outside its profile. This document does not
 silently extend that contract or relabel existing definitions as Bound Surfaces.
-Task #50 must define the smallest suitable representation and explicit versioning
-before artifact production depends on it. Capability alternatives also need an
-explicit representation; mutually exclusive possibilities must not be flattened
+The [bounded contract 0.2](surface-description-contract.md) defines the
+representation and versioning for #50; installed artifact production remains #51.
+Capability alternatives have an explicit representation; mutually exclusive possibilities must not be flattened
 into a selected composition. Preserve shared identities and exact evidence links.
 
 Reuse existing codecs, validators, HTML rendering and revision checks where
@@ -65,6 +66,9 @@ representation, documenting compatibility limits and checking them against the
 agreed meanings. JSON is the first structured representation. YAML expansion,
 other hosts, Lab integration, deployment changes and release work are deferred.
 The first supported acceptance environment is the installed skill in Codex.
+The skill is standalone: it must not invoke or depend on the `n8r-surface` CLI.
+Artifact production and checks must work through the host and bundled skill
+resources independently of that executable.
 
 ## Intent and verification
 
@@ -140,7 +144,8 @@ cleanup is a separate authorized action and must not touch borrowed source data.
 
 1. [#50 — Descriptions and contract](https://github.com/injectionator/n8r-surface/issues/50):
    capture this intent, then define bounded representations, versioning and
-   synthetic examples with meaningful checks. This document is a partial increment.
+   synthetic examples with meaningful checks. See the implemented
+   [contract and human check](surface-description-contract.md).
 2. [#51 — Installed-skill artifact production and revision](https://github.com/injectionator/n8r-surface/issues/51):
    implement generation, validation, privacy, saving and fresh-chat continuation
    using workspace evidence. Depends on #50.

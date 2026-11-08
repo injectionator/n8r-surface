@@ -16,6 +16,16 @@ verifySuccessor(readResearchHtml(asset('lumen-r1.research.html')), lumen);
 assert.deepEqual(decode(encode(surface, 'yaml'), 'yaml'), surface);
 assert.throws(() => readResearchHtml(asset('lumen-manual-edit.pending.html')), /conflict/);
 assert.ok(readFileSync(new URL(import.meta.resolve(`${packageName}/contracts/contracts.md`)), 'utf8').includes('n8r.research/0.1'));
+const description = name => decode(asset(`descriptions/${name}.json`), 'json');
+const descriptionContext = ['research-r1', 'research-r2', 'capability'].map(description);
+const boundBefore = description('bound-r1'), boundAfter = description('bound-r2');
+verifyReferences(boundBefore, descriptionContext);
+verifyReferences(boundAfter, descriptionContext);
+verifySuccessor(boundBefore, boundAfter);
+assert.deepEqual(boundBefore.bindings.map(b => b.state), ['configured', 'conflicting', 'unknown']);
+assert.equal(boundAfter.bindings[0].claims[0].target, 'urn:target:mongodb');
+assert.deepEqual(decode(encode(boundAfter, 'json'), 'json'), boundAfter);
+console.log('Installed Capability/Bound JSON assets, references and successor passed.');
 // Exercise the public consumer boundary; reject before inherited hooks run.
 let serializationCalls = 0;
 class LossyArray extends Array {

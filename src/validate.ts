@@ -1,4 +1,4 @@
-import type {Artefact, ResearchRecord, SurfaceDefinition} from './contracts.js';
+import type {Artefact, ResearchRecord, SurfaceDefinition, SurfaceDescription} from './contracts.js';
 import {canonical, digest, fail, portable} from './portable.js';
 type Check = (v: unknown, p: string) => void;
 const text: Check = (v, p) => { if (typeof v !== 'string' || !v.trim()) fail(p, 'requires nonempty string'); };
@@ -90,7 +90,19 @@ function references(ids: string[], available: Set<string>, p: string): void {
   unique(ids, p);
   for (const item of ids) if (!available.has(item)) fail(p, `unresolved reference ${item}`);
 }
+// Inspect only a data descriptor; never invoke an untrusted getter to dispatch.
+function isDescription(input: unknown): boolean {
+  return input !== null && typeof input === 'object' &&
+    Object.getOwnPropertyDescriptor(input, 'contract')?.value === 'n8r.surface/0.2';
+}
 export function validateArtefact(input: unknown): Artefact {
+  try { return validate(input); }
+  catch (error) {
+    if (isDescription(input)) fail('$description', 'invalid structure, identity, state or reference');
+    throw error;
+  }
+}
+function validate(input: unknown): Artefact {
   canonical(input); // checks portable values, depth and logical size before field access
   const data = object(input, '$');
   if (data.contract === 'n8r.research/0.1') {
@@ -118,6 +130,8 @@ export function validateArtefact(input: unknown): Artefact {
     for (const e of s.relationships) {
       references([e.from], nodes, e.id); references([e.to], nodes, e.id);
     }
+  } else if (data.contract === 'n8r.surface/0.2') {
+    validateDescription(input);
   } else fail('$.contract', 'unsupported contract/version');
   const a = input as Artefact;
   if (a.revision.parent && (a.revision.parent.id !== a.id || a.revision.parent.revision === a.revision.id)) fail('$.revision.parent', 'requires earlier revision of the same artefact');
@@ -125,9 +139,17 @@ export function validateArtefact(input: unknown): Artefact {
 }
 /** Explicit offline bundle verification. Missing external context is an error here. */
 export function verifyReferences(input: unknown, context: unknown[]): void {
+  try { verifyContext(input, context); }
+  catch (error) {
+    if (isDescription(input)) fail('$description', 'invalid or unavailable evidence, capability or exclusive selection');
+    throw error;
+  }
+}
+function verifyContext(input: unknown, context: unknown[]): void {
   const a = validateArtefact(input);
   const records = context.map(validateArtefact);
   unique(records.map(r => JSON.stringify([r.id, r.revision.id])), '$context');
+  if (a.contract === 'n8r.surface/0.2') { verifyDescriptionContext(a, records); return; }
   if (a.contract !== 'n8r.surface/0.1') return;
   for (const ref of a.records) {
     const r = records.find(x => x.id === ref.id && x.revision.id === ref.revision);
@@ -137,5 +159,130 @@ export function verifyReferences(input: unknown, context: unknown[]): void {
     for (const e of [...a.nodes, ...a.relationships]) for (const b of e.basis) {
       if (b.record === ref.id && b.revision === ref.revision) references(b.items, items, e.id);
     }
+  }
+}
+
+
+const basis = shape({record: id, revision: token, items: array(id, 1)});
+const descriptionType = shape({vocabulary: id, term: text});
+const descriptionCommon = {
+  ...common, contract: oneOf('n8r.surface/0.2'), extensions: shape({}),
+  records: array(ref), vocabularies: array(shape({id, version: token})),
+  nodes: array(shape({id, label: text, type: descriptionType})),
+  coverage: array(text), gaps: array(text)
+};
+const capabilityShape = shape({
+  ...descriptionCommon, kind: oneOf('capability'),
+  capabilities: array(shape({id, from: id, to: id, type: descriptionType,
+    state: oneOf('possible', 'unknown', 'omitted', 'redacted', 'absent', 'out-of-scope', 'conflicting'),
+    basis: array(basis), conditions: array(text), note: text})),
+  exclusiveGroups: array(shape({id, members: array(id, 2)}))
+});
+const boundShape = shape({
+  ...descriptionCommon, kind: oneOf('bound'), capability: ref,
+  instance: shape({id, label: text}),
+  bindings: array(shape({id, capability: id,
+    state: oneOf('configured', 'unknown', 'omitted', 'redacted', 'out-of-scope', 'conflicting'),
+    claims: array(shape({target: id, basis: array(basis, 1)})), decisions: array(basis), note: text}))
+});
+function descriptionBases(a: SurfaceDescription) {
+  return a.kind === 'capability' ? a.capabilities.flatMap(c => c.basis) :
+    a.bindings.flatMap(b => [...b.decisions, ...b.claims.flatMap(c => c.basis)]);
+}
+function validateDescription(input: unknown): void {
+  const data = object(input, '$');
+  (data.kind === 'capability' ? capabilityShape : boundShape)(input, '$');
+  const a = input as SurfaceDescription;
+  const entries = a.kind === 'capability' ? [...a.capabilities, ...a.exclusiveGroups] : a.bindings;
+  unique([a.id, ...a.nodes.map(n => n.id), ...entries.map(e => e.id), ...(a.kind === 'bound' ? [a.instance.id] : [])], '$');
+  const nodes = new Set(a.nodes.map(n => n.id));
+  const vocab = unique(a.vocabularies.map(v => v.id), '$.vocabularies');
+  const records = unique(a.records.map(r => JSON.stringify([r.id, r.revision])), '$.records');
+  for (const n of a.nodes) references([n.type.vocabulary], vocab, '$.nodes');
+  for (const b of descriptionBases(a)) {
+    references([JSON.stringify([b.record, b.revision])], records, '$.basis'); unique(b.items, '$.basis.items');
+  }
+  if (a.kind === 'capability') {
+    for (const c of a.capabilities) {
+      references([c.from], nodes, '$.capabilities.from'); references([c.to], nodes, '$.capabilities.to');
+      references([c.type.vocabulary], vocab, '$.capabilities.type');
+      if (['possible', 'absent', 'conflicting'].includes(c.state) && !c.basis.length) fail('$', 'evidence required');
+    }
+    for (const group of a.exclusiveGroups) references(group.members, new Set(a.capabilities.map(c => c.id)), '$.exclusiveGroups');
+  } else {
+    unique(a.bindings.map(b => b.capability), '$.bindings.capability');
+    for (const b of a.bindings) {
+      const count = b.claims.length;
+      if (b.state === 'configured' ? count !== 1 : b.state === 'conflicting' ? count < 2 : count !== 0) fail('$', 'state/claims mismatch');
+      references(b.claims.map(c => c.target), nodes, '$.bindings.targets');
+    }
+  }
+}
+function verifyDescriptionContext(a: SurfaceDescription, context: Artefact[]): void {
+  const research = a.records.map(ref => {
+    const r = context.find(r => r.id === ref.id && r.revision.id === ref.revision);
+    if (!r || r.contract !== 'n8r.research/0.1' || digest(r) !== ref.digest) fail('$', 'research revision/digest unavailable');
+    return r;
+  });
+  const items = (bases: import('./contracts.js').Basis[], decisions = false) => bases.flatMap(b => {
+    const r = research.find(r => r.id === b.record && r.revision.id === b.revision)!;
+    return b.items.map(id => {
+      const item = (decisions ? r.decisions : r.findings).find(f => f.id === id);
+      if (!item) fail('$', 'wrong or missing evidence item kind');
+      return item;
+    });
+  });
+  const findings = (bases: import('./contracts.js').Basis[]) => items(bases) as ResearchRecord['findings'];
+  if (a.kind === 'capability') {
+    for (const c of a.capabilities) {
+      const fs = findings(c.basis);
+      if (fs.some(f => f.subject !== c.from || f.property !== 'supports')) fail('$', 'capability evidence subject/property mismatch');
+      if (c.state === 'possible' && (!fs.length || fs.some(f => f.state !== 'known' || f.claims.some(cl => cl.value !== c.to)))) fail('$', 'possible requires supported target evidence');
+      if (c.state === 'absent' && (!fs.length || fs.some(f => f.state !== 'absent' || f.claims.some(cl => cl.value !== c.to)))) fail('$', 'absent requires scoped absence evidence');
+      if (c.state === 'conflicting' && !fs.some(f => f.state === 'conflicting')) fail('$', 'conflicting requires conflicting finding');
+    }
+    return;
+  }
+  const ref = a.capability;
+  const c = context.find(c => c.id === ref.id && c.revision.id === ref.revision);
+  if (!c || c.contract !== 'n8r.surface/0.2' || c.kind !== 'capability' || digest(c) !== ref.digest) fail('$', 'capability revision/digest unavailable');
+  verifyDescriptionContext(c, context);
+  // A shared node ID denotes the same component; an instance is a distinct identity.
+  if ([c.id, ...c.nodes.map(n => n.id), ...c.capabilities.map(e => e.id)].includes(a.instance.id)) fail('$', 'instance identity reused');
+  for (const n of a.nodes) {
+    const old = c.nodes.find(x => x.id === n.id);
+    if (old && canonical(old.type) !== canonical(n.type)) fail('$', 'shared component type changed');
+  }
+  for (const b of a.bindings) {
+    const capability = c.capabilities.find(c => c.id === b.capability);
+    if (!capability) fail('$', 'unknown capability');
+    if (b.state === 'configured' && capability.state !== 'possible') fail('$', 'configured requires established possibility');
+    items(b.decisions, true);
+    const targets = new Set(b.claims.map(cl => cl.target));
+    if (b.claims.length) {
+      // Do not allow an author to hide contrary evidence by omitting a basis item.
+      // Only this Bound snapshot's records apply; the pinned Capability may use
+      // older research revisions which must not override the current binding.
+      const matching = research.flatMap(r => r.findings).filter(f =>
+        f.subject === a.instance.id && f.property === b.capability &&
+        ['known', 'conflicting'].includes(f.state));
+      for (const f of matching) {
+        if (f.claims.some(cl => typeof cl.value !== 'string' || !targets.has(cl.value)) ||
+            (b.state === 'configured' && f.state === 'conflicting')) fail('$', 'omitted contradictory configuration evidence');
+      }
+    }
+    for (const claim of b.claims) {
+      const fs = findings(claim.basis);
+      for (const f of fs) {
+        if (f.subject !== a.instance.id || f.property !== b.capability ||
+            !['known', 'conflicting'].includes(f.state) ||
+            !f.claims.some(cl => cl.value === claim.target) ||
+            f.claims.some(cl => typeof cl.value !== 'string' || !targets.has(cl.value))) fail('$', 'binding evidence mismatch or suppressed conflict');
+        if (b.state === 'configured' && f.state !== 'known') fail('$', 'conflict cannot establish configured');
+      }
+    }
+  }
+  for (const group of c.exclusiveGroups) {
+    if (a.bindings.filter(b => b.state === 'configured' && group.members.includes(b.capability)).length > 1) fail('$', 'exclusive capabilities configured together');
   }
 }

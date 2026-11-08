@@ -26,6 +26,10 @@ Open a research HTML file in a browser to read its findings and inspect its embe
 data. The data owns all facts; rendering is a derived view. These checked fixtures
 are inert, but arbitrary imported HTML must be validated before trusted rendering.
 
+The separate [Capability and Bound examples](descriptions/README.md) exercise the
+JSON-only `0.2` description contract. They do not convert these selected `0.1`
+definitions into deployments.
+
 ## Selected composition
 
 ```mermaid
