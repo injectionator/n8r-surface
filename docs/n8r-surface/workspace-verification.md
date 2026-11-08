@@ -182,3 +182,21 @@ identified readiness, accurately separated attachment and offered a next action
 without research. Visible experience criteria were met; no separate PM satisfaction
 rating was supplied for this turn. The private receipt and verdict retain the
 same-chat limitation explicitly. No repair or fixture reset was performed.
+
+## Fresh-chat attempt without the target location — 8 November 2026
+
+A distinct product chat received the readiness question without the prepared
+workspace path. Its current folder was the earlier user-selected baseline folder,
+not the candidate workspace. The installed `0.1.9` skill/reference were loaded;
+the helper inspected that current folder and returned exit 3 (nonempty,
+unrecognized). The assistant reported that state and asked for a destination
+choice. No mutation command appears in the receipt.
+
+Fresh reopen is **Blocked for this attempt: the intended workspace was not made
+available as the selected target**. This is not evidence that the saved identity
+could not be recognized. Independent readback confirms the actual candidate
+workspace and synthetic note remain byte-for-byte unchanged. The 21.996-second
+trial and missing-location precondition are retained privately rather than
+silently relabeled as a pass. No fixture repair or product change was made.
+The new chat can receive the explicit target and perform read-only recognition;
+creation in the unrelated current folder is not needed for this scenario.
