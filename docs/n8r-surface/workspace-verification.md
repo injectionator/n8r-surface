@@ -2,7 +2,8 @@
 
 Issue [#41](https://github.com/injectionator/n8r-surface/issues/41) adds identity
 and safeguards to expected README-based baseline behavior. Code/test success is
-not closure: installed-product rehearsal and initial PM acceptance remain required.
+not closure: installed-product scenarios now pass within the recorded limits;
+overall PM acceptance, review readiness, merge and release remain separate.
 
 ## Installed 0.1.8 baseline — 8 November 2026
 
@@ -30,8 +31,10 @@ public repository; this summary contains only sanitized observations.
 
 ## Candidate 0.1.9
 
-Source changes implement the helper and skill guidance. The exact committed
-candidate, installation receipts and checks are recorded below as they occur.
+Source changes implement the helper and skill guidance. All planned product
+scenario outcomes passed: empty/missing creation, repeat, fresh-chat recognition,
+both adoption choices, all refusals and moved identity. The chronological entries
+below preserve earlier incomplete attempts and their status at the time.
 No PM product acceptance, merge or release is claimed. Normal installation was
 subsequently replaced with explicit PM authorization, as recorded below. CLI/Labs workspace integration and other hosts remain unverified.
 
@@ -41,11 +44,11 @@ subsequently replaced with explicit PM authorization, as recorded below. CLI/Lab
 | --- | --- | --- |
 | Create; missing/empty | `tests/workspace.test.mjs`: actual files, record readback and no scaffolds | Candidate empty and missing destination creation passed |
 | Repeat with note | Same suite: byte-preserving reuse and unknown fields | Candidate PM repeat passed; independent hashes unchanged |
-| Fresh reopen; moved identity | Same suite: separate process and moved folder inspection | Candidate fresh-chat reopen passed after destination clarification; move trial pending |
+| Fresh reopen; moved identity | Same suite: separate process and moved folder inspection | Fresh-chat reopen passed after destination clarification; independent moved-folder chat passed |
 | Adoption question and both choices | Same suite: no-write refusal, in-place and alternative destination | Both adoption choices passed |
 | Malformed/conflicting/unsupported | Same suite: complete before/after snapshots | All three installed-product refusal trials passed |
 | Interrupted setup | Same suite: publication failure and no-overwrite guard | Technical evidence only |
-| Installed helper availability | Same suite: copied helper with no checkout dependencies; package smoke | Installed-skill invocation pending |
+| Installed helper availability | Same suite: copied helper with no checkout dependencies; package smoke | Installed 0.1.9 reads and helper execution verified in product chats |
 
 Run `node --test tests/workspace.test.mjs` or the full `npm test` from the repo
 root. These tests own temporary folders and remove them. Publication failure is
@@ -97,13 +100,14 @@ Complete file-map SHA-256: `de5d16d92f714f2f8ea900266078db8e113f6116d78ee4c98e68
 Git/CLI receipts, original registration, test logs and retained baseline evidence
 are stored in the private task inventory, outside tracked files.
 
-Prepared PM fixtures contain only empty destinations or explicit synthetic
-adoption/refusal inputs. No successful workspace was seeded in the create fixture.
-They are deliberately retained; the create fixture has now been exercised, as recorded below. Product chats have not been created by
-the implementation agent. The PM must exercise create → repeat → fresh reopen and
-the remaining cases using the [walkthrough](workspace-human-check.md), then return
-conversation references and separate outcome/experience judgments. The full create/repeat/reopen journey and first-increment acceptance remain pending;
-installation and automated checks do not establish them. No merge or release.
+The prepared fixtures began as empty destinations or explicit synthetic
+adoption/refusal inputs. No successful workspace was seeded for the creation
+trial. The PM created the product chats; the implementation agent inspected their
+receipts and independently read saved files. All planned outcomes have now been
+exercised. The first reopen attempt omitted its target and is retained below;
+explicit-target continuation passed, followed by an independent moved-folder chat.
+Overall PM acceptance remains separate from these observations. Fixtures and a
+final private evidence copy are deliberately retained; no cleanup, merge or release.
 
 ## PM create trial — 8 November 2026
 
@@ -305,3 +309,42 @@ first workspace to a new folder name, preserving all metadata and note bytes.
 The old path is absent and the new path is recorded privately. This is fixture
 preparation, not product behavior; installed-product recognition after the move
 remains pending. No borrowed/user-owned baseline folder was moved or changed.
+
+## PM moved-folder recognition — 8 November 2026
+
+**Outcome: Pass. Visible experience criteria met; no separate PM rating supplied.**
+A new product chat received the moved destination, with no original ID or setup
+conversation supplied. It loaded installed `0.1.9` and the workspace reference,
+then ran the installed helper's `inspect` against that path; exit 0. One turn
+took 20.379 seconds. The response recovered the original identity and saved name,
+retained the purpose/format, linked the new location, and offered a concrete next
+research prompt. It separated metadata readiness from prior research, configured
+targets and app attachment.
+
+Independent complete inventory/hash comparison with the pre-move snapshot
+confirms unchanged metadata and note bytes; the old path remains absent. All 14
+installed plugin files still match candidate `3cb08f5`. Private receipts,
+criterion verdicts, snapshots and a final fixture copy are retained with explicit
+ownership; the live disposable fixtures are deliberately retained too. No user
+baseline folder or Labs work was moved or cleaned up.
+
+## Completion boundary and current checks
+
+All planned product scenario outcomes passed within this host/environment scope.
+The PM explicitly rated creation, repeat and missing-destination interaction
+positively. Later responses meet the observable experience rubric, but supplying
+those responses is not recorded as blanket acceptance. Overall PM acceptance and
+review readiness are still pending; PR #42 remains draft and issue #41 open.
+
+Known limits remain: fresh chats do not prove enforced denial of history or broad
+filesystem access; host/model were not remeasured per candidate run; global-state
+preservation is supported by tool traces rather than a complete system snapshot.
+Interruption is covered by injected filesystem failures, not a machine crash.
+Other hosts and CLI/Labs workspace integration remain unverified.
+
+Local Markdown, pinned offline link/anchor and diff checks passed after evidence
+updates. In CI run `42470396419`, all three Node jobs, fixtures/tooling and Markdown
+passed; the local-links job failed downloading the pinned checker (curl exit 22)
+before checking any links. Its release asset exists. This is not a passing CI
+link check; the final branch run must be checked separately. No workflow or product
+change was made to conceal the failed download.

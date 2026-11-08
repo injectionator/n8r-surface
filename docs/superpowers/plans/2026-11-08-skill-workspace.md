@@ -69,7 +69,7 @@ reference, both manifests, workspace docs and
   and create one draft PR with `Related to #41` and exact human interactions.
 - [x] Prepare exact candidate bytes and isolated marketplace installation
   evidence without changing the normal plugin registration.
-- [ ] Hand the PM a fresh-chat walkthrough. Record actual candidate rehearsal
+- [x] Hand the PM a fresh-chat walkthrough. Record actual candidate rehearsal
   only when performed in separate product chats; keep unrun scenarios pending.
 
 ## Execution record
@@ -87,3 +87,9 @@ reference, both manifests, workspace docs and
 - Isolated clean/upgrade installations match all 14 source files. PM explicitly
   authorized normal installation replacement; pinned 0.1.9 bytes verified there.
   Fresh product-chat load and human acceptance remain pending.
+
+- All planned installed-product scenario outcomes now pass with independent
+  readback. Earlier same-chat/missing-location attempts remain explicit evidence.
+  Overall PM acceptance and review readiness are separate and pending. Fixtures
+  and private evidence are deliberately retained. CI checker-download failure is
+  recorded separately from passing local links and product checks.
