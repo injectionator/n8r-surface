@@ -100,7 +100,7 @@ async function discover(args: string[], reopening = false): Promise<number> {
   const tools = new SourceTools(localPath(source ?? process.cwd(), config.home, process.cwd()));
   console.log(`Research source: ${line(tools.selected)} (${tools.file ? 'one file' : 'directory'})`);
   console.log('Inspected source text and your messages will be sent to OpenAI through Codex using ChatGPT sign-in.');
-  console.log('Source access is read-only. /save saves a Markdown note; /save surface saves a previewed HTML/JSON pair.');
+  console.log('Source access is read-only. /save saves a Markdown note; /save surface saves the previewed Surface bundle.');
   const input = createInterface({input: process.stdin, output: process.stdout});
   const controller = new AbortController();
   let closed = false, interrupted = false;
@@ -121,7 +121,7 @@ async function discover(args: string[], reopening = false): Promise<number> {
     if (reopening && notePath && /(?:research\.html|surface\.json)$/.test(notePath)) {
       pair=readSurfacePair(localPath(notePath,config.home,process.cwd()));
       console.log(`Saved pair: ${line(pair.directory)}`);
-      console.log('Both saved artefacts and host evidence will be sent to OpenAI after confirmation.');
+      console.log('Saved artefacts, dependencies and host evidence will be sent to OpenAI after confirmation.');
     } else if (reopening) {
       note = notePath ? readNote(localPath(notePath,config.home,process.cwd())) : latestNote(config.vault,tools.selected);
       if (!note) { console.log('No saved numbered note found for this source. Name a note explicitly or start with discover.'); return 1; }
@@ -156,6 +156,7 @@ async function discover(args: string[], reopening = false): Promise<number> {
         if (!session.surfaceDraft) { console.log('No current validated Surface preview. Ask to create or update a Surface first.'); continue; }
         const saved=surfaces.save(session.surfaceDraft,{researcher:{version:session.instructions.version,digest:session.instructions.digest},model:session.model,evidence:session.evidence});
         session.acceptSurface(saved);
+        if(saved.briefPath) console.log(`Saved and read back: ${line(saved.briefPath)}`);
         console.log(`Saved and read back: ${line(saved.researchPath)}`);
         console.log(`Saved and read back: ${line(saved.surfacePath)}`);
       } else if (question.trim() === '/save') {

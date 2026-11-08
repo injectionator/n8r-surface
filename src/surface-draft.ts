@@ -1,3 +1,5 @@
+import {checkBundle, verifyBundleSuccessor, type Bundle} from './skill-artifacts.js';
+import {renderBrief} from './skill-presentation.js';
 import {randomUUID} from 'node:crypto';
 import type {ResearchRecord, SurfaceDefinition, Artefact} from './contracts.js';
 import {canonical, digest} from './portable.js';
@@ -5,7 +7,9 @@ import {validateArtefact, verifyReferences} from './validate.js';
 import {verifySuccessor} from './revisions.js';
 import {InspectionError} from './settings.js';
 
-export type SurfaceDraft = {research: ResearchRecord; surface: SurfaceDefinition};
+export type LegacyDraft = {research: ResearchRecord; surface: SurfaceDefinition};
+export type SurfaceDraft = LegacyDraft | Bundle;
+export const isBundle = (draft: SurfaceDraft): draft is Bundle => draft.surface.contract === 'n8r.surface/0.3';
 export type DraftContext = {createdAt?: string; previous?: SurfaceDraft};
 export const revisionRef = (a: Artefact) => ({id:a.id,revision:a.revision.id,digest:digest(a)});
 const error = (s: string): never => { throw new InspectionError(s); };
@@ -14,6 +18,7 @@ function retained(before: {id:string}[], after: {id:string}[], label: string) {
 }
 /** Preservation beyond the library's bounded lineage checks. */
 export function verifyPairSuccessor(before: SurfaceDraft, after: SurfaceDraft) {
+  if(isBundle(before) && isBundle(after)) {verifyBundleSuccessor(before,after);return;}
   verifySuccessor(before.research,after.research); verifySuccessor(before.surface,after.surface);
   for (const key of ['sources','findings','alternatives','decisions','questions'] as const) retained(before.research[key],after.research[key],key);
   retained(before.surface.nodes,after.surface.nodes,'component');
@@ -32,11 +37,18 @@ export function verifyPairSuccessor(before: SurfaceDraft, after: SurfaceDraft) {
     if (!Object.hasOwn(after[key].extensions,name) || canonical(value)!==canonical(after[key].extensions[name])) error(`Preserve opaque extension ${name}`);
   }
 }
-/** The model supplies contract content; the host owns envelope and record-reference fields. */
+/** New bundles use the shared skill checker; legacy content keeps host-owned envelopes. */
 export function prepareSurfaceDraft(input: unknown, context: DraftContext = {}): SurfaceDraft {
   canonical(input); // bound size/depth and reject non-data before inspecting it
   const raw=input as any;
-  if (!raw || typeof raw!=='object' || Array.isArray(raw) || Object.keys(raw).sort().join(',')!=='research,surface') error('Expected research and surface content objects');
+  if (!raw || typeof raw!=='object' || Array.isArray(raw) || !['research,surface','dependencies,research,surface'].includes(Object.keys(raw).sort().join(','))) error('Expected research and surface content objects');
+  if (raw?.surface?.contract === 'n8r.surface/0.3') {
+    const bundle=checkBundle(JSON.parse(JSON.stringify(raw)));
+    if(context.previous) {
+      verifyPairSuccessor(context.previous,bundle);
+    }
+    return bundle;
+  }
   const data=JSON.parse(JSON.stringify(raw));
   const createdAt=context.createdAt ?? new Date().toISOString().replace(/\.\d{3}Z$/,'Z');
   for (const key of ['research','surface'] as const) {
@@ -63,7 +75,9 @@ export function prepareSurfaceDraft(input: unknown, context: DraftContext = {}):
   if(context.previous) verifyPairSuccessor(context.previous,draft);
   return draft;
 }
-export function previewSurface({research:r,surface:s}: SurfaceDraft): string {
+export function previewSurface(draft: SurfaceDraft): string {
+  if(isBundle(draft)) return renderBrief(draft)+'\nNot saved. Enter /save surface to save exactly this preview.';
+  const {research:r,surface:s}=draft;
   return ['Validated partial Surface preview (declared only; not runtime proof)',s.title,
     'Components:',...s.nodes.map(n=>`  ${n.id} | ${n.label}`),
     'Declared connections:',...s.relationships.map(e=>`  ${e.id}: ${e.from} -> ${e.to} (${e.type.term})`),

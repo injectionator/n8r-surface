@@ -29,6 +29,26 @@ revision, without adding a CLI command. See the [task, evidence and human
 check](skill-surface-artifacts.md). Installed rehearsal and human acceptance remain
 distinct from contract checks.
 
+## CLI Capability/Bound increment (#17)
+
+Given an installed candidate, a configured vault, Codex 0.166.0 signed in with
+ChatGPT and permitted local sources, ask `discover SOURCE` to prepare a Capability
+or Bound Surface. Enter `/save surface`, exit, then run
+`reopen SAVED/surface.json --source SOURCE` and request a successor. The same
+commands remain public; there is no new subcommand or automatic migration.
+
+Expected: a preview distinguishes possibilities from configured bindings;
+explicit save creates brief, HTML, JSON, dependencies and a checked manifest in
+the next numbered directory. Fresh reopening retains exact dependencies,
+identities, human decisions and parent references. Read the files independently
+and compare predecessor/source bytes. Existing 0.1 pairs remain readable and
+continue in their original format. No runtime-use or Labs compatibility follows.
+
+The installed baseline at `5eed2ac` produced an older 0.1 definition for the
+Capability request. The installed development candidate completed save/reopen/revise with independent
+readback; see [the task and bounded evidence](cli-bundles.md). Final candidate
+bytes and human acceptance remain separate from that rehearsal.
+
 ## Grow the specification with working verification
 
 Work one useful behavior at a time, including behavior that already exists. Add a

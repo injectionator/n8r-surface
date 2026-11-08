@@ -75,12 +75,7 @@ export function readBundle(directory:string):Bundle {
   return b;
  });
 }
-export function saveBundle(input:unknown,destination:string,predecessor?:string):Bundle {
- return guarded('save validation, predecessor or destination check',()=>{
-  const b=checkBundle(input);destination=resolve(destination);directories(dirname(destination));
-  const parent=predecessor?readBundle(predecessor):undefined;
-  const previousBytes=predecessor?read(join(predecessor,'manifest.json')):undefined;
-  if(parent){
+export function verifyBundleSuccessor(parent:Bundle,b:Bundle) {
    for(const old of [parent.research,parent.surface,...parent.dependencies]){
     const next=[b.research,b.surface,...b.dependencies].find(a=>a.id===old.id&&a.revision.id===old.revision.id);
     if(next && digest(next)!==digest(old))fail('rewritten pinned revision');
@@ -88,6 +83,14 @@ export function saveBundle(input:unknown,destination:string,predecessor?:string)
    verifySuccessor(parent.research,b.research);verifySuccessor(parent.surface,b.surface);
    for(const d of parent.research.decisions)if(!b.research.decisions.some(n=>canonical(n)===canonical(d)))fail('lost human decision');
    for(const n of parent.surface.nodes)if(!b.surface.nodes.some(x=>x.id===n.id))fail('lost component identity');
+}
+export function saveBundle(input:unknown,destination:string,predecessor?:string):Bundle {
+ return guarded('save validation, predecessor or destination check',()=>{
+  const b=checkBundle(input);destination=resolve(destination);directories(dirname(destination));
+  const parent=predecessor?readBundle(predecessor):undefined;
+  const previousBytes=predecessor?read(join(predecessor,'manifest.json')):undefined;
+  if(parent){
+   verifyBundleSuccessor(parent,b);
   }else if(b.research.revision.parent||b.surface.revision.parent)fail('predecessor required');
   const data={'research.html':renderBundleHtml(b),'surface.json':encode(b.surface,'json'),'dependencies.json':JSON.stringify(b.dependencies,null,2)+'\n','brief.md':renderBrief(b)};
   const manifest=JSON.stringify({version:2,files:Object.fromEntries(members.map(n=>[n,hash(data[n])])),predecessor:previousBytes?hash(previousBytes):null},null,2)+'\n';

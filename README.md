@@ -92,7 +92,8 @@ source access and conversation to produce evidence-backed working notes. The
 [discovery guide](docs/n8r-surface/researcher-discovery.md) focuses on AI-relevant
 graphs, reusable product knowledge and comparing descriptions with evidence. See
 [verification and pending Work-mode checks](docs/n8r-surface/researcher-skill-verification.md).
-The delivery order is skill first, n8r-labs adaptation second, standalone CLI third.
+The accepted delivery order is skill first, standalone CLI second, then separate
+n8r-labs adaptation.
 The [local vault](docs/n8r-surface/researcher-vault.md) holds research notes, intermediate artifacts
 and Surface descriptions at a user-selected local path. It also includes prepared test material
 and a walkthrough for investigating another chat-system repository.

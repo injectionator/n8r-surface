@@ -1,11 +1,12 @@
 import fs from 'node:fs';
+import {readBundle,saveBundle} from './skill-artifacts.js';
 import {basename,dirname,join,resolve,relative,sep} from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
 import {decode,encode} from './codec.js';
 import {readResearchHtml,renderResearchHtml} from './html.js';
 import {verifyReferences} from './validate.js';
 import {canonical} from './portable.js';
-import {type SurfaceDraft,verifyPairSuccessor} from './surface-draft.js';
+import {type SurfaceDraft,verifyPairSuccessor,isBundle} from './surface-draft.js';
 import {type Note,type NoteContext} from './notes.js';
 import {InspectionError,readBytes} from './settings.js';
 
@@ -13,8 +14,8 @@ const LIMIT=8*1024*1024;
 const HASH=/^sha256:[a-f0-9]{64}$/;
 const MEMBERS=['research.html','surface.json','manifest.json'] as const;
 const hash=(bytes:Buffer|string)=>`sha256:${createHash('sha256').update(bytes).digest('hex')}`;
-type Manifest={version:1;files:{'research.html':string;'surface.json':string};provenance:NoteContext;note?:{file:string;digest:string};predecessor?:{directory:string;manifestDigest:string}};
-export type SavedSurfacePair=SurfaceDraft & {directory:string;researchPath:string;surfacePath:string;manifest:Manifest;bytes:Record<string,Buffer>};
+type Manifest={version:1|2;files:Record<string,string>;provenance?:NoteContext;note?:{file:string;digest:string};predecessor?:{directory:string;manifestDigest:string}|string|null};
+export type SavedSurfacePair=SurfaceDraft & {directory:string;researchPath:string;surfacePath:string;manifest:Manifest;briefPath?:string;bytes:Record<string,Buffer>};
 function fail(message:string):never{throw new InspectionError(message);}
 function safeName(value:unknown):value is string{return typeof value==='string' && !!value && value!=='.' && value!=='..' && !/[\\/\x00-\x1f]/.test(value);}
 function checkProvenance(p: any): asserts p is NoteContext {
@@ -50,7 +51,16 @@ export function readSurfacePair(path:string):SavedSurfacePair {
   path=resolve(path);if(!['research.html','surface.json'].includes(basename(path)))fail('Select research.html or surface.json from a saved pair');
   const directory=dirname(path);checkDirectories(directory);
   const bytes:Record<string,Buffer>={};bytes['manifest.json']=read(join(directory,'manifest.json'),512*1024);
-  let m:unknown;try{m=JSON.parse(utf8(bytes['manifest.json']));}catch{fail('Invalid pair manifest JSON');}manifest(m);
+  let m:any;try{m=JSON.parse(utf8(bytes['manifest.json']));}catch{fail('Invalid pair manifest JSON');}
+  if(m?.files?.['dependencies.json']) {
+    const bundle=readBundle(directory);
+    for(const name of Object.keys(m.files)) bytes[name]=read(join(directory,name));
+    // Standalone skill manifests have no runner receipt. Re-read recorded sources
+    // on reopening; they remain historical evidence, not a fresh tool result.
+    if(m.provenance)checkProvenance(m.provenance);
+    return {...bundle,directory,researchPath:join(directory,'research.html'),surfacePath:join(directory,'surface.json'),briefPath:join(directory,'brief.md'),manifest:m,bytes};
+  }
+  manifest(m);
   for(const name of ['research.html','surface.json'] as const){bytes[name]=read(join(directory,name));if(hash(bytes[name]!)!==m.files[name])fail('Pair bytes conflict with manifest hash; preserve edits and reopen an accepted revision');}
   const research=readResearchHtml(utf8(bytes['research.html']!)),surface=decode(utf8(bytes['surface.json']!),'json');
   if(surface.contract!=='n8r.surface/0.1')fail('Expected Surface definition');
@@ -72,10 +82,26 @@ export class SurfaceStore {
   private unchanged(){
     checkDirectories(this.directory,this.stamps);
     if(this.note&&!read(this.note.path,256*1024).equals(Buffer.from(this.note.text)))fail('Original note changed; reopen before saving');
-    if(this.previous)for(const name of MEMBERS)if(!read(join(this.previous.directory,name)).equals(this.previous.bytes[name]!))fail('Predecessor changed; reopen before saving');
+    if(this.previous)for(const name of Object.keys(this.previous.bytes))if(!read(join(this.previous.directory,name)).equals(this.previous.bytes[name]!))fail('Predecessor changed; reopen before saving');
   }
   save(draft:SurfaceDraft,provenance:NoteContext):SavedSurfacePair {
-    this.unchanged();checkProvenance(provenance);verifyReferences(draft.surface,[draft.research]);
+    this.unchanged();checkProvenance(provenance);
+    if(isBundle(draft)) {
+      if(this.previous)verifyPairSuccessor(this.previous,draft);
+      fs.mkdirSync(this.directory,{recursive:true,mode:0o700});checkDirectories(this.directory,this.stamps);
+      const names=fs.readdirSync(this.directory);
+      if(names.length>10000)fail('Too many Surface revisions');
+      const max=names.reduce((n,name)=>Math.max(n,Number(/^surface-(\d+)$/.exec(name)?.[1]??0)),0);
+      if(!Number.isSafeInteger(max+1))fail('Surface numbering limit reached');
+      const target=join(this.directory,`surface-${String(max+1).padStart(3,'0')}`);
+      saveBundle(draft,target,this.previous?.directory);
+      const manifestPath=join(target,'manifest.json');
+      const receipt=JSON.parse(utf8(read(manifestPath)));
+      fs.writeFileSync(manifestPath,JSON.stringify({...receipt,provenance,...(this.note?{note:{file:basename(this.note.path),digest:this.note.digest}}:this.previous?.manifest.note?{note:this.previous.manifest.note}:{})},null,2)+'\n',{mode:0o600});
+      const saved=readSurfacePair(join(target,'surface.json'));
+      this.unchanged();this.previous=saved;return saved;
+    }
+    verifyReferences(draft.surface,[draft.research]);
     if(this.previous)verifyPairSuccessor(this.previous,draft);
     else if(draft.research.revision.parent||draft.surface.revision.parent)fail('Initial pair cannot have an unavailable predecessor');
     const html=renderResearchHtml(draft.research),json=encode(draft.surface,'json');

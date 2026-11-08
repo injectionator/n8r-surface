@@ -8266,6 +8266,16 @@ function readBundle(directory) {
     return b;
   });
 }
+function verifyBundleSuccessor(parent, b) {
+  for (const old of [parent.research, parent.surface, ...parent.dependencies]) {
+    const next = [b.research, b.surface, ...b.dependencies].find((a) => a.id === old.id && a.revision.id === old.revision.id);
+    if (next && digest2(next) !== digest2(old)) fail2("rewritten pinned revision");
+  }
+  verifySuccessor(parent.research, b.research);
+  verifySuccessor(parent.surface, b.surface);
+  for (const d of parent.research.decisions) if (!b.research.decisions.some((n) => canonical(n) === canonical(d))) fail2("lost human decision");
+  for (const n of parent.surface.nodes) if (!b.surface.nodes.some((x) => x.id === n.id)) fail2("lost component identity");
+}
 function saveBundle(input, destination, predecessor) {
   return guarded("save validation, predecessor or destination check", () => {
     const b = checkBundle(input);
@@ -8274,14 +8284,7 @@ function saveBundle(input, destination, predecessor) {
     const parent = predecessor ? readBundle(predecessor) : void 0;
     const previousBytes = predecessor ? read(join(predecessor, "manifest.json")) : void 0;
     if (parent) {
-      for (const old of [parent.research, parent.surface, ...parent.dependencies]) {
-        const next = [b.research, b.surface, ...b.dependencies].find((a) => a.id === old.id && a.revision.id === old.revision.id);
-        if (next && digest2(next) !== digest2(old)) fail2("rewritten pinned revision");
-      }
-      verifySuccessor(parent.research, b.research);
-      verifySuccessor(parent.surface, b.surface);
-      for (const d of parent.research.decisions) if (!b.research.decisions.some((n) => canonical(n) === canonical(d))) fail2("lost human decision");
-      for (const n of parent.surface.nodes) if (!b.surface.nodes.some((x) => x.id === n.id)) fail2("lost component identity");
+      verifyBundleSuccessor(parent, b);
     } else if (b.research.revision.parent || b.surface.revision.parent) fail2("predecessor required");
     const data = { "research.html": renderBundleHtml(b), "surface.json": encode(b.surface, "json"), "dependencies.json": JSON.stringify(b.dependencies, null, 2) + "\n", "brief.md": renderBrief(b) };
     const manifest = JSON.stringify({ version: 2, files: Object.fromEntries(members.map((n) => [n, hash2(data[n])])), predecessor: previousBytes ? hash2(previousBytes) : null }, null, 2) + "\n";
@@ -8333,5 +8336,6 @@ export {
   checkBundle,
   digest2 as digest,
   readBundle,
-  saveBundle
+  saveBundle,
+  verifyBundleSuccessor
 };
