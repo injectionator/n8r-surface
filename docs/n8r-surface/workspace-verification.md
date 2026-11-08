@@ -39,7 +39,7 @@ subsequently replaced with explicit PM authorization, as recorded below. CLI/Lab
 
 | Canonical scenario | Deterministic supporting evidence | Product/experience evidence |
 | --- | --- | --- |
-| Create; missing/empty | `tests/workspace.test.mjs`: actual files, record readback and no scaffolds | Baseline above; candidate PM pending |
+| Create; missing/empty | `tests/workspace.test.mjs`: actual files, record readback and no scaffolds | Candidate create passed; missing destination pending |
 | Repeat with note | Same suite: byte-preserving reuse and unknown fields | Candidate PM pending |
 | Fresh reopen; moved identity | Same suite: separate process and moved folder inspection | Baseline continuation above; candidate PM pending |
 | Adoption question and both choices | Same suite: no-write refusal, in-place and alternative destination | Candidate PM pending |
@@ -89,7 +89,7 @@ The PM then explicitly authorized switching the normal installation to this
 pinned candidate. Its original registration details were retained privately;
 marketplace removal, pinned registration and plugin installation all exited 0.
 The normal installed entry is enabled `0.1.9`, and all 14 files again match the
-candidate. This is installed-byte evidence; desktop fresh-chat loading is pending.
+candidate. This is installed-byte evidence; desktop fresh-chat loading was pending at installation; the create trial below now verifies it.
 
 SKILL.md SHA-256: `91abc353f4e0dea663a81decd5eaba6d72470c32b432b904e684c1a3b1092b3b`.
 Complete file-map SHA-256: `de5d16d92f714f2f8ea900266078db8e113f6116d78ee4c98e68dcab8a696180`
@@ -99,9 +99,49 @@ are stored in the private task inventory, outside tracked files.
 
 Prepared PM fixtures contain only empty destinations or explicit synthetic
 adoption/refusal inputs. No successful workspace was seeded in the create fixture.
-They are deliberately retained and unrun. Product chats have not been created by
+They are deliberately retained; the create fixture has now been exercised, as recorded below. Product chats have not been created by
 the implementation agent. The PM must exercise create → repeat → fresh reopen and
 the remaining cases using the [walkthrough](workspace-human-check.md), then return
-conversation references and separate outcome/experience judgments. Actual desktop
-load, interaction quality and first-increment human acceptance remain pending;
+conversation references and separate outcome/experience judgments. The full create/repeat/reopen journey and first-increment acceptance remain pending;
 installation and automated checks do not establish them. No merge or release.
+
+## PM create trial — 8 November 2026
+
+**Outcome: Pass for the observed create operation. Experience: Pass.** The PM
+reported “Worked fine.” One fresh product chat completed in one turn (18.978
+seconds) without questions or technical rescue. Its tool receipts show reads of
+the installed `0.1.9` skill and workspace reference, then the installed helper's
+`setup` invocation with the supplied destination and purpose; exit 0. The helper
+path was in the installed plugin cache, not the developer checkout. All 14
+installed file hashes still match the identified candidate.
+
+The prepared destination was empty before the trial. Independent readback found
+only `.n8r/workspace.json`, with exact format `n8r.workspace/1`, a valid generated
+UUID v4, folder-derived nonempty name and supplied purpose. All pre-existing
+fixture entries and file hashes were unchanged. The final response linked the
+actual workspace, identified format/ID and purpose, accurately separated app
+attachment, and offered a next research action without starting it. The visible
+tool trace contains no source fetch, credential request or global-setting write.
+A complete global-settings before/after snapshot was not collected for this trial.
+
+| Experience criterion | Verdict and observed evidence |
+| --- | --- |
+| Orientation | Pass: final response links location and identifies completion and next action. |
+| Necessary questions | Pass: no repeated authorization or unnecessary setup questions. |
+| User effort | Pass: one prompt, no schema choice, manual setup or technical rescue. |
+| Honest boundaries | Pass: completion matches independent files; attachment explicitly separate. |
+| Scope | Pass: setup only; no research in the tool trace or saved output. |
+
+This verifies loaded installed bytes and the create interaction, not the complete
+issue. The chat's working directory was an existing user folder while the prompt
+explicitly selected the separate empty destination; the requested boundary was
+honored. A separate chat does not prove enforced history/filesystem isolation.
+Host/model were not independently remeasured for this trial. Private chat receipts,
+full metadata, hashes and PM feedback are retained in the task evidence inventory;
+no raw transcript or machine path is published here.
+
+After create readback, the coordinator added the documented synthetic user note
+exclusively and captured a new before-inventory for repeat setup. That preparation
+is distinct from product output. Repeat, fresh reopen, move, missing destination,
+both adoption choices and refusal product trials remain pending. No repair,
+cleanup, merge or release occurred.
