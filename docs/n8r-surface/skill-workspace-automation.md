@@ -87,7 +87,8 @@ Exit codes:
 - **1:** at least one automated scenario or final installation check failed.
 - **2:** blocked prerequisites, or automated checks passed but human review is
   pending. Inspect `results.json` and `blocked.json` to distinguish these cases.
-- **0:** successful owned-fixture cleanup. A live run does not claim full human
+- **0:** successful owned-fixture cleanup. Offline report and review modes have
+  their own exit meanings below. A live run does not claim full human
   acceptance and therefore does not return 0 in this increment.
 
 ## Evidence and human verification
@@ -223,3 +224,136 @@ rehearsals. A private acceptance receipt accompanies the original run evidence;
 the raw Cucumber pending results remain unchanged as the historical automated
 output. Future runs still require their own human review. The user authorized
 PR #44 to become ready for review, not merge or release.
+
+## Readable reports and recorded human verdicts
+
+The follow-up in [#45](https://github.com/injectionator/n8r-surface/issues/45)
+adds a private `review.md` after live-run finalization. It contains each actual
+final response, user input, commentary, tool commands and results, including
+failed or denied operations. Successful tool outputs and technical session
+receipts are expandable in Markdown viewers supporting HTML details; their full
+text remains in the file. Failed outputs remain visible. Missing evidence is
+explicit. No model generates the report or judges the interaction.
+
+The runner prints the report path and a SHA-256 **run fingerprint**. The companion
+`review-manifest.json` binds the evidence file names/bytes and the report bytes.
+These files contain private machine paths and transcripts: retain them with the
+ignored run directory, not in public commits. Existing reports are verified,
+never silently regenerated over different evidence.
+
+To generate or verify a report for a retained run without inference:
+
+```sh
+npm run acceptance:skill -- --report --evidence .local/skill-acceptance/run-1
+```
+
+Expected: exit 0 when the report is successfully generated or verified, with the
+report path, fingerprint and automated status. Exit 0 here means reporting worked,
+not that the scenario passed. A blocked run can have a valid readable report.
+Missing required evidence prevents an overall Pass. Once a verdict receipt exists,
+this command also shows the three human verdicts and combined overall status.
+
+### Human review task list
+
+Prerequisite: a completed run from the command above or the live command. No new
+Codex sign-in, network access or inference is needed for report/review commands.
+From the repository root:
+
+- [ ] Run `--report` as shown above and open the printed `review.md` path. Read
+  each scenario's human criteria, actual final response and tool activity.
+  Inspect any failed commands and preservation warnings. Expect the same actual
+  responses as the retained turn receipts; there are no invented summaries.
+- [ ] Copy the report's run fingerprint. Choose **Pass**, **Fail** or **Blocked**
+  independently for create, repeat and reopen. The command below shows all Pass
+  only as an example; replace each verdict with your actual judgment, replace
+  the fingerprint and reviewer, and use the optional comment for any caveats:
+
+  ```sh
+  npm run acceptance:skill -- --review \
+    --evidence .local/skill-acceptance/run-1 \
+    --run COPY_THE_64_CHARACTER_RUN_FINGERPRINT \
+    --reviewer 'Your name' \
+    --create Pass --repeat Pass --reopen Pass \
+    --comment 'Reviewed the actual responses and tool activity.'
+  ```
+
+  Expect a separate `human-review.json` containing the run fingerprint, report
+  digest, reviewer, date/time, each verdict and comment. The terminal shows
+  automated status, human verdicts and overall status together. **Pass → exit 0;
+  Fail → exit 1; Blocked → exit 2.** A human Pass cannot override an automated
+  failure, final preservation error, missing evidence or blocked prerequisite.
+- [ ] Run `--report` again. Expect verification of the unchanged evidence/report
+  and the recorded human verdicts. Original Cucumber JSON and pending results
+  remain untouched; a verdict receipt does not retroactively alter execution.
+- [ ] Report **Pass / Fail / Blocked** for this review workflow with the private
+  run reference and any failed step. If commands refuse modified evidence, an
+  incorrect fingerprint or a duplicate review, that is the expected protection;
+  retain the refusal when reporting a problem. Do not publish raw private files.
+
+Only one review receipt is supported per run in this increment. Duplicate
+submissions refuse to overwrite it. A correction workflow, reviewer identity
+verification and signed audit records are out of scope. A reviewer name is a
+self-attribution, not authentication. Fingerprints detect drift relative to the
+retained manifest; they do not make files tamper-proof against someone able to
+rewrite both evidence and manifest. Evidence must be quiescent while reporting
+and reviewing; concurrent writers are unsupported.
+
+Owned-fixture cleanup still uses `--cleanup`. It retains reports and verdicts;
+its later `cleanup.json` receipt is excluded from the evidence fingerprint. The
+three generated review files are also excluded from that fingerprint, with
+report bytes bound separately. All other evidence files are included. Symlinks,
+nested entries and files over 64 MiB are refused. Historical manually written
+acceptance receipts are preserved, not automatically imported as new approval.
+
+Offline report/review checks:
+
+```sh
+node --test tests/skill-review.test.mjs
+```
+
+These tests use synthetic reviewer names and verdicts. They do not establish
+human acceptance of any real run. Live execution retains its existing pending
+exit behavior; `--review` is the separate acceptance step.
+
+### Report/review development evidence — 8 November 2026
+
+The observed baseline was the user's accepted #43 run: an agent had to extract
+responses/tools from JSON for human review. The new offline report command was
+exercised against that retained real run and a retained missing-installation run;
+they reported automated Pass and Blocked respectively without new inference or
+rewriting raw evidence. The earlier manual acceptance receipt was preserved and
+was not imported as a new command-recorded review.
+
+A fresh installed-skill run on macOS, Node 26.13.0, Codex CLI 0.166.0 and the
+configured `gpt-6-astra` model passed all three automated scenarios and generated
+the report automatically. The installed 0.1.9 plugin matched the same pinned
+revision before and after. This was a development checkout with harness file
+hashes retained privately, not a clean-commit or human acceptance claim.
+
+The agent checked every final response and command against the readable report,
+then exercised the documented review command using reviewer name
+“Codex agent rehearsal (not human acceptance)” and an explicit rehearsal comment.
+It recorded three Pass verdicts, exited 0 and displayed separate automated/human
+results. Offline report verification still succeeded after owned-fixture cleanup;
+raw results and all evidence remained retained. These verdicts test the recording
+workflow; they are not the user's acceptance of this increment.
+
+Focused offline checks cover changed/missing evidence, wrong fingerprints,
+modified reports, invalid/duplicate reviews, blocked/failing aggregation, null or
+empty required evidence, and interrupted-turn tool recovery from session receipts.
+The latter two cases were found in fresh review, corrected and regression-tested.
+All 171 offline tests passed, including 18 report/review cases; the installed
+package check also passed on Node 26.13.0. No new dependencies or live CI were added.
+
+A second fresh run exercised clean commit `1eb4cae` with the same environment
+and installed skill. All three automated scenarios passed in 52.7 seconds;
+live execution retained its pending-human status. The agent inspected the actual
+responses, tool activity, preservation and isolation receipts, then recorded an
+explicitly labeled agent rehearsal with three Pass verdicts (exit 0). Cleanup
+and offline report verification both exited 0, preserving the exact fingerprint
+and recorded verdicts. This does not establish desktop or human acceptance.
+
+A later offline regression caught an evidence file named `__proto__` being omitted
+from a plain JavaScript object's hash map. Null-prototype maps now include that
+filename; changing its contents is detected. The final narrow fix was verified
+by the offline suite rather than another live inference run.
