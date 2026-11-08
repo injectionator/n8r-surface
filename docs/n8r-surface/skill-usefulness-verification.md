@@ -112,14 +112,15 @@ no screenshot or desktop visual acceptance is claimed.
 
 ## Human acceptance and completion boundary
 
-**Agent rehearsal: Pass. Human acceptance: pending.** The test-reviewer correction
-was scripted input, not a PM decision about a deployment. There is no remaining
+**Agent rehearsal: Pass. User acceptance: accepted on 8 November 2026.** The user accepted the skill verification and authorized PRs #54 and #58 to be
+made ready to merge. The test-reviewer correction was scripted input, not a PM
+decision about a deployment or a separately observed human rerun. There is no remaining
 skill-code blocker identified by this bounded check. Broader research coverage,
 runtime use, CLI integration and Labs compatibility have not been established.
 No further presentation polish or additional product trials are required by this
 increment. Review and merge of PR #54 remain separate decisions.
 
-For the human check, use the two final `bound-002/brief.md` links supplied with
+The accepted evidence can be reviewed using the two final `bound-002/brief.md` links supplied with
 this run's handoff; no installation or new research is necessary:
 
 - [ ] Read each brief. It must explain Model Service B, the retained database
@@ -129,6 +130,6 @@ this run's handoff; no installation or new research is necessary:
 - [ ] Report **Pass / Fail / Blocked** for usefulness. For Fail, name the unclear
   or unsupported claim; for Blocked, name the inaccessible file or missing context.
 
-Accepting this evidence completes the human usefulness decision for this scope;
-it does not authorize merge, publication or deployment. Keep #52 WIP while its
+User acceptance completes the usefulness decision for this scope. Readiness
+authorization does not authorize merge, publication or deployment. Keep #52 WIP while its
 implementing PRs await review/merge, following the repository's issue policy.
