@@ -369,3 +369,11 @@ and independently compares published bytes. Follow the
 [first-release procedure](docs/n8r-surface/npm-release.md), including account
 prerequisites, human checks and partial-stage recovery. Keep merge, acceptance
 and actual registry/provenance verification distinct from local checks.
+
+## Opt-in installed-skill acceptance
+
+The [workspace Gherkin runner](docs/n8r-surface/skill-workspace-automation.md)
+executes create, repeat and fresh-session reopen through an identified installed
+Researcher. Live inference is opt-in, separate from `npm test`, and never runs in
+CI. Follow its prerequisites, private evidence rules and owned-fixture cleanup.
+Automated checks and pending human experience criteria are reported separately.
