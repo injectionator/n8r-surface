@@ -1,6 +1,8 @@
 // Copied into a temporary consumer directory; no checkout-relative imports.
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync, mkdtempSync, rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 const packageName = process.env.N8R_TEST_PACKAGE || 'n8r-surface';
 const {readResearchHtml, decode, encode, verifyReferences, verifySuccessor} = await import(packageName);
 const asset = name => readFileSync(new URL(import.meta.resolve(`${packageName}/examples/${name}`)), 'utf8');
@@ -38,6 +40,23 @@ assert.equal(manifest.bin['n8r-surface'], './dist/cli.js');
 console.log(`Verified installed identity: ${manifest.name}@${manifest.version}`);
 const {researcherInstructions} = await import(new URL('dist/codex.js', installedRoot));
 const instructions = researcherInstructions();
-assert.equal(instructions.version, '0.1.8');
-assert.equal(instructions.digest, 'sha256:8af29c3073df9b8210a7dd94ced9700379b0a98f76bd3a2902f9430b93c98a2a');
-console.log('Installed Researcher instructions and all references match the reviewed 0.1.8 digest.');
+assert.equal(instructions.version, '0.1.9');
+assert.equal(instructions.digest, 'sha256:5b18eff553bd4b703f15b88ff8759ab53593d266e48fe01767602696ef8ca370');
+console.log('Installed Researcher instructions and all references match the reviewed 0.1.9 digest.');
+
+// The installed skill's shared helper must work without a developer checkout.
+const workspaceHelper = await import(new URL('plugins/n8r-surface/skills/research/scripts/workspace.mjs', installedRoot));
+const workspaceFixture = mkdtempSync(join(tmpdir(), 'n8r-installed-workspace-'));
+try {
+  const created = workspaceHelper.setupWorkspace(workspaceFixture);
+  assert.equal(created.status, 'created');
+  const bytes = readFileSync(join(workspaceFixture, '.n8r/workspace.json'));
+  assert.equal(workspaceHelper.inspectWorkspace(workspaceFixture).record.id, created.record.id);
+  assert.equal(workspaceHelper.setupWorkspace(workspaceFixture).status, 'recognized');
+  assert.deepEqual(readFileSync(join(workspaceFixture, '.n8r/workspace.json')), bytes);
+} finally { rmSync(workspaceFixture, {recursive: true, force: true}); }
+const portablePlugin = JSON.parse(readFileSync(new URL('plugins/n8r-surface/plugin.json', installedRoot)));
+const codexPlugin = JSON.parse(readFileSync(new URL('plugins/n8r-surface/.codex-plugin/plugin.json', installedRoot)));
+assert.equal(portablePlugin.version, instructions.version);
+assert.equal(codexPlugin.version, instructions.version);
+console.log('Installed workspace helper create/reuse/readback passed; plugin versions agree.');

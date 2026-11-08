@@ -7,7 +7,12 @@ retain the same evidence and limitations. Do not impose a large empty template.
 
 ## Where notes live
 
-Use a user-selected destination first. When an applicable vault convention places
+Use a user-selected destination first. For work explicitly scoped to a recognized
+Surface workspace, keep new notes under `research/<source-slug>/` within that
+workspace, creating directories only on an authorized save. Do not redirect that
+work to a global vault or the default below. When continuing a supplied note,
+retain its folder unless the user asks to move it. Workspace setup itself creates
+no notes or content directories. When an applicable vault convention places
 Surface descriptions under `surfaces/<source-slug>/`, propose a numbered file
 such as `surface-draft-001.md` there. A save offer does not create directories or
 files; wait for acceptance. Without that convention, use the default below for
