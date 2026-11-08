@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "n8r-surface",
-  "version": "0.1.9",
+  "version": "0.1.11",
   "description": "Discover and reconcile AI-relevant components and connections using source evidence and permitted live settings. Experimental working notes; no deployment or compatibility claims.",
   "author": {"name": "AI Surface Model contributors", "url": "https://github.com/injectionator/n8r-surface"},
   "homepage": "https://github.com/injectionator/n8r-surface",
@@ -13,7 +13,7 @@
       "interface": {
         "displayName": "n8r-surface Researcher",
         "shortDescription": "Research AI system components",
-        "longDescription": "Build partial AI Surface graphs from supplied sources, prior descriptions and permitted live observations using the current host. Retain evidence, decisions and gaps in working notes. This experimental skill does not change deployments or produce validated n8r research/Surface artefacts. Access and saving depend on the host tools.",
+        "longDescription": "Build partial AI Surface graphs from supplied sources, prior descriptions and permitted live observations using the current host. Retain evidence, decisions and gaps in working notes. This experimental skill can save checked Capability and Bound artifacts using bundled resources; it does not change deployments. Access and saving depend on the host tools.",
         "developerName": "AI Surface Model contributors",
         "category": "Developer Tools",
         "capabilities": [],

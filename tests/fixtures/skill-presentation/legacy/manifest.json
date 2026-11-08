@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "files": {
+    "research.html": "sha256:a4d7dd7f9b27261855fb40d3bdf91ffa5f2d1d21996f54515114b6a167b20dff",
+    "surface.json": "sha256:4569e4f0e1df70c1dc488711ceeedcbd32044e38c9704c99aec0fbfabe20a53e",
+    "dependencies.json": "sha256:a3590436c8f883dfd6caa3de327788897a93a1a4fb2b17774e2d89db915d4f01",
+    "brief.md": "sha256:6b3efdb05e895cffeb97915738f1d6fa757a722a3715d1b353deccd7e7a299fd"
+  },
+  "predecessor": null
+}

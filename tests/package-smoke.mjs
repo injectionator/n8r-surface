@@ -59,9 +59,13 @@ assert.equal(manifest.bin['n8r-surface'], './dist/cli.js');
 console.log(`Verified installed identity: ${manifest.name}@${manifest.version}`);
 const {researcherInstructions} = await import(new URL('dist/codex.js', installedRoot));
 const instructions = researcherInstructions();
-assert.equal(instructions.version, '0.1.9');
-assert.equal(instructions.digest, 'sha256:5b18eff553bd4b703f15b88ff8759ab53593d266e48fe01767602696ef8ca370');
-console.log('Installed Researcher instructions and all references match the reviewed 0.1.9 digest.');
+assert.equal(instructions.version, '0.1.11');
+assert.equal(instructions.digest, 'sha256:1e19fd9daf1d7c4ce7fbdcf3dfa1af9dbcdbf2a29896e023604c929b80ec706b');
+console.log('Installed Researcher instructions and all references match the reviewed 0.1.11 digest.');
+
+const artifactHelper = await import(new URL('plugins/n8r-surface/skills/research/scripts/artifacts.mjs', installedRoot));
+assert.equal(artifactHelper.checkBundle({research: graph('research-r1'), surface: graph('capability'), dependencies: []}).surface.kind, 'capability');
+console.log('Installed standalone artifact helper validates bundled Capability without CLI.');
 
 // The installed skill's shared helper must work without a developer checkout.
 const workspaceHelper = await import(new URL('plugins/n8r-surface/skills/research/scripts/workspace.mjs', installedRoot));

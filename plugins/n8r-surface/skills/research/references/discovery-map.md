@@ -106,8 +106,9 @@ that the historical baseline was wrong. Locate applicable override/effective
 evidence if that distinction matters. Do not dump unrelated settings into the diff.
 
 Save the comparison as research. A proposed successor must preserve the original,
-its evidence and unresolved claims. This skill does not emit validated experimental
-Surface JSON/HTML or modify deployments.
+its evidence and unresolved claims. For requested checked Capability/Bound JSON
+and research HTML, follow [standalone artifacts](artifacts.md). The skill does
+not modify deployments.
 
 ## Inspect live connections with the human
 

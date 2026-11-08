@@ -4,7 +4,7 @@ import {checkSize, fail, MAX_DEPTH} from './portable.js';
 import {validateArtefact} from './validate.js';
 export type Encoding = 'json' | 'yaml';
 function formatCheck(format: string): void { if (format !== 'json' && format !== 'yaml') fail('$format', 'unsupported encoding'); }
-export function decode(text: string, format: Encoding): Artefact {
+function decodeValue(text: string, format: Encoding): unknown {
   formatCheck(format); checkSize(text);
   if (format === 'json') {
     try { JSON.parse(text); } catch { fail('$', 'invalid JSON syntax'); }
@@ -22,7 +22,12 @@ export function decode(text: string, format: Encoding): Artefact {
     if (isScalar(node) && typeof node.value === 'number' && !/^-?(0|[1-9][0-9]*)$/.test(node.source ?? '')) fail('$', 'numbers require decimal integer notation');
   });
   const data: unknown = format === 'json' ? JSON.parse(text) : doc.toJS({maxAliasCount: 0});
-  const a = validateArtefact(data);
+  return data;
+}
+/** Strict JSON syntax for host envelopes; artifact validation is separate. */
+export function decodeJsonValue(text: string): unknown { return decodeValue(text, 'json'); }
+export function decode(text: string, format: Encoding): Artefact {
+  const a = validateArtefact(decodeValue(text, format));
   if ((a.contract === 'n8r.surface/0.2' || a.contract === 'n8r.surface/0.3') && format !== 'json') fail('$format', 'Surface descriptions require JSON');
   return a;
 }

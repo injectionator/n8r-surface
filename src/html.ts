@@ -1,7 +1,9 @@
 import type {ResearchRecord, Value} from './contracts.js';
-import {decode, encode} from './codec.js';
-import {checkSize, fail} from './portable.js';
-import {validateArtefact} from './validate.js';
+import {decode, encode, decodeJsonValue} from './codec.js';
+import {checkSize, fail, canonical} from './portable.js';
+import {validateArtefact, verifyReferences} from './validate.js';
+import {renderBundleHtml} from './skill-presentation.js';
+import type {Bundle} from './skill-artifacts.js';
 const escape = (text: string): string => text.replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]!));
 function display(value: Value): string {
   if (Array.isArray(value)) return value.length ? `<ol>${value.map(item => `<li>${display(item)}</li>`).join('')}</ol>` : '<p class="empty">No entries recorded.</p>';
@@ -39,6 +41,23 @@ export function readResearchHtml(html: string): ResearchRecord {
   if (blocks.length !== 1) fail('$html', 'requires exactly one research data block');
   const record = decode(blocks[0]![1]!, 'json');
   if (record.contract !== 'n8r.research/0.1') fail('$html', 'requires research record');
+  if (html.includes('<meta name="n8r-presentation" content="1">')) {
+    const contexts = [...html.matchAll(/<script type="application\/json" id="n8r-context">([\s\S]*?)<\/script>/g)];
+    if (contexts.length !== 1) fail('$html', 'requires exactly one presentation context');
+    const context = decodeJsonValue(contexts[0]![1]!) as Pick<Bundle, 'surface' | 'dependencies'>;
+    if (!context || Object.keys(context).sort().join(',') !== 'dependencies,surface' || !Array.isArray(context.dependencies)) fail('$html', 'invalid presentation context');
+    const surface = validateArtefact(context.surface);
+    if (surface.contract !== 'n8r.surface/0.3') fail('$html', 'requires Surface 0.3');
+    const dependencies = context.dependencies.map(validateArtefact);
+    const all = [record, surface, ...dependencies].filter((a,i,items)=>{
+      const first=items.findIndex(x=>x.id===a.id&&x.revision.id===a.revision.id);
+      if(canonical(items[first])!==canonical(a))fail('$html','ambiguous presentation revision');
+      return first===i;
+    });
+    for (const item of all) verifyReferences(item, all);
+    if (renderBundleHtml({research:record, surface, dependencies}) !== html) fail('$html', 'HTML/data conflict');
+    return record;
+  }
   if (renderResearchHtml(record) !== html) fail('$html', 'HTML/data conflict; preserve bytes and review the edit before regenerating');
   return record;
 }

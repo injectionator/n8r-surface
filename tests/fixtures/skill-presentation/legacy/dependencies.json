@@ -1,0 +1,627 @@
+[
+  {
+    "id": "urn:demo:relationship-capability",
+    "title": "Synthetic Capability Surface with integration details",
+    "scope": "Synthetic role/product identities only; runtime unverified.",
+    "revision": {
+      "id": "r1",
+      "parent": null,
+      "createdAt": "2026-11-08T00:00:00Z",
+      "author": "Synthetic author",
+      "reason": "Initial synthetic example"
+    },
+    "extensions": {},
+    "contract": "n8r.surface/0.3",
+    "kind": "capability",
+    "records": [
+      {
+        "id": "urn:demo:relationship-research",
+        "revision": "r1",
+        "digest": "sha256:615bc6f8f443b986f78a46414faf97822206bcfcc9781e8d7c03d2dcb83940a0"
+      }
+    ],
+    "vocabularies": [
+      {
+        "id": "urn:v:demo",
+        "version": "1"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "urn:node:app",
+        "label": "Assistant",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "component"
+        }
+      },
+      {
+        "id": "urn:node:mongodb",
+        "label": "MongoDB",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "component"
+        }
+      },
+      {
+        "id": "urn:node:oidc",
+        "label": "OIDC",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "component"
+        }
+      },
+      {
+        "id": "urn:node:saml",
+        "label": "SAML",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "component"
+        }
+      },
+      {
+        "id": "urn:node:inference",
+        "label": "Inference service",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "component"
+        }
+      }
+    ],
+    "exclusiveGroups": [
+      {
+        "id": "urn:group:authentication",
+        "members": [
+          "urn:cap:oidc",
+          "urn:cap:saml"
+        ]
+      }
+    ],
+    "coverage": [
+      "One synthetic product guide"
+    ],
+    "gaps": [
+      "Inference support unknown"
+    ],
+    "relationships": [
+      {
+        "id": "urn:cap:database",
+        "from": "urn:node:app",
+        "to": "urn:node:mongodb",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "persists-data"
+        },
+        "state": "possible",
+        "basis": [
+          {
+            "record": "urn:demo:relationship-research",
+            "revision": "r1",
+            "items": [
+              "urn:f:database"
+            ]
+          }
+        ],
+        "conditions": [],
+        "note": "Supported possibility, not a selected composition",
+        "purpose": {
+          "state": "known",
+          "claims": [
+            {
+              "value": "Persist conversation history and user profiles.",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:database-purpose"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        },
+        "integration": {
+          "state": "known",
+          "claims": [
+            {
+              "value": "MongoDB client driver using the MongoDB wire protocol.",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:database-integration"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        },
+        "configuration": {
+          "state": "known",
+          "claims": [
+            {
+              "value": [
+                {
+                  "owner": "urn:node:app",
+                  "mechanism": "environment-variable",
+                  "key": "CHAT_STORE_URI",
+                  "location": "config/assistant.env.example"
+                }
+              ],
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:database-configuration"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        }
+      },
+      {
+        "id": "urn:cap:oidc",
+        "from": "urn:node:app",
+        "to": "urn:node:oidc",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "authenticates-via"
+        },
+        "state": "possible",
+        "basis": [
+          {
+            "record": "urn:demo:relationship-research",
+            "revision": "r1",
+            "items": [
+              "urn:f:oidc"
+            ]
+          }
+        ],
+        "conditions": [
+          "OIDC and SAML are alternatives"
+        ],
+        "note": "Supported possibility, not a selected composition",
+        "purpose": {
+          "state": "known",
+          "claims": [
+            {
+              "value": "Authenticate users through an identity service.",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:oidc-purpose"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        },
+        "integration": {
+          "state": "known",
+          "claims": [
+            {
+              "value": "OpenID Connect",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:oidc-integration"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        },
+        "configuration": {
+          "state": "unknown",
+          "claims": [],
+          "note": "Not researched; no absence assertion."
+        }
+      },
+      {
+        "id": "urn:cap:saml",
+        "from": "urn:node:app",
+        "to": "urn:node:saml",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "authenticates-via"
+        },
+        "state": "possible",
+        "basis": [
+          {
+            "record": "urn:demo:relationship-research",
+            "revision": "r1",
+            "items": [
+              "urn:f:saml"
+            ]
+          }
+        ],
+        "conditions": [
+          "OIDC and SAML are alternatives"
+        ],
+        "note": "Supported possibility, not a selected composition",
+        "purpose": {
+          "state": "known",
+          "claims": [
+            {
+              "value": "Authenticate users through an identity service.",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:saml-purpose"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        },
+        "integration": {
+          "state": "known",
+          "claims": [
+            {
+              "value": "SAML 2.0",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:saml-integration"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        },
+        "configuration": {
+          "state": "unknown",
+          "claims": [],
+          "note": "Not researched; no absence assertion."
+        }
+      },
+      {
+        "id": "urn:cap:inference",
+        "from": "urn:node:app",
+        "to": "urn:node:inference",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "uses"
+        },
+        "state": "unknown",
+        "basis": [],
+        "conditions": [],
+        "note": "Unknown support",
+        "purpose": {
+          "state": "unknown",
+          "claims": [],
+          "note": "Not researched; no absence assertion."
+        },
+        "integration": {
+          "state": "unknown",
+          "claims": [],
+          "note": "Not researched; no absence assertion."
+        },
+        "configuration": {
+          "state": "unknown",
+          "claims": [],
+          "note": "Not researched; no absence assertion."
+        }
+      }
+    ]
+  },
+  {
+    "id": "urn:demo:relationship-research",
+    "title": "Synthetic relationship evidence",
+    "scope": "Synthetic role/product identities only; runtime unverified.",
+    "revision": {
+      "id": "r1",
+      "parent": null,
+      "createdAt": "2026-11-08T00:00:00Z",
+      "author": "Synthetic author",
+      "reason": "Initial shared-relationship fixture"
+    },
+    "extensions": {},
+    "contract": "n8r.research/0.1",
+    "sources": [
+      {
+        "id": "urn:source:summary",
+        "location": "sources.md",
+        "version": "synthetic-relationships-1",
+        "digest": "sha256:cb9498a53d65fb16c16b7ac297b84b2d14a825297012bec9ac07df083e3c5647",
+        "inspectedAt": "2026-11-08T00:00:00Z",
+        "coverage": [
+          {
+            "path": "sources.md",
+            "status": "inspected",
+            "note": "Sanitized synthetic source pack, not raw configuration."
+          }
+        ]
+      },
+      {
+        "id": "urn:source:config",
+        "location": "config/assistant.env.example",
+        "version": "synthetic-1",
+        "digest": "sha256:d575d918e3e60fa1bf4490f7d6ceddafdcf0dba56b41b0e566a3adc8d88fe256",
+        "inspectedAt": "2026-11-08T00:00:00Z",
+        "coverage": [
+          {
+            "path": "config/assistant.env.example",
+            "status": "inspected",
+            "note": "Synthetic setting-name documentation only."
+          }
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "id": "urn:f:database",
+        "subject": "urn:node:app",
+        "property": "supports",
+        "state": "known",
+        "note": "Synthetic source assertion; not runtime evidence.",
+        "claims": [
+          {
+            "value": "urn:node:mongodb",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Product guide"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "urn:f:oidc",
+        "subject": "urn:node:app",
+        "property": "supports",
+        "state": "known",
+        "note": "Synthetic source assertion; not runtime evidence.",
+        "claims": [
+          {
+            "value": "urn:node:oidc",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Product guide"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "urn:f:saml",
+        "subject": "urn:node:app",
+        "property": "supports",
+        "state": "known",
+        "note": "Synthetic source assertion; not runtime evidence.",
+        "claims": [
+          {
+            "value": "urn:node:saml",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Product guide"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "urn:f:database-bound",
+        "subject": "urn:instance:demo",
+        "property": "urn:cap:database",
+        "state": "known",
+        "note": "Synthetic source assertion; not runtime evidence.",
+        "claims": [
+          {
+            "value": "urn:target:atlas",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Sanitized instance configuration summary, revision 1"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "urn:f:identity",
+        "subject": "urn:instance:demo",
+        "property": "urn:cap:oidc",
+        "state": "conflicting",
+        "note": "Synthetic source assertion; not runtime evidence.",
+        "claims": [
+          {
+            "value": "urn:target:oidc",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Sanitized instance configuration summary, revision 1"
+              }
+            ]
+          },
+          {
+            "value": "urn:target:saml",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Sanitized instance configuration summary, revision 1"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "urn:f:database-purpose",
+        "subject": "urn:cap:database",
+        "property": "purpose",
+        "state": "known",
+        "note": "Synthetic source statement; no actual settings.",
+        "claims": [
+          {
+            "value": "Persist conversation history and user profiles.",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Database integration"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "urn:f:database-integration",
+        "subject": "urn:cap:database",
+        "property": "integration",
+        "state": "known",
+        "note": "Synthetic source statement; no actual settings.",
+        "claims": [
+          {
+            "value": "MongoDB client driver using the MongoDB wire protocol.",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Database integration"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "urn:f:database-configuration",
+        "subject": "urn:cap:database",
+        "property": "configuration",
+        "state": "known",
+        "note": "Synthetic source statement; no actual settings.",
+        "claims": [
+          {
+            "value": [
+              {
+                "owner": "urn:node:app",
+                "mechanism": "environment-variable",
+                "key": "CHAT_STORE_URI",
+                "location": "config/assistant.env.example"
+              }
+            ],
+            "evidence": [
+              {
+                "source": "urn:source:config",
+                "locator": "CHAT_STORE_URI comment"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "urn:f:oidc-purpose",
+        "subject": "urn:cap:oidc",
+        "property": "purpose",
+        "state": "known",
+        "note": "Synthetic source statement; no actual settings.",
+        "claims": [
+          {
+            "value": "Authenticate users through an identity service.",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Authentication integration"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "urn:f:oidc-integration",
+        "subject": "urn:cap:oidc",
+        "property": "integration",
+        "state": "known",
+        "note": "Synthetic source statement; no actual settings.",
+        "claims": [
+          {
+            "value": "OpenID Connect",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Authentication integration"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "urn:f:saml-purpose",
+        "subject": "urn:cap:saml",
+        "property": "purpose",
+        "state": "known",
+        "note": "Synthetic source statement; no actual settings.",
+        "claims": [
+          {
+            "value": "Authenticate users through an identity service.",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Authentication integration"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "urn:f:saml-integration",
+        "subject": "urn:cap:saml",
+        "property": "integration",
+        "state": "known",
+        "note": "Synthetic source statement; no actual settings.",
+        "claims": [
+          {
+            "value": "SAML 2.0",
+            "evidence": [
+              {
+                "source": "urn:source:summary",
+                "locator": "Authentication integration"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "alternatives": [
+      {
+        "id": "urn:option:oidc",
+        "title": "Prefer OIDC",
+        "findings": [
+          "urn:f:identity"
+        ],
+        "requirements": []
+      }
+    ],
+    "decisions": [
+      {
+        "id": "urn:decision:oidc",
+        "alternative": "urn:option:oidc",
+        "choice": "selected",
+        "reason": "Synthetic human preference; conflict unresolved.",
+        "by": "Synthetic reviewer",
+        "at": "2026-11-08T00:00:00Z"
+      }
+    ],
+    "questions": [],
+    "notes": []
+  }
+]

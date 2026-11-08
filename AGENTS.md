@@ -389,3 +389,13 @@ and independently compares published bytes. Follow the
 [first-release procedure](docs/n8r-surface/npm-release.md), including account
 prerequisites, human checks and partial-stage recovery. Keep merge, acceptance
 and actual registry/provenance verification distinct from local checks.
+
+## Standalone skill artifact helper
+
+Candidate skill 0.1.11 bundles the checked Capability/Bound artifact helper.
+Run `npm run build:skill` after helper/library changes; `npm run check:skill`
+checks exact bundle bytes and is included in `npm test`. The focused check is
+`node --test tests/skill-artifacts.test.mjs` after `npm run build`.
+It needs Node.js 22/24/26 and no network after dependency installation.
+See [scope, privacy limits and installed human check](docs/n8r-surface/skill-surface-artifacts.md).
+The helper has no CLI or runtime package-install dependency.
