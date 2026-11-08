@@ -392,7 +392,7 @@ and actual registry/provenance verification distinct from local checks.
 
 ## Standalone skill artifact helper
 
-Candidate skill 0.1.10 bundles the checked Capability/Bound artifact helper.
+Candidate skill 0.1.11 bundles the checked Capability/Bound artifact helper.
 Run `npm run build:skill` after helper/library changes; `npm run check:skill`
 checks exact bundle bytes and is included in `npm test`. The focused check is
 `node --test tests/skill-artifacts.test.mjs` after `npm run build`.

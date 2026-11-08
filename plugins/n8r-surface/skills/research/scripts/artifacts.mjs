@@ -7935,29 +7935,146 @@ function encode(value2, format) {
   return text2;
 }
 
+// src/skill-presentation.ts
+var escape = (s) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+var markdown = (s) => s.replace(/[\r\n]+/g, " ").replace(/[\\`*_{}\[\]<>#!|]/g, "\\$&");
+var embedded = (value2) => JSON.stringify(value2, null, 2).replace(/[<>&\u2028\u2029]/g, (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`);
+function reportSections(b) {
+  const { research: r, surface: s } = b;
+  const records = [r, ...b.dependencies.filter((a) => a.contract === "n8r.research/0.1")];
+  const name = (id2) => s.nodes.find((n) => n.id === id2)?.label.replace(/ \(role endpoint\)$/, "") ?? (s.kind === "bound" && s.instance.id === id2 ? s.instance.label : id2);
+  const value2 = (v) => typeof v === "string" ? name(v) : Array.isArray(v) ? v.map(value2).join("; ") : v && typeof v === "object" ? Object.entries(v).map(([k, x]) => `${k}: ${value2(x)}`).join("; ") : String(v);
+  const citations = (basis2) => basis2.flatMap((ref2) => {
+    const record = records.find((x) => x.id === ref2.record && x.revision.id === ref2.revision);
+    return (record?.findings.filter((f) => ref2.items.includes(f.id)) ?? []).flatMap((f) => f.claims.flatMap((c) => c.evidence.map((e) => {
+      const source = record.sources.find((x) => x.id === e.source);
+      return `${e.locator.startsWith(source?.location ?? "\0") ? e.locator : `${source?.location ?? e.source} \u2014 ${e.locator}`} (source revision ${source?.version ?? "unspecified"}; research ${record.revision.id})`;
+    })));
+  });
+  const previous = r.revision.parent && records.find((x) => x.id === r.revision.parent.id && x.revision.id === r.revision.parent.revision && digest(x) === r.revision.parent.digest);
+  const summary = [], changes = [], impact = [], evidence2 = [], unknown = [...s.gaps];
+  for (const edge of s.relationships) {
+    const connection = `${name(edge.from)} \u2192 ${name(edge.to)}`;
+    const prefix = s.relationships.length > 1 ? `${connection}: ` : "";
+    if ("binding" in edge) {
+      const targets = edge.binding.claims.map((c) => name(c.target)).join(" / ");
+      summary.push(edge.binding.state === "configured" ? `${name(edge.from)} is configured to use ${targets}.` : edge.binding.state === "conflicting" ? `${connection}: the configured target is disputed (${targets}). No single target is established.` : `${connection}: target ${edge.binding.state}. ${edge.binding.note}`);
+      const prior = previous && previous.findings.find((f) => s.kind === "bound" && f.subject === s.instance.id && f.property === edge.id);
+      if (prior && prior.state === "known" && edge.binding.state === "configured") {
+        const old = prior.claims.map((c) => value2(c.value)).join(" / ");
+        const same = canonical(prior.claims.map((c) => c.value).sort()) === canonical(edge.binding.claims.map((c) => c.target).sort());
+        const oldDisplay = old === targets && !same ? prior.claims.map((c) => `${value2(c.value)} (${String(c.value)})`).join(" / ") : old;
+        const newDisplay = old === targets && !same ? edge.binding.claims.map((c) => `${name(c.target)} (${c.target})`).join(" / ") : targets;
+        changes.push(same ? `${prefix}The recorded target remains ${targets}.` : `${prefix}${oldDisplay} was the previously recorded target; ${newDisplay} is the configured target in this revision.`);
+      }
+      evidence2.push(...citations(edge.binding.claims.flatMap((c) => c.basis)).map((c) => `${prefix}Target selection: ${c}.`));
+      if (edge.binding.state !== "configured") unknown.push(`${connection}: binding ${edge.binding.state}. ${edge.binding.note}`);
+      if (edge.binding.state === "configured") impact.push(`${prefix}${targets} is the target to consider when reviewing this configured connection. Configuration alone does not establish reachability or actual use.`);
+    } else {
+      summary.push(edge.state === "possible" ? `${name(edge.from)} can connect to ${name(edge.to)}, according to the documented capability. No instance target is established.` : `${connection}: capability ${edge.state}. ${edge.note}`);
+      impact.push(`${connection}: this describes a product possibility, not an instance selection or an exercised connection.`);
+    }
+    if (edge.conditions.length) summary.push(`${connection} \u2014 Conditions: ${edge.conditions.join("; ")}`);
+    for (const [label, detail] of [["Purpose", edge.purpose], ["Integration", edge.integration]]) {
+      if (detail.claims.length) impact.push(`${prefix}${label}${detail.state === "known" ? "" : ` (${detail.state})`}: ${detail.claims.map((c) => c.value).join(" / ")}`);
+      if (detail.state !== "known") unknown.push(`${connection}: ${label.toLowerCase()} ${detail.state}. ${detail.note}`);
+      evidence2.push(...citations(detail.claims.flatMap((c) => c.basis)).map((c) => `${prefix}${label}: ${c}.`));
+    }
+    evidence2.push(...citations(edge.basis).map((c) => `${prefix}Documented support: ${c}.`));
+    evidence2.push(...citations(edge.configuration.claims.flatMap((c) => c.basis)).map((c) => `${prefix}Configuration: ${c}.`));
+    if (edge.configuration.state !== "known") unknown.push(`${connection}: configuration ${edge.configuration.state}. ${edge.configuration.note}`);
+  }
+  if (s.kind === "capability") for (const group of s.exclusiveGroups) summary.push(`Mutually exclusive alternatives: ${group.members.map((id2) => {
+    const edge = s.relationships.find((e) => e.id === id2);
+    return edge ? `${name(edge.from)} \u2192 ${name(edge.to)}` : id2;
+  }).join(" / ")}. These are not jointly available selections.`);
+  if (!changes.length) changes.push(r.revision.parent ? "A successor is recorded. An exact previous target comparison is unavailable in this bundle." : "This is the first saved description; no earlier revision is being compared.");
+  changes.push(`Reason recorded for this revision: ${r.revision.reason}.`);
+  const decisions = r.decisions.map((d) => `${r.alternatives.find((a) => a.id === d.alternative)?.title ?? d.alternative} \u2014 ${d.choice}. ${d.reason} Recorded by ${d.by} on ${d.at}.${previous?.decisions.some((x) => canonical(x) === canonical(d)) ? " Unchanged from the previous research revision." : ""}`);
+  return [
+    { title: "Current picture", paragraphs: summary.length ? summary : ["No connections have been described yet. This does not establish their absence."] },
+    { title: "What changed", paragraphs: changes },
+    { title: "Why it matters", paragraphs: impact.length ? impact : ["The recorded scope bounds what can be concluded. No operational impact has been established."] },
+    { title: "Evidence", paragraphs: [...new Set(evidence2)].length ? [...new Set(evidence2)] : ["No connection evidence is recorded. Missing evidence does not establish absence."] },
+    { title: "Decisions", paragraphs: decisions.length ? decisions : ["No human decisions are recorded."] },
+    { title: "What remains unknown", paragraphs: [...new Set(unknown)].length ? [...new Set(unknown)] : ["No additional gaps are listed. This is not a completeness or runtime assurance claim."] },
+    { title: "Questions to carry forward", paragraphs: r.questions.length ? r.questions.map((q) => q.text) : ["No next investigation is recorded. Review the evidence and scope before extending the research."] }
+  ];
+}
+function renderBrief(b) {
+  const sections = reportSections(b);
+  return `# ${markdown(b.surface.title)}
+
+${sections[0].paragraphs.map(markdown).join("\n\n")}
+
+` + sections.slice(1).map((s) => `## ${s.title}
+
+${s.paragraphs.map(markdown).join("\n\n")}
+`).join("\n") + `
+## Scope
+
+${markdown(b.surface.scope)}
+
+## Read further
+
+[Research and evidence](research.html) \xB7 [Checked Surface data](surface.json)
+`;
+}
+function renderBundleHtml(b) {
+  const sections = reportSections(b), lead = sections[0];
+  const section = (s, i) => `<section id="section-${i}"><h2>${s.title}</h2>${s.paragraphs.map((p) => `<p>${escape(p)}</p>`).join("")}</section>`;
+  const records = [b.research, ...b.dependencies.filter((a) => a.contract === "n8r.research/0.1")];
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="n8r-presentation" content="1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>${escape(b.surface.title)}</title>
+<style>
+:root{color-scheme:light;--ink:#172d46;--muted:#465c72;--blue:#2058a5;--wash:#edf4fc;--line:#c8d6e6;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.65 'Avenir Next',Avenir,'Segoe UI',sans-serif}main{max-width:1120px;margin:auto;padding:48px 40px 72px}header{max-width:880px;margin-bottom:40px}h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.13;letter-spacing:-.035em;margin:16px 0 24px}h2{font-size:1.5rem;line-height:1.3;margin:0 0 20px}h3{font-size:1.1rem}p{max-width:72ch;margin:0 0 18px;overflow-wrap:anywhere}.meta,.scope,footer{color:var(--muted);font-size:.9rem}.lead{background:var(--wash);border-left:5px solid var(--blue);padding:24px 28px;margin:28px 0}.lead p{font-size:1.25rem;line-height:1.5}.lead p:last-child{margin-bottom:0}.layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:48px}nav{align-self:start;position:sticky;top:24px;font-size:.9rem}nav a{display:block;padding:7px 0}a{color:var(--blue);text-underline-offset:4px}a:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:4px}section{padding:0 0 28px;margin-bottom:32px;border-bottom:1px solid var(--line)}details{padding:20px 0;border-top:1px solid var(--line)}summary{cursor:pointer;font-weight:600}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.5 ui-monospace,monospace;background:#f3f6fa;padding:20px;max-height:36rem;overflow:auto}.source{margin:24px 0}footer{margin-top:40px} @media(max-width:720px){main{padding:28px 20px}.layout{display:block}nav{position:static;margin-bottom:32px;display:flex;flex-wrap:wrap;gap:4px 18px}.lead{padding:20px}h1{letter-spacing:-.02em}}@media print{main{padding:0}nav{display:none}.layout{display:block}details{break-inside:avoid}a{color:inherit}}
+</style>
+</head><body><main>
+<header><p class="meta">${b.surface.kind === "bound" ? "Configured system" : "Product capability"} \xB7 Revision ${escape(b.surface.revision.id)}</p><h1>${escape(b.surface.title)}</h1><div class="lead">${lead.paragraphs.map((p) => `<p>${escape(p)}</p>`).join("")}</div><p class="scope">${escape(b.surface.scope)}</p></header>
+<div class="layout"><nav aria-label="Report sections">${sections.slice(1).map((s, i) => `<a href="#section-${i + 1}">${s.title}</a>`).join("")}<a href="#sources">Source coverage</a></nav><article>
+${sections.slice(1).map((s, i) => section(s, i + 1)).join("\n")}
+<section id="sources"><h2>Source coverage</h2>${records.map((r) => `<details><summary>${escape(r.title)} \u2014 ${escape(r.revision.id)}${r.id === b.research.id && r.revision.id === b.research.revision.id ? " (current)" : " (pinned evidence)"}</summary>${r.sources.map((s) => `<div class="source"><h3>${escape(s.location)}</h3><p>Source revision ${escape(s.version)}. Inspected ${escape(s.inspectedAt)}.</p>${s.coverage.map((c) => `<p>${escape(c.path)} \u2014 ${escape(c.status)}. ${escape(c.note)}</p>`).join("")}</div>`).join("") || "<p>No sources recorded.</p>"}</details>`).join("")}</section>
+<details><summary>Technical record and exact evidence</summary><p>The complete checked data is retained below. IDs and hashes identify evidence; they do not establish runtime behavior.</p><pre>${escape(JSON.stringify(b, null, 2))}</pre></details>
+<footer><p><a href="brief.md">Read the brief</a> \xB7 <a href="surface.json">Surface JSON</a> \xB7 <a href="dependencies.json">Pinned evidence JSON</a></p><p>Presentation 1. Visible edits require review; they are never silently incorporated into the checked data.</p></footer>
+</article></div>
+<script type="application/json" id="n8r-record">${embedded(b.research)}</script>
+<script type="application/json" id="n8r-context">${embedded({ surface: b.surface, dependencies: b.dependencies })}</script>
+</main></body></html>
+`;
+  checkSize(html);
+  return html;
+}
+
 // src/html.ts
-var escape = (text2) => text2.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+var escape2 = (text2) => text2.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 function display(value2) {
   if (Array.isArray(value2)) return value2.length ? `<ol>${value2.map((item) => `<li>${display(item)}</li>`).join("")}</ol>` : '<p class="empty">No entries recorded.</p>';
-  if (value2 !== null && typeof value2 === "object") return `<dl>${Object.entries(value2).map(([key, item]) => `<dt>${escape(key)}</dt><dd>${display(item)}</dd>`).join("")}</dl>`;
-  return `<span>${escape(typeof value2 === "string" ? value2 : JSON.stringify(value2))}</span>`;
+  if (value2 !== null && typeof value2 === "object") return `<dl>${Object.entries(value2).map(([key, item]) => `<dt>${escape2(key)}</dt><dd>${display(item)}</dd>`).join("")}</dl>`;
+  return `<span>${escape2(typeof value2 === "string" ? value2 : JSON.stringify(value2))}</span>`;
 }
 function renderResearchHtml(input) {
   const record = validateArtefact(input);
   if (record.contract !== "n8r.research/0.1") fail("$", "HTML requires a research record");
   const data = encode(record, "json").trimEnd().replace(/[<>&\u2028\u2029]/g, (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`);
-  const sections = Object.entries(record).filter(([key]) => key !== "title").map(([key, value2]) => `<section><h2>${escape(key)}</h2>${display(value2)}</section>`).join("\n");
+  const sections = Object.entries(record).filter(([key]) => key !== "title").map(([key, value2]) => `<section><h2>${escape2(key)}</h2>${display(value2)}</section>`).join("\n");
   const html = `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
-<title>${escape(record.title)}</title>
+<title>${escape2(record.title)}</title>
 <style>body{font:17px/1.55 system-ui,sans-serif;max-width:72rem;margin:3rem auto;padding:0 1.5rem;color:#18252d;background:#faf9f5}h1{line-height:1.2}h2{font-size:1.2rem;border-bottom:1px solid #b8c8c9;padding-bottom:.3rem}section{margin:2rem 0}dt{font-weight:650;color:#234c54}dd{margin:0 0 .6rem 1.3rem}li{margin:.75rem 0}span{white-space:pre-wrap;overflow-wrap:anywhere}.empty{color:#56656c;font-style:italic}header p{max-width:55rem}</style>
 </head>
 <body>
-<header><p>Research record \xB7 experimental 0.1</p><h1>${escape(record.title)}</h1><p>Source research describes possibilities. It does not establish a running integration. The embedded data owns the facts; visible edits require review before continuation.</p></header>
+<header><p>Research record \xB7 experimental 0.1</p><h1>${escape2(record.title)}</h1><p>Source research describes possibilities. It does not establish a running integration. The embedded data owns the facts; visible edits require review before continuation.</p></header>
 ${sections}
 <script type="application/json" id="n8r-record">${data}</script>
 </body>
@@ -7972,6 +8089,23 @@ function readResearchHtml(html) {
   if (blocks.length !== 1) fail("$html", "requires exactly one research data block");
   const record = decode(blocks[0][1], "json");
   if (record.contract !== "n8r.research/0.1") fail("$html", "requires research record");
+  if (html.includes('<meta name="n8r-presentation" content="1">')) {
+    const contexts = [...html.matchAll(/<script type="application\/json" id="n8r-context">([\s\S]*?)<\/script>/g)];
+    if (contexts.length !== 1) fail("$html", "requires exactly one presentation context");
+    const context = decodeJsonValue(contexts[0][1]);
+    if (!context || Object.keys(context).sort().join(",") !== "dependencies,surface" || !Array.isArray(context.dependencies)) fail("$html", "invalid presentation context");
+    const surface2 = validateArtefact(context.surface);
+    if (surface2.contract !== "n8r.surface/0.3") fail("$html", "requires Surface 0.3");
+    const dependencies = context.dependencies.map(validateArtefact);
+    const all = [record, surface2, ...dependencies].filter((a, i, items) => {
+      const first = items.findIndex((x) => x.id === a.id && x.revision.id === a.revision.id);
+      if (canonical(items[first]) !== canonical(a)) fail("$html", "ambiguous presentation revision");
+      return first === i;
+    });
+    for (const item of all) verifyReferences(item, all);
+    if (renderBundleHtml({ research: record, surface: surface2, dependencies }) !== html) fail("$html", "HTML/data conflict");
+    return record;
+  }
   if (renderResearchHtml(record) !== html) fail("$html", "HTML/data conflict; preserve bytes and review the edit before regenerating");
   return record;
 }
@@ -8119,7 +8253,7 @@ function readBundle(directory) {
     directory = resolve(directory);
     directories(directory);
     const m = JSON.parse(read(join(directory, "manifest.json")));
-    if (m.version !== 1 || Object.keys(m.files ?? {}).sort().join(",") !== [...members].sort().join(",")) fail2("manifest");
+    if (![1, 2].includes(m.version) || Object.keys(m.files ?? {}).sort().join(",") !== [...members].sort().join(",")) fail2("manifest");
     if (fs.readdirSync(directory).sort().join(",") !== [...members, "manifest.json"].sort().join(",")) fail2("unexpected members");
     const data = Object.fromEntries(members.map((n) => {
       const text2 = read(join(directory, n));
@@ -8127,7 +8261,8 @@ function readBundle(directory) {
       return [n, text2];
     }));
     const b = checkBundle({ research: readResearchHtml(data["research.html"]), surface: decode(data["surface.json"], "json"), dependencies: decodeJsonValue(data["dependencies.json"]) });
-    if (data["brief.md"] !== brief(b)) fail2("brief conflict");
+    if (data["brief.md"] !== (m.version === 1 ? brief(b) : renderBrief(b))) fail2("brief conflict");
+    if (data["research.html"] !== (m.version === 1 ? renderResearchHtml(b.research) : renderBundleHtml(b))) fail2("presentation context conflict");
     return b;
   });
 }
@@ -8148,8 +8283,8 @@ function saveBundle(input, destination, predecessor) {
       for (const d of parent.research.decisions) if (!b.research.decisions.some((n) => canonical(n) === canonical(d))) fail2("lost human decision");
       for (const n of parent.surface.nodes) if (!b.surface.nodes.some((x) => x.id === n.id)) fail2("lost component identity");
     } else if (b.research.revision.parent || b.surface.revision.parent) fail2("predecessor required");
-    const data = { "research.html": renderResearchHtml(b.research), "surface.json": encode(b.surface, "json"), "dependencies.json": JSON.stringify(b.dependencies, null, 2) + "\n", "brief.md": brief(b) };
-    const manifest = JSON.stringify({ version: 1, files: Object.fromEntries(members.map((n) => [n, hash2(data[n])])), predecessor: previousBytes ? hash2(previousBytes) : null }, null, 2) + "\n";
+    const data = { "research.html": renderBundleHtml(b), "surface.json": encode(b.surface, "json"), "dependencies.json": JSON.stringify(b.dependencies, null, 2) + "\n", "brief.md": renderBrief(b) };
+    const manifest = JSON.stringify({ version: 2, files: Object.fromEntries(members.map((n) => [n, hash2(data[n])])), predecessor: previousBytes ? hash2(previousBytes) : null }, null, 2) + "\n";
     fs.mkdirSync(destination, { mode: 448 });
     try {
       for (const [name, bytes] of Object.entries({ ...data, "manifest.json": manifest })) fs.writeFileSync(join(destination, name), bytes, { flag: "wx", mode: 384 });

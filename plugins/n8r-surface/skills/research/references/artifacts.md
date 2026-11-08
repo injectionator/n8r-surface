@@ -124,3 +124,21 @@ The helper checks both successors, retained decisions/components, exact referenc
 evidence and predecessor bytes. Re-read old and new directories and compare prior
 hashes. Update questions/recommendations without erasing contradictory findings.
 No automatic synchronization, source mutation, CLI invocation or deployment.
+
+## Human-readable output
+
+Candidate 0.1.11 saves presentation 1 / manifest 2. HTML and brief lead with the
+current picture, then explain what changed, why the connection matters, evidence,
+decisions and unknowns. Exact parent research must be retained in dependencies
+for a previous-target comparison; otherwise the report explicitly limits it.
+Do not add that record without checking its exact parent digest. Raw IDs/hashes
+remain in technical details. Write source notes, gaps and questions for a human;
+the renderer cannot turn vague or procedural source text into new findings.
+
+Older manifest-1 bundles remain readable without rewriting them. To refresh a
+presentation on request, read the saved bundle, pass that exact bundle to `save`
+with its original predecessor directory (if any), and choose a new destination.
+This makes a presentation copy with the same research/Surface revisions and
+canonical digests; it is not a research successor. Compare original bytes and
+read back the copy. Never overwrite an old directory. Helpers before 0.1.11 do
+not read the new presentation.

@@ -6,7 +6,8 @@ import {createHash} from 'node:crypto';
 import {decode, encode, decodeJsonValue} from './codec.js';
 import {validateArtefact, verifyReferences} from './validate.js';
 import {digest as artifactDigest, canonical} from './portable.js';
-import {renderResearchHtml, readResearchHtml} from './html.js';
+import {readResearchHtml, renderResearchHtml} from './html.js';
+import {renderBrief, renderBundleHtml} from './skill-presentation.js';
 import {verifySuccessor} from './revisions.js';
 import type {Artefact, ResearchRecord, SurfaceGraph} from './contracts.js';
 export interface Bundle {research: ResearchRecord; surface: SurfaceGraph; dependencies: Artefact[]}
@@ -65,11 +66,12 @@ export function readBundle(directory:string):Bundle {
  return guarded('saved-byte verification',()=>{
   directory=resolve(directory);directories(directory);
   const m=JSON.parse(read(join(directory,'manifest.json')));
-  if(m.version!==1 || Object.keys(m.files??{}).sort().join(',')!==[...members].sort().join(','))fail('manifest');
+  if(![1,2].includes(m.version) || Object.keys(m.files??{}).sort().join(',')!==[...members].sort().join(','))fail('manifest');
   if(fs.readdirSync(directory).sort().join(',')!==[...members,'manifest.json'].sort().join(','))fail('unexpected members');
   const data=Object.fromEntries(members.map(n=>{const text=read(join(directory,n));if(hash(text)!==m.files[n])fail('changed bytes');return [n,text];}));
   const b=checkBundle({research:readResearchHtml(data['research.html']!),surface:decode(data['surface.json']!,'json'),dependencies:decodeJsonValue(data['dependencies.json']!)});
-  if(data['brief.md']!==brief(b))fail('brief conflict');
+  if(data['brief.md']!==(m.version===1?brief(b):renderBrief(b)))fail('brief conflict');
+  if(data['research.html']!==(m.version===1?renderResearchHtml(b.research):renderBundleHtml(b)))fail('presentation context conflict');
   return b;
  });
 }
@@ -87,8 +89,8 @@ export function saveBundle(input:unknown,destination:string,predecessor?:string)
    for(const d of parent.research.decisions)if(!b.research.decisions.some(n=>canonical(n)===canonical(d)))fail('lost human decision');
    for(const n of parent.surface.nodes)if(!b.surface.nodes.some(x=>x.id===n.id))fail('lost component identity');
   }else if(b.research.revision.parent||b.surface.revision.parent)fail('predecessor required');
-  const data={'research.html':renderResearchHtml(b.research),'surface.json':encode(b.surface,'json'),'dependencies.json':JSON.stringify(b.dependencies,null,2)+'\n','brief.md':brief(b)};
-  const manifest=JSON.stringify({version:1,files:Object.fromEntries(members.map(n=>[n,hash(data[n])])),predecessor:previousBytes?hash(previousBytes):null},null,2)+'\n';
+  const data={'research.html':renderBundleHtml(b),'surface.json':encode(b.surface,'json'),'dependencies.json':JSON.stringify(b.dependencies,null,2)+'\n','brief.md':renderBrief(b)};
+  const manifest=JSON.stringify({version:2,files:Object.fromEntries(members.map(n=>[n,hash(data[n])])),predecessor:previousBytes?hash(previousBytes):null},null,2)+'\n';
   // Parent must exist; exclusive mkdir never replaces an occupied destination.
   fs.mkdirSync(destination,{mode:0o700});
   try {

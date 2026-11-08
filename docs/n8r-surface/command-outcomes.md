@@ -581,3 +581,14 @@ submission failed with E403 and was removed from the release scope; no unscoped
 registry success or name protection is claimed. Future workflow adaptation
 must remove dual-package assumptions before another scoped release. Unscoped
 publication and name reservation are no longer planned.
+
+## SKILL-PRESENTATION-01: read a useful checked report
+
+**Implemented candidate 0.1.11.** Given a saved checked Capability/Bound bundle,
+ask the installed Researcher to save a readable presentation copy in a new folder,
+using the same bundle and original predecessor. Expect the current conclusion,
+what changed, bounded significance, cited evidence, decisions and unknowns in
+both HTML and brief. Exact-parent comparison is unavailable when parent research
+is not retained. All checked data and original bytes remain unchanged; the new
+manifest covers the new presentation. No new research or CLI behavior is added.
+See the [human task and readback](skill-surface-artifacts.md#short-human-check).

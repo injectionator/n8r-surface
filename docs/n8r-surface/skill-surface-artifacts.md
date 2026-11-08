@@ -1,7 +1,7 @@
 # Standalone installed-skill Surface artifacts
 
 Issue [#51](https://github.com/injectionator/n8r-surface/issues/51) adds a standalone
-artifact helper to candidate skill 0.1.10. The host researches sources and prepares
+artifact helper, now bundled in candidate skill 0.1.11. The host researches sources and prepares
 JSON; the bundled helper checks it, renders research HTML and a brief, and saves
 a new revision directory. It never invokes the `n8r-surface` CLI, reads source
 configuration, connects to a model or makes network requests.
@@ -19,7 +19,7 @@ evidence references and revision rules. The helper reuses that implementation;
 JSON decoding retains the existing strict codec. A development-only esbuild step
 bundles the helper and its YAML parser dependency into one offline Node module.
 The parser's licence is retained alongside it. There is no runtime dependency
-installation. Earlier library readers and the CLI persistence path are unchanged.
+installation. The library reader accepts both presentation generations; the CLI persistence output remains unchanged.
 
 `npm run build:skill` regenerates the retained bundle; `npm run check:skill`
 checks exact reproducibility and runs in `npm test`. The helper entrypoint is
@@ -108,7 +108,7 @@ unrelated-product journey and human acceptance remain #52.
 
 ## Human verification task list
 
-Maintainer preparation: identify the installed 0.1.10 candidate and file digests,
+Maintainer preparation: identify the installed 0.1.11 candidate and file digests,
 record Codex/model/Node versions, and supply an empty writable workspace containing
 `product.md` with this synthetic source. Use the
 [isolated installation procedure](workspace-installation.md) with the candidate's
@@ -152,3 +152,74 @@ user decision and must never delete borrowed sources.
 
 This bounded agent rehearsal is distinct from human acceptance. Issue #52 retains
 the broader two-product journey, human corrections, usefulness and host acceptance.
+
+## Human-readable presentation (candidate 0.1.11)
+
+The 0.1.10 rehearsal exposed a usefulness failure: HTML listed contract fields,
+and the brief directed readers elsewhere for evidence. Candidate 0.1.11 renders
+a shared narrative in both formats: current picture, what changed, why it
+matters, evidence locators, human decisions and remaining unknowns. Impact is
+limited to the connection's documented purpose and configured selection; it does
+not invent business outcomes or runtime success. Conflicting claims remain visible.
+
+A previous target is compared only when the exact parent research record is in
+the bundle. Otherwise the report says that the comparison is unavailable. Full
+records, source coverage and hashes remain accessible in expandable HTML details.
+The report uses local styles, no scripts, remote fonts or network resources.
+
+Saved bundles now use manifest version 2 and HTML presentation 1. Research and
+Surface contracts and canonical digests do not change. The reader still accepts
+unchanged manifest-1 bundles and their original brief/HTML. Both presentations
+reject visible edits; updating a manifest hash alone cannot legitimize prose that
+disagrees with the embedded data. New HTML also checks its embedded Surface and
+dependency context against the accompanying files. Older 0.1.10 helpers cannot
+read the new presentation; install 0.1.11 before continuing it.
+
+### Short human check
+
+Prerequisite: the identified 0.1.11 candidate and an existing checked Bound
+successor and its predecessor, produced by the task list above. Keep the original
+files. In the same workspace, ask the Researcher:
+
+> Read bound-002 and its predecessor bound-001 using the bundled helper. Save the
+> same checked bundle with the new readable presentation in bound-002-readable.
+> Preserve all research and Surface data, decisions and original files. This is
+> a presentation copy, not another research revision. Show the HTML and brief.
+
+- [ ] Open the returned HTML. The configured target should be the first useful
+  statement. “What changed” should name the previous and current targets when
+  the exact parent research is retained.
+- [ ] Read “Why it matters” and “Evidence”. Expect the documented connection
+  purpose/integration, configuration-versus-runtime limit and source locators.
+  No new source findings or business/security assurances should appear.
+- [ ] Read decisions and unknowns, then expand technical details. The deferred
+  decision, unresolved questions and original checked data must remain available.
+- [ ] Open the brief. Expect the same substantive explanation without needing to
+  decode identifiers or open the JSON to discover the conclusion.
+- [ ] Report **Pass / Fail / Blocked**, the two output links and any unclear
+  wording. Visual usefulness requires human review, separate from data checks.
+
+Maintainer evidence: helper save/read must exit 0; compare canonical research,
+Surface and dependency data and byte hashes of all original files. Only HTML,
+brief and their new manifest may differ in the presentation copy. Retain the
+copy for review; no cleanup or registry publication is part of this task.
+
+### Presentation evidence and limits
+
+The copied standalone 0.1.11 helper re-rendered the previously generated Bound
+successor without new research. Save and independent read exited 0. Research,
+Surface and dependency data compared equal; Surface/dependency JSON bytes were
+identical, and all 29 files present before the presentation copy were unchanged.
+The new brief identifies the old/current targets, source locators and retained
+deferral. Raw receipts remain private. This is helper rehearsal, not a fresh
+installed-skill conversation or human usefulness acceptance. Browser policy
+blocked the local-file preview, so no screenshot or visual acceptance is claimed.
+
+Six presentation regressions cover data preservation, legacy reopening, visible
+edits, manifest downgrade, equal-label target identities and conditional/exclusive
+Capabilities. Independent review found the latter three issues before fixes;
+regressions demonstrated each failure, then passed. The complete suite has 201
+checks. Package preparation exposed stale version/digest expectations; those were
+corrected. Concurrent cross-runtime tests collided on a shared temporary build
+file; sequential rerunning passed. Broad usefulness remains the two-product
+skill journey in #52, followed by CLI integration and separate Labs work.

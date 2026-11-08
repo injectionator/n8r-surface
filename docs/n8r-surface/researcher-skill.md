@@ -72,7 +72,7 @@ API connection. Work's picker and full lifecycle still need
    ```
 
    Expected: exit 0 and one installed/enabled `n8r-surface@n8r-surface`, version
-   `0.1.10`. The branch is a changing draft candidate, not a release on `main`.
+   `0.1.11`. The branch is a changing draft candidate, not a release on `main`.
    Use an identified commit with `--ref` for a repeatable installation. Network
    access is required; the commands change plugin configuration/cache.
 2. **Open your source.** Start a local chat with your LibreChat folder selected.
@@ -148,7 +148,7 @@ These are packaging contracts; host behavior still needs its own rehearsal.
   Both use the same skill files; no second instruction copy is maintained.
 - [The repository marketplace](../../.agents/plugins/marketplace.json) exposes
   `n8r-surface@n8r-surface` as available, without forcing installation.
-- Plugin and skill version `0.1.10` identify this experimental candidate. Increment
+- Plugin and skill version `0.1.11` identify this experimental candidate. Increment
   them when changing distributed instructions; record the Git revision and
   installed file digest with test results. This is separate from the npm version.
 
@@ -212,7 +212,7 @@ is not access in a cloud chat.
    > and gaps, and ask the next question that would help me choose a setup.
    > Save working research notes that I can reopen.
 
-   Expected: the skill identifies version `0.1.10`, reads the two actual documents,
+   Expected: the skill identifies version `0.1.11`, reads the two actual documents,
    cites evidence and saves a readable note outside the plugin cache. Independently
    open that note. Both conflicting batch maxima (10 and 25) and the unknown model
    version must survive; optional features must not become user selections. The
