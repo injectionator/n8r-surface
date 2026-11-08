@@ -42,7 +42,7 @@ subsequently replaced with explicit PM authorization, as recorded below. CLI/Lab
 | Create; missing/empty | `tests/workspace.test.mjs`: actual files, record readback and no scaffolds | Candidate empty and missing destination creation passed |
 | Repeat with note | Same suite: byte-preserving reuse and unknown fields | Candidate PM repeat passed; independent hashes unchanged |
 | Fresh reopen; moved identity | Same suite: separate process and moved folder inspection | Candidate fresh-chat reopen passed after destination clarification; move trial pending |
-| Adoption question and both choices | Same suite: no-write refusal, in-place and alternative destination | In-place adoption passed; alternative choice pending |
+| Adoption question and both choices | Same suite: no-write refusal, in-place and alternative destination | Both adoption choices passed |
 | Malformed/conflicting/unsupported | Same suite: complete before/after snapshots | Candidate PM pending |
 | Interrupted setup | Same suite: publication failure and no-overwrite guard | Technical evidence only |
 | Installed helper availability | Same suite: copied helper with no checkout dependencies; package smoke | Installed-skill invocation pending |
@@ -261,3 +261,22 @@ separates research/attachment. No repeated permission or technical rescue occurr
 Both turn receipts and the before-choice/after-choice inventories are retained
 privately. The alternative-choice fixtures remain untouched and inventoried for
 the next trial. Alternative adoption, refusal and move trials remain pending.
+
+## PM alternative-folder adoption — 8 November 2026
+
+**Outcome: Pass. Visible experience criteria met; no separate PM rating supplied.**
+The installed helper returned exit 3 for the second nonempty unrecognized fixture;
+the assistant asked for a destination choice (18.840-second turn). Before the PM
+answered, independent comparison confirmed the original note/folder unchanged and
+the alternative destination still empty.
+
+The PM chose the alternative path. The installed `0.1.9` helper ran ordinary
+`setup` there without `--adopt`, exited 0, and completed in 10.476 seconds.
+Independent readback verified the reported UUID v4, supported format,
+folder-derived name and retained purpose. Only identity metadata was created in
+the alternative; the original folder and note remain exactly unchanged. The
+response identifies the chosen destination and keeps research/attachment separate.
+Both receipts, choice-boundary inventory and final readback are retained privately.
+All three refusal fixtures were rechecked against their initial inventories and
+remain unchanged for independent product trials. Refusals and moved-folder
+recognition remain pending; no merge, release or cleanup.
