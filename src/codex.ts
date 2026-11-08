@@ -307,7 +307,7 @@ export class ResearchConversation {
   acceptSurface(draft: SurfaceDraft) { this.previousSurface=draft; this.surfaceDraft=undefined; }
   async reopenSurface(pair: SavedSurfacePair) {
     this.previousSurface='dependencies' in pair ? {research:pair.research,surface:pair.surface,dependencies:pair.dependencies} : {research:pair.research,surface:pair.surface};
-    const records=[pair.research,...('dependencies' in pair?pair.dependencies.filter(a=>a.contract==='n8r.research/0.1'):[])];
+    const records='dependencies' in pair?[pair.research,...pair.dependencies.filter(a=>a.contract==='n8r.research/0.1')]:[];
     const evidence=[...(pair.manifest.provenance?.evidence ?? [])];
     for(const record of records) if(record.contract==='n8r.research/0.1') for(const source of record.sources) {
       if(!evidence.some(e=>e.path===source.location && e.digest===source.digest))
