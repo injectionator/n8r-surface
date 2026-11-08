@@ -167,3 +167,18 @@ setup-only scope. The private evidence inventory retains the full tool receipt,
 before/after hashes and PM judgment. A read-only snapshot has been retained for
 the next fresh-chat reopen trial. Reopen, move, missing destination, adoption and
 refusal product trials remain pending; the issue and PR remain open/draft.
+
+## Additional same-chat readiness check — 8 November 2026
+
+The user supplied a readiness response matching the saved identity and purpose.
+Its actual tool receipt belongs to the original setup chat, so this does **not**
+exercise fresh-chat reopen. Retain it as a successful read-only readiness check;
+the fresh-session scenario remains pending, not a product failure.
+
+One turn completed in 12.477 seconds. The installed `0.1.9` helper ran `inspect`
+against the selected workspace and exited 0. Independent full inventory/hash
+comparison found no changes to metadata or the synthetic note. The response
+identified readiness, accurately separated attachment and offered a next action
+without research. Visible experience criteria were met; no separate PM satisfaction
+rating was supplied for this turn. The private receipt and verdict retain the
+same-chat limitation explicitly. No repair or fixture reset was performed.
