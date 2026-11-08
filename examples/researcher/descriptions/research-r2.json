@@ -1,0 +1,157 @@
+{
+  "id": "urn:demo:research",
+  "title": "Synthetic capability and binding evidence",
+  "scope": "Synthetic role/product identities only; runtime unverified.",
+  "revision": {
+    "id": "r2",
+    "parent": {
+      "id": "urn:demo:research",
+      "revision": "r1",
+      "digest": "sha256:628d3c612d4afbb09852ec51436cf8b51f4fb96f02407c2b99e45dc06a3dfec0"
+    },
+    "createdAt": "2026-11-08T00:00:00Z",
+    "author": "Synthetic author",
+    "reason": "Changed database binding evidence"
+  },
+  "extensions": {},
+  "contract": "n8r.research/0.1",
+  "sources": [
+    {
+      "id": "urn:source:summary",
+      "location": "sources.md",
+      "version": "synthetic-1",
+      "digest": "sha256:892be031542be26860afe70102a0293aa30b6cfaf15d091e95549c0e11277e49",
+      "inspectedAt": "2026-11-08T00:00:00Z",
+      "coverage": [
+        {
+          "path": "sources.md",
+          "status": "inspected",
+          "note": "Sanitized synthetic source pack, not raw configuration."
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "urn:f:database",
+      "subject": "urn:node:app",
+      "property": "supports",
+      "state": "known",
+      "note": "Synthetic source assertion; not runtime evidence.",
+      "claims": [
+        {
+          "value": "urn:node:mongodb",
+          "evidence": [
+            {
+              "source": "urn:source:summary",
+              "locator": "Product guide"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "urn:f:oidc",
+      "subject": "urn:node:app",
+      "property": "supports",
+      "state": "known",
+      "note": "Synthetic source assertion; not runtime evidence.",
+      "claims": [
+        {
+          "value": "urn:node:oidc",
+          "evidence": [
+            {
+              "source": "urn:source:summary",
+              "locator": "Product guide"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "urn:f:saml",
+      "subject": "urn:node:app",
+      "property": "supports",
+      "state": "known",
+      "note": "Synthetic source assertion; not runtime evidence.",
+      "claims": [
+        {
+          "value": "urn:node:saml",
+          "evidence": [
+            {
+              "source": "urn:source:summary",
+              "locator": "Product guide"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "urn:f:database-bound",
+      "subject": "urn:instance:demo",
+      "property": "urn:cap:database",
+      "state": "known",
+      "note": "Synthetic source assertion; not runtime evidence.",
+      "claims": [
+        {
+          "value": "urn:target:mongodb",
+          "evidence": [
+            {
+              "source": "urn:source:summary",
+              "locator": "Sanitized instance configuration summary, revision 2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "urn:f:identity",
+      "subject": "urn:instance:demo",
+      "property": "urn:cap:oidc",
+      "state": "conflicting",
+      "note": "Synthetic source assertion; not runtime evidence.",
+      "claims": [
+        {
+          "value": "urn:target:oidc",
+          "evidence": [
+            {
+              "source": "urn:source:summary",
+              "locator": "Sanitized instance configuration summary, revision 1"
+            }
+          ]
+        },
+        {
+          "value": "urn:target:saml",
+          "evidence": [
+            {
+              "source": "urn:source:summary",
+              "locator": "Sanitized instance configuration summary, revision 1"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "alternatives": [
+    {
+      "id": "urn:option:oidc",
+      "title": "Prefer OIDC",
+      "findings": [
+        "urn:f:identity"
+      ],
+      "requirements": []
+    }
+  ],
+  "decisions": [
+    {
+      "id": "urn:decision:oidc",
+      "alternative": "urn:option:oidc",
+      "choice": "selected",
+      "reason": "Synthetic human preference; conflict unresolved.",
+      "by": "Synthetic reviewer",
+      "at": "2026-11-08T00:00:00Z"
+    }
+  ],
+  "questions": [],
+  "notes": []
+}

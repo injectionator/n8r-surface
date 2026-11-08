@@ -1,0 +1,167 @@
+{
+  "id": "urn:demo:capability",
+  "title": "Synthetic Capability Surface",
+  "scope": "Synthetic role/product identities only; runtime unverified.",
+  "revision": {
+    "id": "r1",
+    "parent": null,
+    "createdAt": "2026-11-08T00:00:00Z",
+    "author": "Synthetic author",
+    "reason": "Initial synthetic example"
+  },
+  "extensions": {},
+  "contract": "n8r.surface/0.2",
+  "kind": "capability",
+  "records": [
+    {
+      "id": "urn:demo:research",
+      "revision": "r1",
+      "digest": "sha256:628d3c612d4afbb09852ec51436cf8b51f4fb96f02407c2b99e45dc06a3dfec0"
+    }
+  ],
+  "vocabularies": [
+    {
+      "id": "urn:v:demo",
+      "version": "1"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "urn:node:app",
+      "label": "Assistant",
+      "type": {
+        "vocabulary": "urn:v:demo",
+        "term": "component"
+      }
+    },
+    {
+      "id": "urn:node:mongodb",
+      "label": "MongoDB",
+      "type": {
+        "vocabulary": "urn:v:demo",
+        "term": "component"
+      }
+    },
+    {
+      "id": "urn:node:oidc",
+      "label": "OIDC",
+      "type": {
+        "vocabulary": "urn:v:demo",
+        "term": "component"
+      }
+    },
+    {
+      "id": "urn:node:saml",
+      "label": "SAML",
+      "type": {
+        "vocabulary": "urn:v:demo",
+        "term": "component"
+      }
+    },
+    {
+      "id": "urn:node:inference",
+      "label": "Inference service",
+      "type": {
+        "vocabulary": "urn:v:demo",
+        "term": "component"
+      }
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "urn:cap:database",
+      "from": "urn:node:app",
+      "to": "urn:node:mongodb",
+      "type": {
+        "vocabulary": "urn:v:demo",
+        "term": "uses"
+      },
+      "state": "possible",
+      "basis": [
+        {
+          "record": "urn:demo:research",
+          "revision": "r1",
+          "items": [
+            "urn:f:database"
+          ]
+        }
+      ],
+      "conditions": [],
+      "note": "Supported possibility, not a selected composition"
+    },
+    {
+      "id": "urn:cap:oidc",
+      "from": "urn:node:app",
+      "to": "urn:node:oidc",
+      "type": {
+        "vocabulary": "urn:v:demo",
+        "term": "uses"
+      },
+      "state": "possible",
+      "basis": [
+        {
+          "record": "urn:demo:research",
+          "revision": "r1",
+          "items": [
+            "urn:f:oidc"
+          ]
+        }
+      ],
+      "conditions": [
+        "OIDC and SAML are alternatives"
+      ],
+      "note": "Supported possibility, not a selected composition"
+    },
+    {
+      "id": "urn:cap:saml",
+      "from": "urn:node:app",
+      "to": "urn:node:saml",
+      "type": {
+        "vocabulary": "urn:v:demo",
+        "term": "uses"
+      },
+      "state": "possible",
+      "basis": [
+        {
+          "record": "urn:demo:research",
+          "revision": "r1",
+          "items": [
+            "urn:f:saml"
+          ]
+        }
+      ],
+      "conditions": [
+        "OIDC and SAML are alternatives"
+      ],
+      "note": "Supported possibility, not a selected composition"
+    },
+    {
+      "id": "urn:cap:inference",
+      "from": "urn:node:app",
+      "to": "urn:node:inference",
+      "type": {
+        "vocabulary": "urn:v:demo",
+        "term": "uses"
+      },
+      "state": "unknown",
+      "basis": [],
+      "conditions": [],
+      "note": "Unknown support"
+    }
+  ],
+  "exclusiveGroups": [
+    {
+      "id": "urn:group:authentication",
+      "members": [
+        "urn:cap:oidc",
+        "urn:cap:saml"
+      ]
+    }
+  ],
+  "coverage": [
+    "One synthetic product guide"
+  ],
+  "gaps": [
+    "Inference support unknown"
+  ]
+}

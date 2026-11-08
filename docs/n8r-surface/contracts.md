@@ -12,6 +12,16 @@ make this profile concrete. Other languages can implement the same data contract
 The library reads supplied strings and returns values/strings; it does not read
 files, fetch references, call inference or write a corpus.
 
+The separate JSON-only [Capability and Bound contract 0.2](surface-description-contract.md)
+adds possible relationships and configured instance bindings without reinterpreting
+these selected `0.1` definitions. The APIs accept both versions; their meanings
+and fields remain distinct. Installed-skill production is separate work.
+
+The [shared relationship contract 0.3](surface-relationships.md) adds the same
+component-node and relationship-edge structure to both descriptions, including
+evidenced purpose, integration mechanism and safe configuration references.
+Existing `0.1` and `0.2` representations remain readable.
+
 ## Common envelope and identity
 
 Every artefact has these required fields. Objects are closed except the explicit

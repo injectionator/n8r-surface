@@ -16,6 +16,25 @@ verifySuccessor(readResearchHtml(asset('lumen-r1.research.html')), lumen);
 assert.deepEqual(decode(encode(surface, 'yaml'), 'yaml'), surface);
 assert.throws(() => readResearchHtml(asset('lumen-manual-edit.pending.html')), /conflict/);
 assert.ok(readFileSync(new URL(import.meta.resolve(`${packageName}/contracts/contracts.md`)), 'utf8').includes('n8r.research/0.1'));
+const description = name => decode(asset(`descriptions/${name}.json`), 'json');
+const descriptionContext = ['research-r1', 'research-r2', 'capability'].map(description);
+const boundBefore = description('bound-r1'), boundAfter = description('bound-r2');
+verifyReferences(boundBefore, descriptionContext);
+verifyReferences(boundAfter, descriptionContext);
+verifySuccessor(boundBefore, boundAfter);
+assert.deepEqual(boundBefore.bindings.map(b => b.state), ['configured', 'conflicting', 'unknown']);
+assert.equal(boundAfter.bindings[0].claims[0].target, 'urn:target:mongodb');
+assert.deepEqual(decode(encode(boundAfter, 'json'), 'json'), boundAfter);
+console.log('Installed Capability/Bound JSON assets, references and successor passed.');
+const graph = name => decode(asset(`relationships/${name}.json`), 'json');
+const graphContext = ['research-r1', 'research-r2', 'capability'].map(graph);
+const graphBefore = graph('bound-r1'), graphAfter = graph('bound-r2');
+verifyReferences(graphBefore, graphContext); verifyReferences(graphAfter, graphContext);
+verifySuccessor(graphBefore, graphAfter);
+assert.equal(graphBefore.relationships[0].configuration.claims[0].value[0].key, 'CHAT_STORE_URI');
+assert.equal(graphAfter.relationships[0].binding.claims[0].target, 'urn:target:mongodb');
+assert.deepEqual(decode(encode(graphAfter, 'json'), 'json'), graphAfter);
+console.log('Installed shared relationship details, configuration references and bindings passed.');
 // Exercise the public consumer boundary; reject before inherited hooks run.
 let serializationCalls = 0;
 class LossyArray extends Array {

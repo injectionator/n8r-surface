@@ -49,7 +49,7 @@ not an intrinsic component type. Cycles and shared components are possible.
 | Surface identity | The persistent thing being described across revisions. |
 | Definition revision | A particular composition, configuration, scope and set of known gaps. |
 | Component | An identified application, service, model, agent, data store or other relevant part. |
-| Relationship | A typed connection between identified entities, optionally with integration configuration. |
+| Relationship | An identified, typed connection between component nodes, with purpose, integration mechanism, safe configuration references and evidence where known. |
 | Configuration artifact | Inline settings or a referenced artifact/revision that determines behavior. |
 | Coverage | What was inspected, remains unknown, was omitted, is redacted or is outside scope. |
 | Deployment binding | A separate mapping from definition entities to concrete resources. |
@@ -83,6 +83,24 @@ distinguish matches, known non-matches and unresolved coverage.
 
 Formal schema validity and fitness for a task are separate. A small description
 can support inventory lookup while lacking enough configuration for recreation.
+
+## Surface description names
+
+**Capability Surface** describes supported possibilities without asserting instance
+bindings. **Bound Surface** describes configured relationships for an instance;
+configuration is sufficient evidence, without proof of runtime use. **Observed
+Surface** names a future dated description of inspected instance configuration and
+state; it is deferred from the current delivery. These are descriptions within
+the one AI Surface Model, independent of depth or skeleton size.
+
+See the [agreed intent and verification](../docs/n8r-surface/surface-descriptions.md)
+for privacy boundaries, planned outputs and the three delivery tasks.
+The bounded [shared relationship contract 0.3](../docs/n8r-surface/surface-relationships.md)
+uses component nodes and relationship edges in both descriptions. Edges retain
+purpose, integration mechanism, safe configuration references and property-level
+evidence; Bound adds configured-target claims. Unknown detail stays explicit.
+It represents these distinctions in JSON; installed-skill artifact production and
+acceptance remain separate work.
 
 ## Output profiles and size
 
