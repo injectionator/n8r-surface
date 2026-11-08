@@ -23,12 +23,12 @@ export function decode(text: string, format: Encoding): Artefact {
   });
   const data: unknown = format === 'json' ? JSON.parse(text) : doc.toJS({maxAliasCount: 0});
   const a = validateArtefact(data);
-  if (a.contract === 'n8r.surface/0.2' && format !== 'json') fail('$format', 'Surface descriptions require JSON');
+  if ((a.contract === 'n8r.surface/0.2' || a.contract === 'n8r.surface/0.3') && format !== 'json') fail('$format', 'Surface descriptions require JSON');
   return a;
 }
 export function encode(value: unknown, format: Encoding): string {
   formatCheck(format); const a = validateArtefact(value);
-  if (a.contract === 'n8r.surface/0.2' && format !== 'json') fail('$format', 'Surface descriptions require JSON');
+  if ((a.contract === 'n8r.surface/0.2' || a.contract === 'n8r.surface/0.3') && format !== 'json') fail('$format', 'Surface descriptions require JSON');
   const text = format === 'json' ? JSON.stringify(a, null, 2) + '\n' : stringify(a, {version: '1.2', aliasDuplicateObjects: false, lineWidth: 0, defaultKeyType: 'QUOTE_DOUBLE'});
   checkSize(text); return text;
 }

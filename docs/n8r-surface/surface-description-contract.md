@@ -6,6 +6,10 @@ not a universal schema or a released Researcher workflow. The standalone skill
 must not call or depend on the `n8r-surface` CLI. Skill artifact production is #51;
 installed-workflow and human acceptance are #52. Observed Surface remains deferred.
 
+For the revised #50 verification, start with [shared relationships 0.3](surface-relationships.md).
+This earlier bounded profile and its fixtures remain readable without alteration;
+`0.3` adds consistent node/edge metadata across both descriptions.
+
 ## Versions and shared representation
 
 `n8r.surface/0.2` requires `kind: "capability"` or `kind: "bound"`. It neither

@@ -30,6 +30,10 @@ The separate [Capability and Bound examples](descriptions/README.md) exercise th
 JSON-only `0.2` description contract. They do not convert these selected `0.1`
 definitions into deployments.
 
+For the revised #50 inspection, use the [shared relationship 0.3 examples](relationships/README.md).
+They put purpose, integration mechanism, safe config references and evidence on
+the edges in both Capability and Bound descriptions.
+
 ## Selected composition
 
 ```mermaid

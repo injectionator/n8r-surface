@@ -26,6 +26,15 @@ assert.deepEqual(boundBefore.bindings.map(b => b.state), ['configured', 'conflic
 assert.equal(boundAfter.bindings[0].claims[0].target, 'urn:target:mongodb');
 assert.deepEqual(decode(encode(boundAfter, 'json'), 'json'), boundAfter);
 console.log('Installed Capability/Bound JSON assets, references and successor passed.');
+const graph = name => decode(asset(`relationships/${name}.json`), 'json');
+const graphContext = ['research-r1', 'research-r2', 'capability'].map(graph);
+const graphBefore = graph('bound-r1'), graphAfter = graph('bound-r2');
+verifyReferences(graphBefore, graphContext); verifyReferences(graphAfter, graphContext);
+verifySuccessor(graphBefore, graphAfter);
+assert.equal(graphBefore.relationships[0].configuration.claims[0].value[0].key, 'CHAT_STORE_URI');
+assert.equal(graphAfter.relationships[0].binding.claims[0].target, 'urn:target:mongodb');
+assert.deepEqual(decode(encode(graphAfter, 'json'), 'json'), graphAfter);
+console.log('Installed shared relationship details, configuration references and bindings passed.');
 // Exercise the public consumer boundary; reject before inherited hooks run.
 let serializationCalls = 0;
 class LossyArray extends Array {

@@ -29,6 +29,21 @@ separate from selected bindings. Conflicting evidence remains visible rather tha
 being silently resolved. Definitions and instance bindings retain separate
 identity/revision meaning; later evidence cannot rewrite prior descriptions or Runs.
 
+## Shared component and relationship structure
+
+Capability and Bound descriptions both contain component nodes and identified,
+typed relationship edges. Relationships carry purpose (why), integration mechanism
+(how), configuration references (owner, setting names and safe documented locations),
+and evidence for each detail. Unknown or conflicting details remain explicit.
+The Bound description retains this useful context and adds configured-target
+claims; it is not merely a list of targets detached from their integrations.
+
+Configuration references describe where/how settings are defined, never their
+actual values. Role endpoints and concrete bound targets have distinct identities;
+a successor can change the target without changing the relationship's purpose or
+rewriting its predecessor. The [bounded representation](surface-relationships.md)
+keeps earlier contracts readable and describes compatibility limits.
+
 ## Outputs and privacy
 
 On an authorized save, provide a concise readable Surface brief, a research HTML
@@ -55,7 +70,7 @@ capture and live/runtime inspection; no continuous synchronization is promised.
 The [current experimental contract](contracts.md) represents selected definitions
 and leaves deployment bindings outside its profile. This document does not
 silently extend that contract or relabel existing definitions as Bound Surfaces.
-The [bounded contract 0.2](surface-description-contract.md) defines the
+The [shared relationship contract 0.3](surface-relationships.md) defines the
 representation and versioning for #50; installed artifact production remains #51.
 Capability alternatives have an explicit representation; mutually exclusive possibilities must not be flattened
 into a selected composition. Preserve shared identities and exact evidence links.
@@ -145,7 +160,7 @@ cleanup is a separate authorized action and must not touch borrowed source data.
 1. [#50 — Descriptions and contract](https://github.com/injectionator/n8r-surface/issues/50):
    capture this intent, then define bounded representations, versioning and
    synthetic examples with meaningful checks. See the implemented
-   [contract and human check](surface-description-contract.md).
+   [contract and human check](surface-relationships.md).
 2. [#51 — Installed-skill artifact production and revision](https://github.com/injectionator/n8r-surface/issues/51):
    implement generation, validation, privacy, saving and fresh-chat continuation
    using workspace evidence. Depends on #50.

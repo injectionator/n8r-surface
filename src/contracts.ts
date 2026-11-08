@@ -65,4 +65,31 @@ export interface BoundSurface extends DescriptionEnvelope {
   }[];
 }
 export type SurfaceDescription = CapabilitySurface | BoundSurface;
-export type Artefact = ResearchRecord | SurfaceDefinition | SurfaceDescription;
+/** Shared node/edge contract; setting names and safe locations, never values. */
+export interface ConfigurationReference {
+  owner: string; mechanism: 'environment-variable' | 'file-key' | 'argument' | 'admin-setting' | 'code';
+  key: string; location: string;
+}
+export interface RelationshipDetail<T> {
+  state: State | 'conflicting'; claims: {value: T; basis: Basis[]}[]; note: string;
+}
+export interface DescriptionRelationship {
+  id: string; from: string; to: string; type: DescriptionNode['type'];
+  purpose: RelationshipDetail<string>; integration: RelationshipDetail<string>;
+  configuration: RelationshipDetail<ConfigurationReference[]>;
+  basis: Basis[]; conditions: string[]; note: string;
+}
+export interface GraphEnvelope extends Omit<DescriptionEnvelope, 'contract'> {
+  contract: 'n8r.surface/0.3';
+}
+export interface CapabilityGraph extends GraphEnvelope {
+  kind: 'capability';
+  relationships: (DescriptionRelationship & {state: CapabilitySurface['capabilities'][number]['state']})[];
+  exclusiveGroups: CapabilitySurface['exclusiveGroups'];
+}
+export interface BoundGraph extends GraphEnvelope {
+  kind: 'bound'; capability: RevisionRef; instance: BoundSurface['instance'];
+  relationships: (DescriptionRelationship & {binding: Omit<BoundSurface['bindings'][number], 'id' | 'capability'>})[];
+}
+export type SurfaceGraph = CapabilityGraph | BoundGraph;
+export type Artefact = ResearchRecord | SurfaceDefinition | SurfaceDescription | SurfaceGraph;

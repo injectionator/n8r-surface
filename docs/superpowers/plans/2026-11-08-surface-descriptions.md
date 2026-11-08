@@ -96,3 +96,49 @@ link/fragment errors; cffconvert 2.0.0 validated metadata; Python passed 24 test
 The documented fixture readback returned `configured, conflicting, unknown`,
 `urn:target:atlas`, then `urn:target:mongodb`, with exit 0 and no file changes.
 Local Node.js 22/24 checks were not repeated; no distribution tooling changed.
+
+## Revision: shared relationship structure
+
+User verification identified that a generic `uses` edge does not answer why a
+component connects, how it integrates or where configuration is defined. The user
+approved a shared node/edge structure and explicit relationship metadata.
+
+Use `n8r.surface/0.3` for the revised shape; retain `0.2` readers and fixtures.
+Both descriptions have `nodes` and `relationships`. A relationship has stable
+`id`, `from`, `to`, `type`, support `basis`, `conditions`, `note`, and independently
+evidenced `purpose`, `integration` and `configuration` details. A Bound relationship
+adds a `binding` annotation (configured/unknown/conflicting claims and decisions).
+Its stable endpoints identify the integration roles; the annotation identifies
+concrete targets without changing the relationship identity.
+
+Details carry explicit knowledge states and sourced claims. Configuration claims
+list owner component, mechanism, key and safe documented location, never actual
+setting values. Each detail's source findings refer to that relationship ID and
+property, preserving contradictory evidence. Bound descriptions repeat readable
+metadata with their own exact evidence references and pin the Capability revision.
+
+- [x] Add new synthetic `relationships/` examples and failing tests for both kinds,
+  property-level provenance, safe config locations, conflicts, endpoint/type
+  agreement, retained identities and closed shapes. Record the `0.2` baseline gap.
+- [x] Implement `0.3` shared types and checks using existing codecs/revision helpers;
+  retain all `0.1`/`0.2` tests. Run focused and full suites.
+- [x] Update the contract, model guidance, examples and human inspection/readback.
+  Rehearse the documented library interaction; installed skill remains blocked on
+  #51's known missing artifact-production capability and must not depend on CLI.
+- [x] Obtain fresh review, run package/docs/fixture checks, then commit and push
+  this increment to draft PR #53. Update #50; no merge or human acceptance claim.
+
+Revision evidence: the new tests first failed on unsupported `0.3`. The shared
+shape/evidence checks then passed; successor tests exposed missing `0.3` identity
+checks before their implementation. Fresh review found that detail conflicts
+could not include an absent finding. A regression reproduced that rejection;
+the correction retains known/absent assertions even when their values coincide
+and rejects agreeing sources incorrectly labelled conflicting. `npm test` now
+passes 186 tests. The documented readback returned the expected purpose, setting
+owner/key/location and Atlas-to-MongoDB target change without file writes.
+
+Package verification passed on Node.js 26.13.0, including installed shared-edge
+metadata and binding readback. Markdownlint 0.24.0 passed 87 files; lychee 0.24.2
+reported zero local-link errors; cffconvert 2.0.0 validated citation metadata;
+Python passed 24 fixture/tooling tests. Earlier `0.2` fixtures remain unchanged.
+No installed-skill acceptance, merge or release is claimed.

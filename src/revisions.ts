@@ -26,6 +26,19 @@ export function verifySuccessor(previous: unknown, next: unknown): void {
       }
     }
   }
+  if (before.contract === 'n8r.surface/0.3' && after.contract === 'n8r.surface/0.3') {
+    if (before.kind !== after.kind) fail('$revision', 'description kind changed');
+    for (const n of after.nodes) {
+      const old = before.nodes.find(x => x.id === n.id);
+      if (old && canonical(old.type) !== canonical(n.type)) fail('$revision', 'retained node type changed');
+    }
+    for (const edge of after.relationships) {
+      const old = before.relationships.find(x => x.id === edge.id);
+      if (old && (old.from !== edge.from || old.to !== edge.to || canonical(old.type) !== canonical(edge.type))) fail('$revision', 'retained relationship endpoints/type changed');
+    }
+    if (before.kind === 'bound' && after.kind === 'bound' &&
+        (before.instance.id !== after.instance.id || before.capability.id !== after.capability.id)) fail('$revision', 'instance/capability identity changed');
+  }
   if (before.contract === 'n8r.surface/0.1' && after.contract === 'n8r.surface/0.1') {
     for (const edge of after.relationships) {
       const old = before.relationships.find(x => x.id === edge.id);
