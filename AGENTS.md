@@ -325,6 +325,11 @@ Node.js 22, 24 or 26; no additional dependencies. See the
 [workspace contract](docs/n8r-surface/workspace.md) and
 [installed-skill human check](docs/n8r-surface/workspace-human-check.md).
 Helper tests do not replace fresh-chat product rehearsal or PM acceptance.
+The opt-in installed-skill slice uses
+`npm run acceptance:skill -- --live --evidence NEW_PRIVATE_DIRECTORY`; it runs
+only create/repeat/fresh-session reopen through Codex CLI 0.166.0. See the
+[runner prerequisites, pending human criteria and cleanup](docs/n8r-surface/skill-workspace-automation.md).
+`node --test tests/skill-acceptance.test.mjs` checks its assertions offline.
 
 ## Package version checks
 

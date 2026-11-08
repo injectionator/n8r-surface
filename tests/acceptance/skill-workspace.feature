@@ -1,6 +1,7 @@
 Feature: Establish a Surface workspace through the Researcher skill
   A new user can prepare durable work without understanding its internal structure.
 
+  @installed-workspace
   Scenario: Create a workspace without beginning research
     Given a verified fresh supported Codex session with the identified skill installed
     And an empty writable destination selected by the user
@@ -19,12 +20,14 @@ Feature: Establish a Surface workspace through the Researcher skill
     And it does not start research or request private instance credentials
     And unrelated files and global vault settings are unchanged
 
+  @installed-workspace
   Scenario: Repeat setup without replacing existing work
     Given the workspace has been created and contains a user-owned note
     When the user asks to set up the workspace at that location again
     Then the original workspace identity and user note remain unchanged
     And the assistant recognizes the workspace rather than recreating it
 
+  @installed-workspace
   Scenario: Reopen without the setup conversation
     Given a fresh supported session with no access to the setup conversation
     And the user has made the created workspace available
