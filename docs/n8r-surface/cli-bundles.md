@@ -72,3 +72,22 @@ Source, settings and every predecessor file remained unchanged. Tarball SHA-256:
 This is an agent rehearsal, not a new human acceptance or registry release.
 Subsequent changes broadened dependency-source checks and preserved optional
 runner/note receipts; final candidate verification must identify its own bytes.
+
+## Installed candidate readback, 8 November 2026
+
+Scoped candidate `0.1.0-experimental.3`, built from clean commit
+`19ebdeee72b2b9f0719cce90a55900890827ef84`, was installed globally with lifecycle
+scripts disabled. Archive SHA-256:
+`8f34182c435632052e3e44f516cf5d0993d7f50e7af76eaeacb8fd8bfa9db842`.
+`--version` returned .3; normal startup reused the existing vault without setup
+changes. The exact installed command reopened the previous Capability, retained
+both deferrals, added a requested callback-investigation deferral and saved a
+successor (exit 0). Independent readback through the installed helper confirmed
+both exact parent digests, retained decisions and component identities, and all
+prior source/settings/output files unchanged. Codex 0.166.0, ChatGPT sign-in,
+gpt-6-astra and Node 26.13.0 were used. The full suite (206 tests) and installed
+package/terminal checks passed on Node 22.23.2, 24.22.2 and 26.13.0.
+
+This is an installed agent rehearsal. Public npm publication, human acceptance
+of the CLI and Labs compatibility are not claimed. Later documentation alignment
+does not change the installed candidate's recorded code revision or archive.
