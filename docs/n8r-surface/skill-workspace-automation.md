@@ -168,9 +168,37 @@ Two later fresh-fixture journeys passed all three automated scenarios:
 
 These are developing-agent rehearsals, not PM acceptance. They used a dirty
 checkout during implementation; run-4 records complete harness file digests.
-A subsequent startup-deadline fix has an offline regression test; committed-code
-rehearsal is recorded separately when available. The maintained feature text is
+A subsequent startup-deadline fix has an offline regression test; the committed
+rehearsals below include that fix. The maintained feature text is
 unchanged apart from selection tags. Checker tests demonstrate rejection of
 incorrect identity, altered notes, ambiguous isolation failures, malformed output
 and unsafe cleanup. The runner leaves human criteria pending instead of treating
 these tests or filesystem results as full conversational acceptance.
+
+### Committed-code repetitions
+
+Both runs below exercised clean commit
+`d9c99c4e9853ca407264f126a9dd2aa6b8599df4`, with identical harness digests and
+the environment/installed revision above. Each used a fresh disposable fixture,
+a different generated identity, and separate setup/reopen processes. Both exited
+2 with all automated checks passed and all full scenarios pending human review.
+
+| Private run label | Create | Repeat | Fresh reopen |
+| --- | --- | --- | --- |
+| run-5 | 18.251 s | 8.713 s | 17.801 s |
+| run-6 | 17.966 s | 8.431 s | 14.814 s |
+
+Independent readback confirmed unchanged repeat/reopen inventories, global
+settings fingerprints and installed bytes. Both reopen receipts retain the exact
+missing-thread error and denied evidence reads. Agent inspection of the messages
+found orientation, no repeated initialization question, honest attachment/access
+boundaries and no research activity. This is an agent assessment, not PM acceptance;
+the runner correctly leaves those human criteria pending. The documented cleanup
+command then removed both owned fixtures, exited 0 and retained all evidence.
+
+A deliberately missing installation exited 2 before inference and marked all
+three scenarios blocked. All 153 offline tests passed, including 14 acceptance
+checker/adapter tests. The package check passed locally on Node 26.13.0. CI for
+`d9c99c4` passed Node 22/24/26, fixtures/tooling, Markdown and local links. Local
+Markdown lint, lychee 0.24.2 offline links/anchors, citation validation and diff
+checks also passed. No live inference was run by CI.

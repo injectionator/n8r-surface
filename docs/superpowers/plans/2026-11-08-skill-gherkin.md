@@ -37,10 +37,10 @@ and thread. A restricted permission profile denies transcript/evidence reads.
   and per-scenario results. Limit each scenario to one user turn and 120 seconds.
 - [x] Add one opt-in command and owned-fixture cleanup. Run twice with fresh
   destinations; retain raw evidence outside published files.
-- [ ] Document interface identity, failed probes, isolation controls, human rubric
+- [x] Document interface identity, failed probes, isolation controls, human rubric
   review and a repeatable tester task list. Run offline regression and repository
   checks; review the final diff for private material.
-- [ ] Commit, push and open a draft PR after the first reviewable slice. Keep the
+- [x] Commit, push and open a draft PR after the first reviewable slice. Keep the
   issue open for any incomplete acceptance and report pushed versus merged state.
 
 ## Interface findings before implementation
@@ -57,3 +57,13 @@ of TOML. These are retained private attempts, not acceptance passes.
 
 This establishes an interface candidate, not desktop behavior or full acceptance.
 The complete runner must verify its own isolation and repeat/reopen outcomes.
+
+## Completion record
+
+Implementation commit `d9c99c4` has two clean committed-code live rehearsals.
+All three automated checks pass in each; semantic human criteria remain pending.
+Draft PR #44 retains issue #43 as related work. Failed attempts, raw evidence and
+cleanup receipts remain private. A fresh reviewer identified isolation-error,
+finalization and startup-deadline gaps; each was corrected and covered by offline
+checks. No review findings remain outstanding. See the
+[public evidence summary](../../n8r-surface/skill-workspace-automation.md#committed-code-repetitions).
