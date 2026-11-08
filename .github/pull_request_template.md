@@ -29,6 +29,7 @@ unit tests, fixtures or developer-authored findings do not prove AI research. --
 ## Contributor checklist
 
 - [ ] Scope matches the linked issue and this branch contains only that work.
+- [ ] This PR has relevant topic labels and no issue Kanban status labels; linked issue statuses are current.
 - [ ] Affected documentation and examples agree on the proposed meaning.
 - [ ] Evidence is distinguished from proposals and unimplemented capabilities.
 - [ ] Examples are synthetic or have permission for publication; no sensitive data is included.
