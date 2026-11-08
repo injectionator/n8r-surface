@@ -143,6 +143,13 @@ independently verifiable Outcome Z. List expected state changes, visible results
 and the evidence needed to verify them. Keep the complete public command inventory
 and conversational intents current before adding a command, option or behavior.
 
+Before starting a meaningful action, tell the user what you are going to do in
+one short, plain-language sentence. Group routine substeps; do not narrate every
+tool call or add a procedural briefing. Continue within existing authorization
+without turning the announcement into a permission request. Report the result
+and relevant evidence afterward. Verify this from the order of messages and
+actions; see [COMMUNICATION-01](docs/n8r-surface/command-outcomes.md#communication-01-announce-the-next-action).
+
 Keep simple checks simple: a plain-language Given / When / Then / Verify example
 with representative terminal output is enough. Use ordinary process, output and
 file assertions to automate it; do not introduce a technical DSL or require a large
