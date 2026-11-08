@@ -43,7 +43,7 @@ subsequently replaced with explicit PM authorization, as recorded below. CLI/Lab
 | Repeat with note | Same suite: byte-preserving reuse and unknown fields | Candidate PM repeat passed; independent hashes unchanged |
 | Fresh reopen; moved identity | Same suite: separate process and moved folder inspection | Candidate fresh-chat reopen passed after destination clarification; move trial pending |
 | Adoption question and both choices | Same suite: no-write refusal, in-place and alternative destination | Both adoption choices passed |
-| Malformed/conflicting/unsupported | Same suite: complete before/after snapshots | Candidate PM pending |
+| Malformed/conflicting/unsupported | Same suite: complete before/after snapshots | All three installed-product refusal trials passed |
 | Interrupted setup | Same suite: publication failure and no-overwrite guard | Technical evidence only |
 | Installed helper availability | Same suite: copied helper with no checkout dependencies; package smoke | Installed-skill invocation pending |
 
@@ -280,3 +280,28 @@ Both receipts, choice-boundary inventory and final readback are retained private
 All three refusal fixtures were rechecked against their initial inventories and
 remain unchanged for independent product trials. Refusals and moved-folder
 recognition remain pending; no merge, release or cleanup.
+
+## PM refusal trials — 8 November 2026
+
+**Outcome: Pass for each expected refusal. Visible experience criteria met;
+no separate PM satisfaction ratings supplied.** Each independent product chat
+loaded the installed `0.1.9` skill/reference and invoked its bundled helper with
+an ordinary setup request at the selected fixture. All returned exit 2:
+
+| Fixture | Observed explanation | Turn duration |
+| --- | --- | --- |
+| Malformed JSON | Invalid workspace JSON; another folder or separate repair assessment. | 19.458 seconds |
+| Conflicting `.n8r` file | Metadata conflict; another folder or separate repair assessment. | 23.887 seconds |
+| Unsupported format | Unsupported workspace format; another destination or repair assessment. | 17.353 seconds |
+
+Independent before/after comparisons found exact agreement for every directory
+entry and file hash in all three fixtures. No initialization, repair, migration,
+downgrade or deletion occurred; the assistant made no success or research claim.
+These are passing refusal scenarios, not blocked test runs. Receipts, inventories
+and criterion-level verdicts are retained in the private evidence inventory.
+
+For the final move trial, the coordinator renamed the inventoried disposable
+first workspace to a new folder name, preserving all metadata and note bytes.
+The old path is absent and the new path is recorded privately. This is fixture
+preparation, not product behavior; installed-product recognition after the move
+remains pending. No borrowed/user-owned baseline folder was moved or changed.
