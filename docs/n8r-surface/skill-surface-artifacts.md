@@ -223,3 +223,12 @@ checks. Package preparation exposed stale version/digest expectations; those wer
 corrected. Concurrent cross-runtime tests collided on a shared temporary build
 file; sequential rerunning passed. Broad usefulness remains the two-product
 skill journey in #52, followed by CLI integration and separate Labs work.
+
+## Two-product usefulness result
+
+The [installed-skill usefulness check](skill-usefulness-verification.md) exercises
+Capability, Bound and fresh-session revision on two pinned public source packs.
+Both passed independent readback and preservation checks on 0.1.11 without skill
+code changes. The record includes the initial test-instruction blocker and the
+corrected retry. The user accepted this bounded skill verification on 8 November 2026; acceptance
+is distinct from the agent rehearsal and does not imply an additional human run.
