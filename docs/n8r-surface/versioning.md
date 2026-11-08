@@ -9,8 +9,8 @@ The maintainer removed unscoped publication and name reservation from the plan
 on 5 November 2026. The first verified release is
 [`@n8r/surface@0.1.0-experimental.2`](npm-release.md#verified-scoped-release).
 Historical dual archives remain evidence, not a second supported package or a
-future publication commitment. Existing dual-package tooling must be reduced to
-the scoped package before another release; that cleanup does not authorize one.
+future publication commitment. Current tooling prepares only the scoped package; preparation does not authorize
+a release.
 
 ## Compatibility and version changes
 
@@ -67,12 +67,10 @@ Retain the approved scoped archive, its digest report, build environment, test
 evidence, release notes and registry readback. SHA-256 identifies bytes; it does
 not authenticate the builder. Do not rebuild or alter a published version.
 
-The current packer and release checker still retain two artifacts from the
-superseded implementation. Preserve the historical report and both archives for
-verification of `.1` and `.2`; remove the unscoped output and dual-package
-requirements when adapting the tooling for future scoped releases. Source and
-default candidates remain private. Never strip a guard from an old tarball and
-retain its old digest or source claim.
+The packer produces one scoped archive. Preserve the historical reports and both
+archives for verification of `.1` and `.2`; their version-specific verification
+still checks both. Source and default candidates remain private. Never strip a
+guard from an old tarball and retain its old digest or source claim.
 
 ## Read-only verification commands
 

@@ -65,8 +65,7 @@ and unpublished draft artifacts remain retained.
 
 The procedure below records the original dual-package preparation. Its two-name
 acceptance requirement was superseded by the maintainer's scoped-only decision.
-Do not rerun it for the released version. The existing workflow still expects
-both names; remove that legacy behavior before a future scoped release. Future
+Do not rerun it for the released version. The historical workflow expected both names; current .3 tooling is scoped-only. Future
 releases require updated version guards, reviewed
 authentication configuration, and a new permanent version/tag. Trusted publishing
 has not been exercised; this release used stage-only token authentication and
