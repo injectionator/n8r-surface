@@ -34,3 +34,6 @@ Copied project examples remain subject to their applicable licence.
 
 Third-party material retains its own applicable terms and attribution. The
 project licences do not relicense third-party components described in a Surface.
+
+The bundled `skills/research/scripts/artifacts.mjs` includes yaml 2.9.1 under
+its ISC licence; see `skills/research/scripts/THIRD-PARTY-NOTICES.txt`.

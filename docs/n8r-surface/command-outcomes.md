@@ -24,6 +24,11 @@ user: define a real task, attempt it through the product, observe the gap, devel
 what is missing, then repeat the same task. It does not publish private Lab
 implementation material or require that application to be running.
 
+Candidate skill 0.1.10 adds standalone Capability/Bound artifact production and
+revision, without adding a CLI command. See the [task, evidence and human
+check](skill-surface-artifacts.md). Installed rehearsal and human acceptance remain
+distinct from contract checks.
+
 ## Grow the specification with working verification
 
 Work one useful behavior at a time, including behavior that already exists. Add a

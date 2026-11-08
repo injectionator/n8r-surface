@@ -1,6 +1,6 @@
 # n8r-surface Researcher: start an investigation
 
-**First increment:** an experimental Researcher, packaged for
+**Historical first increment:** an experimental Researcher, packaged for
 ChatGPT desktop / Work and Codex. It researches supplied sources with the existing
 harness and saves working notes. It does not add a CLI runner, Lab connection or
 validated experimental HTML/Surface output. Related to [#17](https://github.com/injectionator/n8r-surface/issues/17).
@@ -66,13 +66,13 @@ API connection. Work's picker and full lifecycle still need
    or build of n8r-surface is needed:
 
    ```sh
-   codex plugin marketplace add injectionator/n8r-surface --ref feat/41-skill-workspace --json
+   codex plugin marketplace add injectionator/n8r-surface --ref feat/51-standalone-surface-artifacts --json
    codex plugin add n8r-surface@n8r-surface --json
    codex plugin list --marketplace n8r-surface --json
    ```
 
    Expected: exit 0 and one installed/enabled `n8r-surface@n8r-surface`, version
-   `0.1.9`. The branch is a changing draft candidate, not a release on `main`.
+   `0.1.10`. The branch is a changing draft candidate, not a release on `main`.
    Use an identified commit with `--ref` for a repeatable installation. Network
    access is required; the commands change plugin configuration/cache.
 2. **Open your source.** Start a local chat with your LibreChat folder selected.
@@ -121,8 +121,9 @@ fresh-chat continuation. **Outcome Z:** a useful explanation and preserved,
 readable successor notes with source evidence, choices and gaps. See
 [observed results and remaining limits](researcher-skill-verification.md).
 
-These are working notes. Validated HTML/Surface outputs, Lab adaptation and the
-standalone CLI remain later increments. RESEARCH-01 does not establish the
+These earlier checks cover working notes. Candidate 0.1.10 adds the separate
+[checked artifact workflow](skill-surface-artifacts.md); Lab adaptation remains
+outside this repository. RESEARCH-01 does not establish the
 complete installed-command E2E-01/E2E-02 cases.
 
 ## Package and standards
@@ -147,7 +148,7 @@ These are packaging contracts; host behavior still needs its own rehearsal.
   Both use the same skill files; no second instruction copy is maintained.
 - [The repository marketplace](../../.agents/plugins/marketplace.json) exposes
   `n8r-surface@n8r-surface` as available, without forcing installation.
-- Plugin and skill version `0.1.9` identify this experimental candidate. Increment
+- Plugin and skill version `0.1.10` identify this experimental candidate. Increment
   them when changing distributed instructions; record the Git revision and
   installed file digest with test results. This is separate from the npm version.
 
@@ -172,7 +173,7 @@ codex plugin list --marketplace n8r-surface --json
 ```
 
 Expected: each command exits 0. The installed list contains exactly one
-`n8r-surface@n8r-surface`, version `0.1.9`, installed and enabled. The installation
+`n8r-surface@n8r-surface`, version `0.1.10`, installed and enabled. The installation
 path varies by computer. `alreadyAdded: true` is fine on a repeated marketplace
 registration. Do not register a second copy of the skill in `.agents/skills`.
 
@@ -211,7 +212,7 @@ is not access in a cloud chat.
    > and gaps, and ask the next question that would help me choose a setup.
    > Save working research notes that I can reopen.
 
-   Expected: the skill identifies version `0.1.9`, reads the two actual documents,
+   Expected: the skill identifies version `0.1.10`, reads the two actual documents,
    cites evidence and saves a readable note outside the plugin cache. Independently
    open that note. Both conflicting batch maxima (10 and 25) and the unknown model
    version must survive; optional features must not become user selections. The
@@ -258,8 +259,17 @@ git archive --format=zip --output="$n8r_skill_zip/n8r-surface.zip" HEAD:plugins/
 python3 -m zipfile -l "$n8r_skill_zip/n8r-surface.zip"
 ```
 
-Expected: exit 0; the archive has both manifests, one skill with its five references and workspace helper
+Expected: exit 0; the archive has both manifests, one skill with its references, synthetic shape examples, workspace/artifact helpers
+and third-party notice
 and OpenAI metadata, the icon and licence files. It contains no Git history,
 source-repository research data, credentials or node_modules. The output directory
 varies. Archive only the committed plugin subtree so paused/untracked work cannot
 enter the package. Uploading or publishing the ZIP remains a separate action.
+
+## Checked artifacts in candidate 0.1.10
+
+The skill now supports standalone Capability/Bound JSON, research HTML and a
+brief through bundled resources. See the [artifact task and human
+verification](skill-surface-artifacts.md) for prerequisites, privacy limits,
+revision behavior and evidence. Historical working-note rehearsals above do
+not establish acceptance of this new path.
