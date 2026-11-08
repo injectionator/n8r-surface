@@ -41,7 +41,7 @@ subsequently replaced with explicit PM authorization, as recorded below. CLI/Lab
 | --- | --- | --- |
 | Create; missing/empty | `tests/workspace.test.mjs`: actual files, record readback and no scaffolds | Candidate create passed; missing destination pending |
 | Repeat with note | Same suite: byte-preserving reuse and unknown fields | Candidate PM repeat passed; independent hashes unchanged |
-| Fresh reopen; moved identity | Same suite: separate process and moved folder inspection | Baseline continuation above; candidate PM pending |
+| Fresh reopen; moved identity | Same suite: separate process and moved folder inspection | Candidate fresh-chat reopen passed after destination clarification; move trial pending |
 | Adoption question and both choices | Same suite: no-write refusal, in-place and alternative destination | Candidate PM pending |
 | Malformed/conflicting/unsupported | Same suite: complete before/after snapshots | Candidate PM pending |
 | Interrupted setup | Same suite: publication failure and no-overwrite guard | Technical evidence only |
@@ -200,3 +200,29 @@ trial and missing-location precondition are retained privately rather than
 silently relabeled as a pass. No fixture repair or product change was made.
 The new chat can receive the explicit target and perform read-only recognition;
 creation in the unrelated current folder is not needed for this scenario.
+
+## Fresh-chat reopen after destination clarification — 8 November 2026
+
+**Outcome: Pass for fresh-chat recognition with the explicit destination.** In the
+separate readiness chat, the user supplied the saved workspace path and requested
+inspection without initialization. No setup conversation or expected identity was
+supplied. The installed `0.1.9` helper ran `inspect` on that exact destination;
+exit 0. This turn took 12.697 seconds. The earlier missing-location attempt remains
+part of the trial evidence; this was not a successful first-turn reopen.
+
+The response recovered the original ID, format, name and purpose from the saved
+workspace. It offered a useful next research action while distinguishing readiness
+from source access, prior findings and app attachment. Independent complete
+inventory/hash comparison confirms unchanged metadata and synthetic note, with
+no added/deleted entries. No initialization, research or technical repair occurred.
+The visible experience criteria were met after destination clarification; the PM
+supplied the response but no separate satisfaction rating for this turn.
+
+The create → repeat → fresh-chat recognition path now has installed-helper tool
+evidence and independent state readback. A distinct chat is observed; enforced
+denial of broader history/filesystem access remains unproved. Host/model limits
+remain as recorded above. This does not complete issue #41: moved-folder identity,
+missing destination, both adoption choices and malformed/conflicting/unsupported
+product refusal trials are still pending, as is overall PM acceptance. Automated
+coverage for those cases is supporting evidence, not a substitute. PR remains
+draft; no merge, release or cleanup.
