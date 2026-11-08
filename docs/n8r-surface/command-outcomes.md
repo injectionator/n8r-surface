@@ -29,33 +29,6 @@ revision, without adding a CLI command. See the [task, evidence and human
 check](skill-surface-artifacts.md). Installed rehearsal and human acceptance remain
 distinct from contract checks.
 
-## COMMUNICATION-01: announce the next action
-
-**Intent:** the user can see what the agent is about to do without reading a
-procedural briefing or repeatedly granting permission for authorized work.
-Applies to project work and Researcher interactions.
-
-**Given:** the user has authorized a task. **When:** the agent is about to begin
-a meaningful action or change direction. **Then:** first send one short sentence
-stating the action in ordinary language, then carry it out. Group routine
-substeps. Afterward, report the result with the evidence needed to assess it.
-Ask a question only when missing information or authorization actually blocks work.
-
-Example announcement: “I'll use LibreChat and Open WebUI to check whether the
-installed skill produces useful research and preserves it across revisions.”
-
-**Verify:** read the conversation beside the action receipts. The announcement
-must precede the action and describe what actually happens. Fail if it arrives
-afterward, expands into a checklist of internal procedure, or adds an unnecessary
-permission stop. Verify the outcome separately; an announcement is not evidence
-that the task succeeded.
-
-**Observed gap:** during preparation for #52, the user requested visibility before
-action, then rejected a detailed step-by-step briefing. This requirement records
-the corrected intent. Repository guidance is updated; installed-skill adherence
-remains to be checked during the two-product rehearsal. No runtime enforcement or
-completed usefulness check is claimed.
-
 ## Grow the specification with working verification
 
 Work one useful behavior at a time, including behavior that already exists. Add a
