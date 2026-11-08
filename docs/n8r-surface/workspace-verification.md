@@ -32,8 +32,8 @@ public repository; this summary contains only sanitized observations.
 
 Source changes implement the helper and skill guidance. The exact committed
 candidate, installation receipts and checks are recorded below as they occur.
-No PM product acceptance, merge, release or normal-installation replacement is
-claimed. CLI/Labs workspace integration and other hosts remain unverified.
+No PM product acceptance, merge or release is claimed. Normal installation was
+subsequently replaced with explicit PM authorization, as recorded below. CLI/Labs workspace integration and other hosts remain unverified.
 
 ## Scenario and evidence mapping
 
@@ -58,8 +58,11 @@ Gherkin is in [the feature file](../../tests/acceptance/skill-workspace.feature)
 
 On macOS with Node.js 26.13.0, the full `npm test` passed 139 tests, including
 nine workspace checks. `npm run check:package` passed both legacy archive names
-and their offline installed-command rehearsals. The workspace-specific installed
-smoke check is also being repeated across supported Node majors.
+and their offline installed-command rehearsals. The expanded installed helper/terminal checks passed on Node 22.23.4, 24.22.2
+and 26.13.0 for both legacy archive names. The full 139-test suite also passed
+on Node 22 and 24. An initial parallel matrix run collided on the existing
+`dist/obsolete-candidate-check.js` fixture in two Node 24 distribution tests;
+the serial rerun passed. No product fix was required for that orchestration error.
 Markdownlint 0.24.0, lychee 0.24.2 offline links/fragments, cffconvert 2.0.0,
 Python fixture/workflow tests (24), shell syntax and skill frontmatter validation
 passed. A fresh independent code review found no actionable findings and reran
@@ -69,3 +72,36 @@ The initial helper test failed because it was absent; eight behavioral checks
 then failed against placeholder exports before implementation. The first full
 implementation exposed a macOS temporary-directory alias in executable detection;
 using the real script path fixed the copied-helper check. Failed test output remains in the implementation chat evidence. No fixture was silently repaired to claim a product pass.
+
+## Identified installed candidate — 8 November 2026
+
+Candidate commit: `3cb08f59a4a932121bdd1c742fbac724d12a6d74`, plugin `0.1.9`,
+[draft PR #42](https://github.com/injectionator/n8r-surface/pull/42).
+Codex CLI 0.166.0 fetched this exact commit through the Git repository marketplace.
+Clean installation and upgrade from baseline `3effc41` were exercised in separate
+isolated homes. Every one of the 14 plugin files matched the committed source by
+relative filename and SHA-256. Both manifests and the installed list reported
+`0.1.9`, enabled. A synthetic workspace outside the installations remained
+byte-for-byte unchanged. The normal registration/configuration and baseline
+plugin bytes were unchanged during these isolated trials.
+
+The PM then explicitly authorized switching the normal installation to this
+pinned candidate. Its original registration details were retained privately;
+marketplace removal, pinned registration and plugin installation all exited 0.
+The normal installed entry is enabled `0.1.9`, and all 14 files again match the
+candidate. This is installed-byte evidence; desktop fresh-chat loading is pending.
+
+SKILL.md SHA-256: `91abc353f4e0dea663a81decd5eaba6d72470c32b432b904e684c1a3b1092b3b`.
+Complete file-map SHA-256: `de5d16d92f714f2f8ea900266078db8e113f6116d78ee4c98e68dcab8a696180`
+(sorted relative-path → SHA-256 JSON, compact separators, UTF-8). The full map,
+Git/CLI receipts, original registration, test logs and retained baseline evidence
+are stored in the private task inventory, outside tracked files.
+
+Prepared PM fixtures contain only empty destinations or explicit synthetic
+adoption/refusal inputs. No successful workspace was seeded in the create fixture.
+They are deliberately retained and unrun. Product chats have not been created by
+the implementation agent. The PM must exercise create → repeat → fresh reopen and
+the remaining cases using the [walkthrough](workspace-human-check.md), then return
+conversation references and separate outcome/experience judgments. Actual desktop
+load, interaction quality and first-increment human acceptance remain pending;
+installation and automated checks do not establish them. No merge or release.

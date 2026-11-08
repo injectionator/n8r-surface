@@ -58,16 +58,16 @@ reference, both manifests, workspace docs and
   marketplace still points at the one canonical plugin.
 - [x] Retain accepted Gherkin, short PM walkthrough, fixture ownership/readback
   and separate outcome/experience rubric. Record baseline evidence accurately.
-- [ ] Run full tests, package smoke checks, Markdown/link/citation and fixture
+- [x] Run full tests, package smoke checks, Markdown/link/citation and fixture
   checks; inspect the task diff for sensitive material.
 
 ## Task 3: Reviewable candidate and delivery
 
 - [x] Obtain a fresh whole-branch code review; resolve material findings and rerun
   affected checks. This review is not a product test chat or PM acceptance.
-- [ ] Verify publishing identity, commit task files, push the dedicated branch
+- [x] Verify publishing identity, commit task files, push the dedicated branch
   and create one draft PR with `Related to #41` and exact human interactions.
-- [ ] Prepare exact candidate bytes and isolated marketplace installation
+- [x] Prepare exact candidate bytes and isolated marketplace installation
   evidence without changing the normal plugin registration.
 - [ ] Hand the PM a fresh-chat walkthrough. Record actual candidate rehearsal
   only when performed in separate product chats; keep unrun scenarios pending.
@@ -81,3 +81,9 @@ reference, both manifests, workspace docs and
 - Routine design decisions: use Node built-ins and a bundled ESM module; partial
   staging records never count as workspace identity. Preserve residual staging
   on interruption for separate recovery rather than guessing repair.
+
+- Implementation commit: `3cb08f5`; draft PR #42. Full suites pass on Node 22/24/26,
+  package matrix passes, independent review reports no actionable findings.
+- Isolated clean/upgrade installations match all 14 source files. PM explicitly
+  authorized normal installation replacement; pinned 0.1.9 bytes verified there.
+  Fresh product-chat load and human acceptance remain pending.
