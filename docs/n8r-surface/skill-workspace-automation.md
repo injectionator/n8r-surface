@@ -202,3 +202,24 @@ checker/adapter tests. The package check passed locally on Node 26.13.0. CI for
 `d9c99c4` passed Node 22/24/26, fixtures/tooling, Markdown and local links. Local
 Markdown lint, lychee 0.24.2 offline links/anchors, citation validation and diff
 checks also passed. No live inference was run by CI.
+
+### Human acceptance — 8 November 2026
+
+The user ran the documented command from clean commit
+`77b1bc49108c2741e012cf1d6b5ca43e3cee97ab` on macOS with Node 22.23.2,
+Codex CLI 0.166.0 and `gpt-6-astra`. The installed Researcher remained 0.1.9
+at the pinned revision above. All three automated scenarios passed.
+
+After reviewing the actual final responses and relevant tool activity presented
+from that run, the user explicitly accepted **create, repeat setup and
+fresh-session reopen: Pass**. The user also accepted the reopen turn's denied
+attempt to read the unrelated Superpowers skill; its read returned exit 1 and
+the Researcher inspection subsequently succeeded. Recorded metadata/note
+inventories and global-settings fingerprints were unchanged through the
+applicable checks. Scenario durations were 16.998, 10.737 and 19.492 seconds.
+
+This is human acceptance of the reviewed run, separate from the earlier agent
+rehearsals. A private acceptance receipt accompanies the original run evidence;
+the raw Cucumber pending results remain unchanged as the historical automated
+output. Future runs still require their own human review. The user authorized
+PR #44 to become ready for review, not merge or release.
