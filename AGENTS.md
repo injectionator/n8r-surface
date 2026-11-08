@@ -330,6 +330,12 @@ The opt-in installed-skill slice uses
 only create/repeat/fresh-session reopen through Codex CLI 0.166.0. See the
 [runner prerequisites, pending human criteria and cleanup](docs/n8r-surface/skill-workspace-automation.md).
 `node --test tests/skill-acceptance.test.mjs` checks its assertions offline.
+The same runner supports offline `--report --evidence RUN_DIRECTORY` and
+`--review --evidence RUN_DIRECTORY --run SHA256 --reviewer NAME
+--create Pass --repeat Pass --reopen Pass` (also Fail/Blocked; optional
+`--comment TEXT`). Review records bind the exact evidence/report and preserve
+raw results. See the [human review procedure](docs/n8r-surface/skill-workspace-automation.md#human-review-task-list).
+`node --test tests/skill-review.test.mjs` checks reporting and review integrity.
 
 ## Package version checks
 
