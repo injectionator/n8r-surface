@@ -307,7 +307,14 @@ export class ResearchConversation {
   acceptSurface(draft: SurfaceDraft) { this.previousSurface=draft; this.surfaceDraft=undefined; }
   async reopenSurface(pair: SavedSurfacePair) {
     this.previousSurface='dependencies' in pair ? {research:pair.research,surface:pair.surface,dependencies:pair.dependencies} : {research:pair.research,surface:pair.surface};
-    await this.reopenContext(JSON.stringify(this.previousSurface),pair.manifest.provenance?.evidence ?? pair.research.sources.map(s=>({path:s.location,digest:s.digest,inspectedAt:s.inspectedAt,startLine:1,endLine:1})),'STRUCTURED PAIR');
+    const records=[pair.research,...('dependencies' in pair?pair.dependencies.filter(a=>a.contract==='n8r.research/0.1'):[])];
+    const evidence=[...(pair.manifest.provenance?.evidence ?? [])];
+    for(const record of records) if(record.contract==='n8r.research/0.1') for(const source of record.sources) {
+      if(!evidence.some(e=>e.path===source.location && e.digest===source.digest))
+        // Zero range denotes historical source metadata, not a claimed tool read.
+        evidence.push({path:source.location,digest:source.digest,inspectedAt:source.inspectedAt,startLine:0,endLine:0});
+    }
+    await this.reopenContext(JSON.stringify(this.previousSurface),evidence,'STRUCTURED PAIR');
   }
   async reopen(note: Note) {
     await this.reopenContext(note.text,note.metadata.evidence,'SAVED NOTE');

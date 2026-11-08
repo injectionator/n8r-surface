@@ -40,3 +40,22 @@ test('CLI reopens a standalone skill bundle without inventing runner provenance'
  assert.equal(saved.manifest.provenance,undefined);
  assert.deepEqual(saved.dependencies,b.dependencies);
 });
+test('fresh reopen compares sources of pinned dependency research too',async()=>{
+ const {ResearchConversation}=await import('../dist/codex.js');
+ const {SourceTools}=await import('../dist/source-tools.js');
+ const root=fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(),'cli-evidence-')));
+ try {
+  const b=bundle('r2');
+  b.research.sources.forEach(s=>s.location='bound.txt');
+  b.dependencies.filter(a=>a.contract==='n8r.research/0.1').forEach(r=>r.sources.forEach(s=>s.location='capability.txt'));
+  fs.writeFileSync(path.join(root,'bound.txt'),'Current bound evidence');
+  const session=Object.create(ResearchConversation.prototype);
+  session.source=new SourceTools(root);session.evidence=[];
+  const output=[];session.output=s=>output.push(s);
+  // Only inference is replaced; source comparison uses the actual filesystem.
+  session.runTurn=async()=>{};
+  await session.reopenSurface({...b,manifest:{}});
+  assert(output.some(s=>s.includes('bound.txt: changed')));
+  assert(output.some(s=>s.includes('capability.txt: unavailable')));
+ } finally {fs.rmSync(root,{recursive:true,force:true});}
+});
