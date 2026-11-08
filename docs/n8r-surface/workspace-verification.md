@@ -40,7 +40,7 @@ subsequently replaced with explicit PM authorization, as recorded below. CLI/Lab
 | Canonical scenario | Deterministic supporting evidence | Product/experience evidence |
 | --- | --- | --- |
 | Create; missing/empty | `tests/workspace.test.mjs`: actual files, record readback and no scaffolds | Candidate create passed; missing destination pending |
-| Repeat with note | Same suite: byte-preserving reuse and unknown fields | Candidate PM pending |
+| Repeat with note | Same suite: byte-preserving reuse and unknown fields | Candidate PM repeat passed; independent hashes unchanged |
 | Fresh reopen; moved identity | Same suite: separate process and moved folder inspection | Baseline continuation above; candidate PM pending |
 | Adoption question and both choices | Same suite: no-write refusal, in-place and alternative destination | Candidate PM pending |
 | Malformed/conflicting/unsupported | Same suite: complete before/after snapshots | Candidate PM pending |
@@ -145,3 +145,25 @@ exclusively and captured a new before-inventory for repeat setup. That preparati
 is distinct from product output. Repeat, fresh reopen, move, missing destination,
 both adoption choices and refusal product trials remain pending. No repair,
 cleanup, merge or release occurred.
+
+## PM repeat-setup trial — 8 November 2026
+
+**Outcome: Pass. Experience: Pass.** The PM reported “Looks good.” In the same
+product chat, the user selected the installed Researcher and asked to set up the
+same workspace again. One turn completed in 10.978 seconds. The tool receipt
+shows the installed `0.1.9` helper invoked against the original destination;
+exit 0. No repeated confirmation or technical rescue was required.
+
+The response recognized the same saved ID, format, name and purpose, linked the
+workspace, and kept research and app attachment separate. Independent comparison
+against the inventory captured after synthetic-note preparation found exact
+agreement: no added/deleted entries and no changed file hashes, including both
+identity metadata and the note. This verifies preservation, not merely an
+assistant statement that files were unchanged.
+
+All five experience criteria pass for this turn: clear orientation, no unnecessary
+questions, no user repair burden, accurate completion/attachment statements and
+setup-only scope. The private evidence inventory retains the full tool receipt,
+before/after hashes and PM judgment. A read-only snapshot has been retained for
+the next fresh-chat reopen trial. Reopen, move, missing destination, adoption and
+refusal product trials remain pending; the issue and PR remain open/draft.
