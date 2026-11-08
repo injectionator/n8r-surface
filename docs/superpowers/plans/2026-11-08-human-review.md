@@ -41,7 +41,7 @@ work and generates a report only after final evidence capture. No dependencies.
 - [x] Rehearse report generation on the retained real run and a blocked run. Run
   one fresh installed-skill journey, inspect the report and record an explicitly
   labeled agent-review rehearsal. Preserve private evidence and exercise cleanup.
-- [ ] Update the runner guide and AGENTS.md command inventory. Run repository
+- [x] Update the runner guide and AGENTS.md command inventory. Run repository
   checks, request focused review, fix findings and push a matching draft PR.
 
 ## Review focus

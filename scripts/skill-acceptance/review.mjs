@@ -12,7 +12,7 @@ const scenarios=[
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 function snapshot(root) {
   assert(!lstatSync(root).isSymbolicLink(),'Evidence directory must not be a symlink');
-  const files={},bytes={};
+  const files=Object.create(null),bytes=Object.create(null);
   for(const name of readdirSync(root).sort()) {
     const stat=lstatSync(join(root,name));
     assert(stat.isFile() && !stat.isSymbolicLink(),`Evidence must be regular files, not symlinks: ${name}`);

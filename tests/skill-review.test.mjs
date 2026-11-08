@@ -112,3 +112,8 @@ test('empty inventories are missing preservation proof, not unchanged success',t
  for(const name of ['create-inventory','repeat-before','repeat-after','reopen-before','reopen-after','final-inventory'])put(name+'.json',{});
  const r=createReport(root);assert.equal(review(root,r.run).overall,'Blocked');
 });
+
+test('every extra evidence filename is fingerprinted, including object-property names',t=>{
+ const {root}=fixture(t);writeFileSync(join(root,'__proto__'),'original');const r=createReport(root);
+ writeFileSync(join(root,'__proto__'),'changed');assert.throws(()=>review(root,r.run),/changed|missing/);
+});

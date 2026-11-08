@@ -342,5 +342,18 @@ Focused offline checks cover changed/missing evidence, wrong fingerprints,
 modified reports, invalid/duplicate reviews, blocked/failing aggregation, null or
 empty required evidence, and interrupted-turn tool recovery from session receipts.
 The latter two cases were found in fresh review, corrected and regression-tested.
-All 170 offline tests passed, including 17 report/review cases; the installed
+All 171 offline tests passed, including 18 report/review cases; the installed
 package check also passed on Node 26.13.0. No new dependencies or live CI were added.
+
+A second fresh run exercised clean commit `1eb4cae` with the same environment
+and installed skill. All three automated scenarios passed in 52.7 seconds;
+live execution retained its pending-human status. The agent inspected the actual
+responses, tool activity, preservation and isolation receipts, then recorded an
+explicitly labeled agent rehearsal with three Pass verdicts (exit 0). Cleanup
+and offline report verification both exited 0, preserving the exact fingerprint
+and recorded verdicts. This does not establish desktop or human acceptance.
+
+A later offline regression caught an evidence file named `__proto__` being omitted
+from a plain JavaScript object's hash map. Null-prototype maps now include that
+filename; changing its contents is detected. The final narrow fix was verified
+by the offline suite rather than another live inference run.
