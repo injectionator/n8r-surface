@@ -36,6 +36,42 @@ See [interoperability research](docs/interoperability.md) for the evidence expec
 of compatibility claims. Include only material you have permission to publish;
 do not submit credentials, private deployment details or personal data.
 
+## Issue status labels
+
+Use one of these five status labels per open issue. Keep topic labels such as
+`bug`, `documentation` and `enhancement` alongside the status when useful.
+
+| Label | Meaning |
+| --- | --- |
+| **Icebox** | Future ideas and possibilities, with no commitment to do them. |
+| **Backlog** | Work we intend to do: “I can see it in the distance.” It is not coming up next. |
+| **Planned** | Coming soon and in reach: “It is filling my windscreen.” The next useful scope is clear. |
+| **WIP** | Authorized work is actively underway, including verification and review. |
+| **Done** | The issue's scope is completed and verified against its acceptance checks; close as completed. |
+
+Replace the previous status when moving an issue. Start speculative ideas in
+Icebox and intended work in Backlog; promote to Planned when it comes into reach,
+then WIP when authorized work starts. Move paused work back to Planned, Backlog
+or Icebox according to its current proximity. Labels describe status and intent;
+they do not authorize implementation, review readiness, merge, release or deployment.
+
+Keep WIP while an implementing PR awaits review or merge. A draft PR, passing
+tests or a completed increment does not make a broader issue Done. For tracking
+issues, judge the remaining scope rather than inheriting a child issue's status;
+record which increment is active in the issue when relevant.
+
+When the whole scope is complete, its acceptance checks are satisfied and any
+implementing PR is merged, replace the active status with Done and close as
+completed. For rejected, superseded, duplicate or abandoned work, explain why,
+remove the status label and close as **not planned**. Do not add Done or a
+Rejected status label. A completed investigation can conclude “do not proceed”
+and still be Done if that fulfills its agreed scope.
+
+When reopening an issue, remove Done if present and choose Icebox, Backlog,
+Planned or WIP from the current evidence and authorization. Preserve topic labels
+and historical discussion. These are manually maintained labels; no automatic
+synchronization with issue closure or pull requests is configured.
+
 ## Issue, branch and pull request workflow
 
 Follow this sequence for each contribution, including documentation changes:

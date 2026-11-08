@@ -61,7 +61,31 @@ and code changes. Apply it in the existing checkout.
    and deployment remain separate user decisions. A request to push a branch
    does not authorize merging it into the default branch.
 
-Workspace and publication rules:
+### Issue status labels
+
+Follow the [issue status definitions](CONTRIBUTING.md#issue-status-labels).
+Use exactly one active status on every open issue, preserving topic labels:
+
+- **Icebox:** future ideas, with no commitment.
+- **Backlog:** intended work visible in the distance.
+- **Planned:** coming soon and in reach, filling the windscreen.
+- **WIP:** authorized work actively underway, including verification and review.
+- **Done:** whole issue completed and verified; closed as completed.
+
+Replace the previous status on transitions. A label is not authorization to
+start implementation or approve review readiness, merge, release or deployment.
+Keep WIP while an implementing PR awaits review or merge; mark Done only when
+its whole scope and acceptance checks are satisfied and any implementing PR is
+merged. A partial increment does not complete its parent issue. Classify tracking
+issues by their remaining scope, and move paused work back according to proximity.
+
+For rejected, superseded, duplicate or abandoned work, record the reason, remove
+any status label and close as not planned; do not use Done or create Rejected.
+A completed investigation with a negative recommendation can still be Done.
+When reopening, replace Done with the appropriate active status. Maintain these
+labels manually alongside the issue/PR workflow; no synchronization is automated.
+
+### Workspace and publication rules
 
 - Never create, use, enter or recommend Git worktrees for this repository,
   through either native tooling or Git commands.
