@@ -1,6 +1,6 @@
 {
   "name": "n8r-surface",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Discover and reconcile AI-relevant components and connections using source evidence and permitted live settings. Experimental working notes; no deployment or compatibility claims.",
   "author": {
     "name": "AI Surface Model contributors",

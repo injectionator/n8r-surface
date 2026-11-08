@@ -319,6 +319,13 @@ Inspect the final diff for unintended changes and sensitive material. Preserve
 unrelated user work. Summarize what changed, what was checked and any remaining
 limitations without claiming capabilities beyond the evidence.
 
+The bundled workspace helper has focused offline checks:
+`node --test tests/workspace.test.mjs` (also included in `npm test`). It requires
+Node.js 22, 24 or 26; no additional dependencies. See the
+[workspace contract](docs/n8r-surface/workspace.md) and
+[installed-skill human check](docs/n8r-surface/workspace-human-check.md).
+Helper tests do not replace fresh-chat product rehearsal or PM acceptance.
+
 ## Package version checks
 
 `npm run check:version` validates the authoritative package version and lockfile;

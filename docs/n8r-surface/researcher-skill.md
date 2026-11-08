@@ -1,6 +1,6 @@
 # n8r-surface Researcher: start an investigation
 
-**First increment:** an experimental instruction-only Researcher, packaged for
+**First increment:** an experimental Researcher, packaged for
 ChatGPT desktop / Work and Codex. It researches supplied sources with the existing
 harness and saves working notes. It does not add a CLI runner, Lab connection or
 validated experimental HTML/Surface output. Related to [#17](https://github.com/injectionator/n8r-surface/issues/17).
@@ -21,6 +21,16 @@ for those broader tasks; the short first trial below uses authentication.
 For a compact security brief and explicit reconciliation, use the
 [Skeleton Surface walkthrough](researcher-skeleton-check.md). This provisional
 Markdown profile adds no validated structured-output contract.
+
+For workspace-only setup and recognition, use the
+[workspace contract](workspace.md), [isolated candidate installation](workspace-installation.md)
+and [short human check](workspace-human-check.md). The workspace helper requires
+Node.js 22, 24 or 26 and a persistent local filesystem. Desktop workspace
+acceptance is pending; a cloud-only chat cannot perform local setup.
+
+The installation commands below change the selected host's plugin registration.
+For issue #41 trials, prefer the isolated procedure above; replacing a normal
+installation must be an explicit choice.
 
 ## RESEARCH-01: investigate and continue
 
@@ -47,7 +57,7 @@ Refreshing the desktop app alone does not refresh the Git snapshot.
 
 You need a local Work
 or Codex chat that can read your LibreChat checkout and save files. Existing
-ChatGPT sign-in is sufficient for this instruction-only plugin; it adds no model
+ChatGPT sign-in is sufficient for research through this plugin; it adds no model
 API connection. Work's picker and full lifecycle still need
 [human acceptance](researcher-skill-verification.md#remaining-work-mode-acceptance).
 
@@ -56,13 +66,13 @@ API connection. Work's picker and full lifecycle still need
    or build of n8r-surface is needed:
 
    ```sh
-   codex plugin marketplace add injectionator/n8r-surface --ref feat/17-skeleton-surface --json
+   codex plugin marketplace add injectionator/n8r-surface --ref feat/41-skill-workspace --json
    codex plugin add n8r-surface@n8r-surface --json
    codex plugin list --marketplace n8r-surface --json
    ```
 
    Expected: exit 0 and one installed/enabled `n8r-surface@n8r-surface`, version
-   `0.1.8`. The branch is a changing draft candidate, not a release on `main`.
+   `0.1.9`. The branch is a changing draft candidate, not a release on `main`.
    Use an identified commit with `--ref` for a repeatable installation. Network
    access is required; the commands change plugin configuration/cache.
 2. **Open your source.** Start a local chat with your LibreChat folder selected.
@@ -137,7 +147,7 @@ These are packaging contracts; host behavior still needs its own rehearsal.
   Both use the same skill files; no second instruction copy is maintained.
 - [The repository marketplace](../../.agents/plugins/marketplace.json) exposes
   `n8r-surface@n8r-surface` as available, without forcing installation.
-- Plugin and skill version `0.1.8` identify this experimental candidate. Increment
+- Plugin and skill version `0.1.9` identify this experimental candidate. Increment
   them when changing distributed instructions; record the Git revision and
   installed file digest with test results. This is separate from the npm version.
 
@@ -162,7 +172,7 @@ codex plugin list --marketplace n8r-surface --json
 ```
 
 Expected: each command exits 0. The installed list contains exactly one
-`n8r-surface@n8r-surface`, version `0.1.8`, installed and enabled. The installation
+`n8r-surface@n8r-surface`, version `0.1.9`, installed and enabled. The installation
 path varies by computer. `alreadyAdded: true` is fine on a repeated marketplace
 registration. Do not register a second copy of the skill in `.agents/skills`.
 
@@ -201,7 +211,7 @@ is not access in a cloud chat.
    > and gaps, and ask the next question that would help me choose a setup.
    > Save working research notes that I can reopen.
 
-   Expected: the skill identifies version `0.1.8`, reads the two actual documents,
+   Expected: the skill identifies version `0.1.9`, reads the two actual documents,
    cites evidence and saves a readable note outside the plugin cache. Independently
    open that note. Both conflicting batch maxima (10 and 25) and the unknown model
    version must survive; optional features must not become user selections. The
@@ -248,7 +258,7 @@ git archive --format=zip --output="$n8r_skill_zip/n8r-surface.zip" HEAD:plugins/
 python3 -m zipfile -l "$n8r_skill_zip/n8r-surface.zip"
 ```
 
-Expected: exit 0; the archive has both manifests, one skill with its four references
+Expected: exit 0; the archive has both manifests, one skill with its five references and workspace helper
 and OpenAI metadata, the icon and licence files. It contains no Git history,
 source-repository research data, credentials or node_modules. The output directory
 varies. Archive only the committed plugin subtree so paused/untracked work cannot

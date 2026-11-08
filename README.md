@@ -82,6 +82,10 @@ with fresh-session revision; see the [candidate evidence and limits](docs/n8r-su
 [command outcome specification](docs/n8r-surface/command-outcomes.md) for the
 intended interactions and required evidence.
 
+The issue #41 skill candidate adds [standalone workspace setup and recognition](docs/n8r-surface/workspace.md)
+before research, with a minimal identity record and preservation checks. Installed
+candidate PM acceptance is [tracked separately](docs/n8r-surface/workspace-verification.md).
+
 The [n8r-surface Researcher skill package](docs/n8r-surface/researcher-skill.md) is now
 available for testing in the existing Codex/ChatGPT harness. It uses the host's
 source access and conversation to produce evidence-backed working notes. The
