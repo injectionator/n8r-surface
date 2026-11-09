@@ -89,3 +89,44 @@ package/terminal checks passed on Node 22.23.2, 24.22.2 and 26.13.0.
 This is an installed agent rehearsal. Public npm publication, human acceptance
 of the CLI and Labs compatibility are not claimed. Later documentation alignment
 does not change the installed candidate's recorded code revision or archive.
+
+## Open conversation and return, 9 November 2026
+
+The new interactive entry point accepts a research question immediately. It uses
+the current folder unless the user selects another source. Questions and
+corrections do not require preparing a Surface first. Plain `save` can prepare
+and persist the current result; later startup offers the saved title and remembers
+its source/model. Source conflicts keep the question available for correction.
+A recent-index failure reports the saved paths and preserves the saved result.
+
+An installed live run exercised bare startup → research question → unrelated
+follow-up about authentication → `save the result` → `exit`, then a fresh bare
+startup → select title by number → add a decision → `save` → `exit`. Both
+processes exited 0. Independent helper readback confirmed exact parent references,
+retained component identities and the runtime-verification deferral, plus the
+new OIDC-investigation deferral. Source, settings and predecessor bytes stayed
+unchanged; the recent-work entry advanced to the successor. This used Codex
+0.166.0, its configured gpt-6-astra model, ChatGPT sign-in and Node 26.13.0.
+
+The first live attempt exposed a conflicting old instruction requiring another
+save command. It saved the initial result but did not save a successor; that run
+is retained as failed evidence. The host now explicitly authorizes Surface
+staging during a plain-language save request. The repeated full journey passed.
+
+The successful rehearsal archive was built from a working checkout before the
+version bump (package version .2), SHA-256:
+`7c6b07625295dcde330b8b0a3740cb04d8e5d666e134f72002f159154d9cfdd1`.
+Every runtime file and bundled instruction was independently compared with the
+clean .4 candidate from `1b3082d143a2829dc62624de3859ac25b5a41d42`; all bytes
+matched. The .4 scoped archive SHA-256 is
+`cf19b37c89a20bad6237ded40779b7f0d9436e36b61ed089fc2d5852d398ff83`.
+That archive is installed in the user's Node 22/24/26 environments. The installed
+Node 22 command was also opened normally and reached the free `You>` prompt;
+`exit` returned 0. No Node-default switch or settings migration was performed.
+
+208 tests pass on Node 22.23.2, 24.22.2 and 26.13.0. The first Node 24 run had a
+subprocess timeout in the existing occupied-vault startup check; its isolated
+rerun and the full suite passed without a code change. Terminal regressions cover
+new conversation, plain save, fresh startup selection, source correction and
+index failure. This evidence remains agent rehearsal, not user acceptance,
+public npm availability or Labs compatibility.
