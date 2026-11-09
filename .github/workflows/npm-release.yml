@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   release:
-    if: github.repository == 'injectionator/n8r-surface' && github.ref == 'refs/tags/v0.1.0-experimental.3'
+    if: github.repository == 'injectionator/n8r-surface' && github.ref == 'refs/tags/v0.1.0-experimental.4'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -51,7 +51,7 @@ jobs:
         run: |
           # API failures fail closed; a draft or published release blocks rebuilding.
           gh api --paginate --slurp repos/injectionator/n8r-surface/releases > "$RUNNER_TEMP/releases.json"
-          node --input-type=module -e 'import fs from "node:fs"; const releases=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/releases.json")); if (releases.flat().some(r=>r.tag_name==="v0.1.0-experimental.3")) throw Error("Release already exists; reuse its retained artifacts")'
+          node --input-type=module -e 'import fs from "node:fs"; const releases=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+"/releases.json")); if (releases.flat().some(r=>r.tag_name==="v0.1.0-experimental.4")) throw Error("Release already exists; reuse its retained artifacts")'
           npm ci
           npm cache add yaml@2.9.1
           npm test
@@ -71,14 +71,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create v0.1.0-experimental.3 --verify-tag --target "$GITHUB_SHA" --draft --prerelease --title '0.1.0-experimental.3' --notes 'Experimental scoped package release. Publication and independent registry verification are pending.' "$RUNNER_TEMP/candidates/candidates.json" "$RUNNER_TEMP/candidates/"*.tgz
+          gh release create v0.1.0-experimental.4 --verify-tag --target "$GITHUB_SHA" --draft --prerelease --title '0.1.0-experimental.4' --notes 'Experimental scoped package release. Publication and independent registry verification are pending.' "$RUNNER_TEMP/candidates/candidates.json" "$RUNNER_TEMP/candidates/"*.tgz
       - name: Download and verify retained release artifacts
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir "$RUNNER_TEMP/retained"
-          gh release download v0.1.0-experimental.3 --dir "$RUNNER_TEMP/retained" --pattern candidates.json --pattern '*.tgz'
-          node --input-type=module -e 'import fs from "node:fs"; const d=process.env.RUNNER_TEMP+"/retained"; for(const folder of ["scoped"]) { fs.mkdirSync(d+"/"+folder); fs.copyFileSync(d+"/n8r-surface-0.1.0-experimental.3-"+folder+".tgz",d+"/"+folder+"/n8r-surface-0.1.0-experimental.3.tgz") }'
+          gh release download v0.1.0-experimental.4 --dir "$RUNNER_TEMP/retained" --pattern candidates.json --pattern '*.tgz'
+          node --input-type=module -e 'import fs from "node:fs"; const d=process.env.RUNNER_TEMP+"/retained"; for(const folder of ["scoped"]) { fs.mkdirSync(d+"/"+folder); fs.copyFileSync(d+"/n8r-surface-0.1.0-experimental.4-"+folder+".tgz",d+"/"+folder+"/n8r-surface-0.1.0-experimental.4.tgz") }'
           npm run check:release -- "$RUNNER_TEMP/retained"
       - name: Stage missing versions or verify approved registry bytes
         if: inputs.operation != 'prepare'

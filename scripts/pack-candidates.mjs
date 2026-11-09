@@ -33,7 +33,7 @@ export function packCandidates(destination, {publishable = false} = {}) {
     delete manifest.scripts;
     delete manifest.devDependencies;
     if (publishable) {
-      if (manifest.version !== '0.1.0-experimental.3') throw new Error('Publishable preparation is limited to candidate version 0.1.0-experimental.3');
+      if (manifest.version !== '0.1.0-experimental.4') throw new Error('Publishable preparation is limited to candidate version 0.1.0-experimental.4');
       manifest.private = false;
       manifest.publishConfig = {access:'public', registry:'https://registry.npmjs.org', tag:'experimental'};
     }
