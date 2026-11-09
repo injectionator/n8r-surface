@@ -22,37 +22,35 @@ Use permitted sources or sanitized configuration summaries; do not supply secret
 
 ## Human verification
 
-Prerequisites: the installed candidate, Node.js 22/24/26, Codex CLI 0.166.0 signed
-in with ChatGPT, and a configured vault. Use the existing
-[installation and setup guide](getting-started.md). Use the supplied
-[Lumen guide](../../examples/researcher/sources/lumen-guide.md), copied into a
-separate source directory. Keep that source outside the vault output directory.
-These steps send the selected source and messages to OpenAI after confirmation.
+Maintainer preparation: install the candidate in the tester's active Node
+installation, confirm Codex sign-in/model access and vault setup, and open the
+terminal in the existing prepared Lumen source directory. Do not ask the tester
+to build packages or find paths. The checks below send that source to OpenAI
+after confirmation. See [using the command](getting-started.md).
 
-- From the source directory, run `n8r-surface discover .`. Confirm research.
-  Send: “Research the supplied guide and create a Capability Surface distinguishing
-  supported possibilities from configured selections. My decision is to defer
-  runtime verification.” Expect actual source reads and a Capability preview,
-  with that human decision separate from source claims.
-- Enter `/save surface`, then `/exit`. Expect exit 0 and actual saved file paths.
-  Open the brief, HTML and JSON. Expect contract `n8r.surface/0.3`, kind
-  `capability`, source evidence and unverified runtime use. The directory also
-  contains `dependencies.json` and `manifest.json`.
-- Run `n8r-surface reopen /SAVED/surface.json --source /SOURCE`, replacing the
-  two paths with the actual saved file and source directory. Confirm research.
-  Send: “Keep my runtime-verification deferral. Add my decision to defer external
-  OIDC investigation because model-service configuration is the priority.
-  Preserve source claims and identities. Prepare the successor Capability
-  Surface with that dated human decision, keeping runtime unverified.”
-- Enter `/save surface`, then `/exit`. Expect exit 0, a new numbered directory,
-  both decisions in the successor and the original files unchanged. Open both
-  briefs and the successor JSON; its parent identifies the earlier revision.
+- [ ] Run `n8r-surface`. At `You>`, enter: “Research the AI connections in this
+  guide. Keep unknown configuration and runtime use explicit. My decision is to
+  defer runtime verification.” Confirm research. Expect findings based on the
+  guide and the recorded decision. Ask a follow-up question in your own words;
+  the conversation should let you explore freely.
+- [ ] Type `save`. Open the brief or HTML at the returned path. Expect a useful
+  explanation of the connections, source evidence, unknowns and your decision.
+  Type `exit` when you want to leave. No separate Surface-preparation command is
+  required; saving does not end the conversation.
+- [ ] Run `n8r-surface` again and select the saved title by its number. Expect
+  the previous research and decision to return without copying a file path.
+  Say: “Keep my runtime-verification deferral. Add my decision to defer external
+  OIDC investigation because model-service configuration is the priority.”
+  Then type `save`. Expect a new saved result with both decisions; the previous
+  result remains available and unchanged. Type `exit` to leave (exit 0).
+- [ ] Report **Pass / Fail / Blocked** and any point where the experience was
+  confusing or the result was wrong, with the saved links. Wording and filenames
+  can vary. Missing saves, lost decisions or overwritten files fail. Missing
+  installation or sign-in is blocked. Keep the saved work; no cleanup is needed.
 
-Return **Pass / Fail / Blocked**, the installed version, saved file links and
-any error. Generated prose, IDs and dates may vary. Missing saves, invented
-configuration, lost decisions, changed predecessors or success after a validation
-failure are Fail. Missing runtime or sign-in is Blocked. Preserve the source,
-settings and saved work; no cleanup is required.
+Maintainer evidence checks cover exact parent digests, preserved source/settings
+bytes, dependency validation and the local recent-work index. They do not replace
+the user's judgment of the conversation and result.
 
 ## Maintainer evidence
 
