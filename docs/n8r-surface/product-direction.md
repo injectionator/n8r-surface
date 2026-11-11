@@ -28,6 +28,33 @@ investigation is a product use of the model, not a restriction on its meaning.
 The installed n8r-surface skill in Codex is the discovery entry point. CLI breadth,
 a general telemetry backend and a larger schema are not outcomes in themselves.
 
+## Presentation: brief by default, explanation within reach
+
+Default to a short, at-a-glance view with colour where the host supports it,
+recognizable short names and plain-language status labels. Show the relevant
+components and connections, the main finding or question, material uncertainty
+and the next useful action. Short names must remain unambiguous within the view
+and resolve to the same full names and stable identities in expanded detail.
+
+Keep “Explain this” or “More” one click away where interactive controls are
+available, or one natural-language request away in Codex. Explain the selected
+item in context: what it means, why it matters, the supporting evidence and its
+limits. Evidence links should lead to the underlying sources or retained records.
+Expansion uses the same claims and revisions as the summary; fetching new evidence
+is a separate investigation and must be identified as such.
+
+Users who prefer a longer explanation can request it directly. Honour their
+chosen level of detail throughout the current conversation. Persistent preferences
+across chats are a later implementation choice, not an existing capability claim.
+
+Colour reinforces text and symbols; it is never the only carrier of meaning.
+Provide a readable plain-text fallback and keep labels consistent across views.
+Evidence status (possible, configured, observed, unknown) is distinct from a
+security result (for example, a demonstrated unauthorized read). Colour must not
+turn “configured” into “safe”, or a passing scoped check into whole-system approval.
+Material gaps and conditions stay visible in the compact view; longer reasoning,
+source excerpts and investigation history can sit behind expansion.
+
 ## Investigations we bring to the system
 
 For broad intake, the investigator selects relevant questions from discovered
@@ -174,6 +201,13 @@ Use the [installed-skill setup](researcher-skill.md) and
   demonstrated before and after the change, and what remains unproved.” Expect
   stable identities, distinct setup/run references, accessible evidence and
   unchanged predecessor artifacts.
+- [ ] Inspect the default brief. Expect recognizable short names, concise text
+  labels, visible material gaps and colour where supported. Ask: “Explain this
+  connection and show its evidence.” Expect a contextual explanation tied to the
+  same identities and revisions, within one request; a UI control may provide
+  the same action. Ask for a longer explanation, then return to the brief. Expect
+  consistent claims and readable meaning without colour. Record whether both
+  presentation levels help the tester understand the finding.
 - [ ] Report **Pass / Fail / Blocked**, artifact links, failed or blocked steps and
   whether the result explains an actionable security problem. Generated wording
   and identifiers may vary. Unsupported integration claims, a missed seeded
@@ -222,6 +256,7 @@ installed path before deciding which implementation changes are necessary.
 | Questions selected from discovered boundaries | Demonstrate an investigator-generated authority question with rationale and policy basis, rather than a user-supplied diagnosis. This needs explicit acceptance evidence. |
 | A runtime handoff another actor can execute | Provide the relevant graph identities, policy, proposed test, required observation points and gaps. Execution remains outside the current read-only skill. |
 | Evidence-linked findings and before/after comparison | Define the smallest linkage between claims, source revisions, effective setups, runs and retained evidence. Start with readable working records where needed; do not mislabel them as validated structured Observed Surfaces. |
+| Brief and expanded explanations | Verify concise defaults, unambiguous short names, accessible status cues and one-request explanation/evidence access in the installed host. Material uncertainty must survive both views. |
 | Durable continuation | Exercise saved artifact readback and fresh-chat reopening with stable identities, predecessor history and explicit remaining work. |
 
 Observed Surface delivery is currently deferred in the
