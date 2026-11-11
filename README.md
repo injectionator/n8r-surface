@@ -46,6 +46,11 @@ and explicit gaps. Bindings are optional; larger research is not a minimum size.
 This repository maintains the model and standalone tooling. Application design
 and implementation for `n8r-labs` are maintained in its separate repository.
 
+For the security investigation product direction and proposed first proof of
+value, see [from source discovery to a verified defensive change](docs/n8r-surface/product-direction.md).
+The installed skill starts with folders and URLs; possible integrations remain
+distinct from configured systems and runtime evidence.
+
 ## What it describes
 
 An **AI Surface** is the connected system being described: applications, agents,

@@ -1,5 +1,12 @@
 # n8r-surface critical path
 
+The [product direction captured on 11 November 2026](product-direction.md)
+proposes a first value demonstration: installed-skill discovery across sources,
+a bounded security finding on an integrated test system, and a verified defence.
+It accepts unintegrated sources for discovery and requires runtime evidence for
+runtime claims. This is a proposed acceptance target, not implementation or
+rehearsal evidence; the delivery history and existing obligations below remain.
+
 The next installed-skill delivery agreed on 8 November 2026 is
 [Capability and Bound Surfaces from workspace artifacts](surface-descriptions.md),
 tracked by #50 → #51 → #52 under #17. Observed Surface is deferred. The earlier
