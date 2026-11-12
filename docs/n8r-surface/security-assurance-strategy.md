@@ -87,6 +87,99 @@ verification procedures/results to the exact claims and setup they assess. Users
 must be able to navigate from a component to its controls and tests, or from a
 control to every known implementation, uncovered path and outstanding question.
 
+## Domain, identity and control-aware runtime paths
+
+Assess the paths an LLM can assemble at runtime against the security framework.
+A test needs business meaning: which actor, acting from which context, attempts
+which operation on which resource, under which policy? HR records, CRM accounts,
+financial transactions and clinical data introduce different permissions and
+consequences. Trace authentication, authorization and accounting across the path,
+including changes from the initiating user to delegated or service identities.
+
+The circuit analogy describes how a request can connect tools, data and services
+into an execution path. It is an explanatory view of the same AI Surface Model,
+not a separate model or a claim that the LLM controls every connection. Host logic,
+tool availability, permissions and external systems also determine execution.
+The following synthetic diagram illustrates one candidate path, not live evidence:
+
+```mermaid
+flowchart LR
+    U[User and request context] --> A[Application and LLM]
+    A -->|Proposed tool call| G[Tool gateway]
+    G -->|Executed request| C[Service authorization]
+    C -->|Permitted operation| D[Protected business data]
+    C -->|Denied operation| X[Denial]
+    P[Policy and control requirements] -.-> G
+    P -.-> C
+    G -.-> E[Correlated execution evidence]
+    C -.-> E
+    D -.-> E
+```
+
+The illustrated enforcement points are candidates to investigate; their presence,
+coverage and effectiveness require evidence. A real path may branch, run in
+parallel, retry, loop or invoke further agents. Finite tools do not imply a small
+set of histories: arguments, state and repeated operations can produce an enormous
+or unbounded execution space. Do not promise exhaustive testing of arbitrary
+human inputs or every possible circuit.
+
+Assess the intended protection of each technique against explicit requirements:
+input constraints, actor/task-specific tool access, per-action authorization,
+sequence/state restrictions, approval bound to the executed action, execution/data
+budgets, and detection/interruption. These are candidate control families, not an
+adopted catalog. Input filtering or an LLM guardrail must not receive credit for
+service authorization without evidence that it enforces the relevant requirement.
+Individually permitted operations may combine into a forbidden business outcome.
+
+The assessment must identify which control held or failed. If the model proposes
+a prohibited read and the service denies it, downstream authorization held for
+that attempt even if a guardrail did not. If the model refuses after a tool has
+retrieved protected data, investigate the retrieval and disclosure separately.
+If the response invents a record without retrieval, assess integrity rather than
+claiming demonstrated unauthorized data access. Prompt injection is one means of
+exercising these boundaries; direct requests, retrieved content, tool outputs and
+stateful sequences can test the same business rule. Existing probe engines can
+supply inputs; the framework supplies context, expectations and evidence criteria.
+
+### Proof, counterexamples and bounded tests
+
+| Conclusion | Required basis and limit |
+| --- | --- |
+| Proved within stated assumptions | An identified property and explicit model/scope, justified assumptions and a suitable proof or exhaustive analysis of a bounded state space. Establish how the analyzed model corresponds to the deployed setup; a model proof alone is not proof of the whole live service. |
+| Disproved by a counterexample | A traceable execution violating the exact claim under its applicable conditions. One valid counterexample defeats a universal claim, even if the behavior is intermittent; it does not establish prevalence or failure of unrelated controls. |
+| Supported by bounded testing | Identified cases, repetitions, outcomes and observation coverage. Report the tested conditions and unexplored space; passing samples do not prove all paths safe. |
+| Inconclusive or blocked | Missing prerequisites, ambiguous attribution or insufficient telemetry. State what evidence would resolve the judgment; no observed failure does not imply a pass. |
+
+For probabilistic behavior, retain model/provider version where available, relevant
+settings, prompts and source context subject to privacy rules, initial state,
+identity/role, setup revision, attempts and observed outcomes. Record unknown
+provider details and changes. Repeated trials can characterize the sampled
+conditions; do not infer a general failure probability without a justified sampling
+method. Keep a retained counterexample even if later attempts cannot reproduce it.
+
+### Proposed Labs view: watch and replay the circuit
+
+A proposed n8r-labs consumer capability is to draw observed execution paths as
+events arrive and replay them afterwards. It should help the consultant see the
+initiating and effective identities, proposed versus executed tool calls, data
+movement, control decisions and resulting effects, with links back to the policy
+and evidence. A denied operation may be an exercised enforcement point without
+being a completed data-access path. A configured control without decision evidence
+must not be displayed as an observed successful check.
+
+Such a view depends on sufficiently correlated, authorized telemetry. Make missing
+instrumentation, delayed events, uncertain ordering and inferred links visible;
+chronological proximity alone does not establish causality. Describe observed data
+movement only to the granularity supported by evidence, without exposing protected
+payloads. Preserve the Run and effective setup so replay cannot silently substitute
+today's configuration for the one tested. The visualization is a view onto evidence,
+not proof of complete execution coverage.
+
+This records a consumer outcome and evidence requirements only. Labs UI design,
+instrumentation, event transport/storage and implementation belong in the separate
+n8r-labs repository. A static evidence-linked path is enough for the first framework
+slice; live animation is not a prerequisite for proving a bounded control failure.
+
 ## Demonstrating conformance and reporting posture
 
 The distinguishing outcome is observable testing of control effectiveness.
@@ -129,10 +222,11 @@ acceptance loop while developing the first bounded framework example.
 | --- | --- | --- |
 | Discovery and durable descriptions | Capability/Bound contract, standalone skill 0.1.11 and two-product verification merged in #53/#54/#58. These provide identities, relationships, evidence and revision preservation. | Retain the accepted bounded evidence; do not reinterpret it as security-posture acceptance. |
 | Practical consultant intake | Incremental source discovery and fresh-session correction rehearsed in draft #63; installation handoff in draft #62. | User review of the saved brief and useful next enquiries; preserve source/configuration/runtime distinctions. |
-| First framework slice | Next proposed milestone: one security capability, a small explicit control set, a provisional level profile, implementation guidance and verification procedures. | A consultant and engineer can trace one policy requirement down to a test and a discovered fact back to the requirement, using a synthetic worked example. Approve the bounded profile before rating against it. |
+| First framework slice | Next proposed milestone: one security capability, a small explicit control set, a provisional level profile, domain/identity context, implementation guidance and verification procedures with explicit proof/test limits. | A consultant and engineer can trace one policy requirement down to a test and a discovered fact back to the requirement, using a synthetic worked example. Approve the bounded profile before rating against it. |
 | Static and configured assessment | Apply that slice to a known composition using the existing discovery path. LibreChat/VPS/Atlas is an existing motivating path, not a required architecture or verified posture. | Evidence-linked control applicability, implementation claims, gaps and proposed probes; independent source/configuration readback. |
-| Observable runtime proof | Extend the [first value demonstration](product-direction.md#smallest-end-to-end-value-demonstration) with the selected control/profile and assessment record. Fixture and execution owner remain to be selected. | One discovered authority failure, a defensive change, prohibited/legitimate retests, downstream evidence and preserved before/after setup references. |
+| Observable runtime proof | Extend the [first value demonstration](product-direction.md#smallest-end-to-end-value-demonstration) with the selected control/profile and assessment record. Fixture and execution owner remain to be selected. | One discovered authority failure, a defensive change, prohibited/legitimate retests, downstream evidence attributing the result to a specific control, a retained runtime path and preserved before/after setup references. |
 | Repeatable assessment and scoring | Derive the initial reporting/rating rules from the worked example, then exercise another composition without product-specific control meanings. | Explicit coverage and critical-failure rules; independent review can reproduce judgments from retained evidence and identify inconclusive cases. |
+| Live path visualization | Proposed Labs consumer outcome: watch/replay observed circuits with identity and control context. No Labs implementation is included here. | Correlated events resolve to the same Run/setup and evidence; proposed/executed/denied actions, inferred links and telemetry gaps remain distinguishable. |
 | Distribution and consumer integration | CLI #59 and scoped candidate #60 remain drafts; #60 is stacked on #59. Labs adaptation belongs in its own repository. | Separate experience acceptance, release decisions and named-consumer evidence; these are delivery channels, not substitutes for assurance proof. |
 
 The narrow runtime demonstration is intended to become the first exercised path
