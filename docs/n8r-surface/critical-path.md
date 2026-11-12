@@ -1,5 +1,13 @@
 # n8r-surface critical path
 
+The [security assurance strategy agreed on 12 November 2026](security-assurance-strategy.md)
+sets the destination: a consultant-led framework connecting policy and levels to
+controls, implementation and observable tests. Its
+[milestone map](security-assurance-strategy.md#existing-work-and-proposed-next-milestones)
+places the existing skill, pending acceptance and proposed first framework slice
+in that context. The delivery history below does not define a complete assurance
+framework or establish a posture score.
+
 The [product direction captured on 11 November 2026](product-direction.md)
 proposes a first value demonstration: installed-skill discovery across sources,
 a bounded security finding on an integrated test system, and a verified defence.

@@ -18,7 +18,17 @@ This list is a research and design sequence, not a release commitment.
 7. Exercise recreation from a shareable example and record required artifacts,
    local bindings and remaining gaps.
 
-## Evidence needed before a release
+## Security assurance product direction
+
+The [agreed strategy](n8r-surface/security-assurance-strategy.md) connects the model
+and discovery work to a practical framework and professional service for consultants,
+security engineers, architects and system owners. Its milestone map starts with
+existing skill acceptance, then a bounded policy/control/verification slice,
+static/configured assessment, observable runtime proof and repeatable posture
+reporting. Level definitions and scoring rules remain to be designed. The broader
+model research sequence above remains relevant and is not a product delivery claim.
+
+## Evidence needed before a model/interoperability release
 
 - Examples have an identified schema version and validate against it.
 - Queries give useful answers without hiding incomplete knowledge.
@@ -26,8 +36,10 @@ This list is a research and design sequence, not a release commitment.
 - Exported documents validate and work with named, versioned consumers.
 - Recreation claims have been attempted in an independent environment.
 
-Current status: conceptual documentation and synthetic examples only. No released
-schema, query engine, exporter, consumer trial or recreation proof is included.
+The model/interoperability sequence remains draft; no universal released schema,
+exporter, consumer compatibility trial or recreation proof is claimed here.
+Experimental command/library delivery and accepted bounded skill verification are
+tracked separately in the [critical path](n8r-surface/critical-path.md) and strategy.
 
 Related: [draft concepts](../spec/README.md),
 [interoperability](interoperability.md), [contributing](../CONTRIBUTING.md).

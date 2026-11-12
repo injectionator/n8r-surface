@@ -1,10 +1,21 @@
 # Product direction: security investigation of composed AI systems
 
-Captured 11 November 2026. Documentation scope:
+Captured 11 November 2026; strategic context expanded 12 November 2026.
+Documentation scope:
 [#64](https://github.com/injectionator/n8r-surface/issues/64).
 This records the user-established direction and a proposed smallest demonstration.
 The demonstration scope below is a recommendation for review, not authorization
 to implement, deploy or test a system. No demonstration results are claimed here.
+
+## Strategic context
+
+The agreed destination is a practical [AI Surface security assurance framework](security-assurance-strategy.md)
+and professional service: policy and assurance levels connect to controls,
+implementation guidance, static/live assessment and observable verification.
+The primary reader is the consultant advising an engineer or architect and the
+system owner. Discovery and this first demonstration are increments toward that
+destination; they do not constitute the whole framework. The strategy maps existing
+work and proposed milestones, including assessment coverage and scoring decisions.
 
 ## Why and for whom
 
