@@ -83,3 +83,7 @@ test('grouping based on a human decision is visibly identified as user evidence 
  for(const f of ['brief.md','surface.html']){assert.match(files[f],/user intent/);assert(!files[f].includes('Grouping describes source architecture'));}
  assert.match(files['brief.md'],/decision-1/);
 });
+test('an explicitly unclassified node with no evidence says placement basis is not recorded',()=>{
+ const b=described();b.services[0].properties=[property('presentation',{boundary:'unknown',area:'Persistence',evidence:[]})];
+ const brief=renderSurface(checkSurfaceBom(b))['brief.md'];assert.match(brief,/Placement basis: Not recorded/);
+});

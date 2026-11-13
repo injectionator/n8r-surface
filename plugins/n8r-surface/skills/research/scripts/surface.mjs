@@ -27550,7 +27550,7 @@ function renderSurface(s) {
   };
   const placementMd = (id2) => {
     const p = s.presentation[id2];
-    return p ? " Placement basis: " + p.evidence.map((e) => `${md(basis2(e))} \u2014 ${evidenceMd([e])}`).join("; ") : "";
+    return p ? " Placement basis: " + (p.evidence.map((e) => `${md(basis2(e))} \u2014 ${evidenceMd([e])}`).join("; ") || "Not recorded") : "";
   };
   const list = (xs, empty) => xs.length ? xs.map((x) => "- " + md(x)).join("\n") : "- " + empty;
   const grouped = groups.map((g) => `### ${boundaryNames[g.boundary]} \xB7 ${md(g.area)}
