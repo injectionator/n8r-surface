@@ -46,6 +46,13 @@ and explicit gaps. Bindings are optional; larger research is not a minimum size.
 This repository maintains the model and standalone tooling. Application design
 and implementation for `n8r-labs` are maintained in its separate repository.
 
+For the agreed professional-service direction, see the
+[AI Surface security assurance strategy](docs/n8r-surface/security-assurance-strategy.md):
+policy, controls, implementation guidance and observable assessment of static and
+live systems. For the proposed first proof of value, see [from source discovery to a verified defensive change](docs/n8r-surface/product-direction.md).
+The installed skill starts with folders and URLs; possible integrations remain
+distinct from configured systems and runtime evidence.
+
 ## What it describes
 
 An **AI Surface** is the connected system being described: applications, agents,
@@ -95,7 +102,10 @@ graphs, reusable product knowledge and comparing descriptions with evidence. See
 Candidate 0.1.13 saves a [self-contained CycloneDX Surface](docs/n8r-surface/skill-cyclonedx.md)
 with a generated brief, visual and investigation journal. Follow the [working user manual](docs/n8r-surface/skill-manual.md)
 for multi-component research, saving and continuation.
-The delivery order is skill first, n8r-labs adaptation second, standalone CLI third.
+The [freeform component journey](docs/n8r-surface/guided-journey-verification.md)
+records installed-skill exploration, later source intake and saved continuation.
+The accepted delivery order is skill first, standalone CLI second, then separate
+n8r-labs adaptation.
 The [local vault](docs/n8r-surface/researcher-vault.md) holds research notes, intermediate artifacts
 and Surface descriptions at a user-selected local path. It also includes prepared test material
 and a walkthrough for investigating another chat-system repository.
@@ -161,8 +171,11 @@ does not establish absence.
 
 ## Working with existing standards and tools
 
-We intend to exchange supported subsets through CycloneDX and SPDX, using native
-constructs where suitable and reporting omitted or transformed information.
+We have adopted CycloneDX as the standards direction for AI Surface exchange and
+SBOM-first discovery. See the [strategic brief](docs/cyclonedx-adoption.md) for the
+decision, discovery policy and open representation choices. Implementation remains
+future work; SPDX remains an interoperability candidate. Use native constructs
+where suitable and report omitted or transformed information.
 Compatibility and round-trip fidelity still need evidence from named versions and
 consuming tools. See the [interoperability research](docs/interoperability.md) for
 mapping questions and related work, including Prismor and sbom-tools.

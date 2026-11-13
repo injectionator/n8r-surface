@@ -4,8 +4,11 @@ The goal is useful exchange with existing ecosystems while preserving the native
 AI Surface description. An export can contain only a subset of that description.
 Its omissions and transformations must be visible to the recipient.
 
-**Status:** proposed mapping questions only. This repository does not yet contain
-an exporter, a validated CycloneDX/SPDX fixture or consumer compatibility results.
+**Status:** CycloneDX is the adopted standards direction; see the
+[strategic brief and SBOM-first discovery policy](cyclonedx-adoption.md). Detailed
+mappings and representation choices remain open. This repository does not yet
+contain an exporter, a validated CycloneDX/SPDX fixture or consumer compatibility
+results.
 
 ## Related work
 
@@ -18,8 +21,9 @@ an exporter, a validated CycloneDX/SPDX fixture or consumer compatibility result
 
 Standards and tools have different roles. A format supporting a concept does not
 prove that a particular producer collects it or that every consumer understands it.
-These are sources of ideas and interoperability candidates, not selected software
-dependencies. No affiliation or endorsement is implied.
+CycloneDX is the selected standards direction; the other projects remain
+interoperability candidates. None is selected here as a software dependency.
+No affiliation or endorsement is implied.
 
 ## Candidate mapping questions
 

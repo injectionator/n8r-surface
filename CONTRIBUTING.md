@@ -72,6 +72,31 @@ Planned or WIP from the current evidence and authorization. Preserve topic label
 and historical discussion. These are manually maintained labels; no automatic
 synchronization with issue closure or pull requests is configured.
 
+## Pull request labels
+
+Issue Kanban labels (`Icebox`, `Backlog`, `Planned`, `WIP`, `Done`) are for issues
+only. PR progress uses GitHub's native draft, ready-for-review, review decision
+and merged/closed states. Keep the linked issue WIP while its implementing PR
+awaits review or merge; a merged partial increment does not make the issue Done.
+
+Apply relevant topic labels to every PR when opening it, and revisit them when
+its scope changes. Issues and PRs share the same topic labels:
+
+| Label | Use on a PR |
+| --- | --- |
+| `bug` | Fixes incorrect behavior. |
+| `enhancement` | Adds or improves a capability. |
+| `documentation` | Focuses on documentation or includes substantial documentation work. |
+| `accessibility` | Addresses a barrier affecting people with disabilities. |
+
+Choose labels from the actual change; do not copy all labels from the linked
+issue. Multiple topic labels are appropriate when each describes substantial
+work. A supporting documentation update alone does not require `documentation`.
+For example, a feature PR can be draft with `enhancement` while its issue is WIP;
+a documentation-only PR uses `documentation`. Labels are maintained manually;
+there is no automatic synchronization or labeling enforcement in `scripts/flow`.
+Labels do not authorize review readiness, merge, release or deployment.
+
 ## Issue, branch and pull request workflow
 
 Follow this sequence for each contribution, including documentation changes:
@@ -85,7 +110,7 @@ Follow this sequence for each contribution, including documentation changes:
    `docs/123-model-links`, with the issue number in its name. Work in the existing
    checkout and preserve unrelated changes.
 3. **Do the work and open a draft PR.** Commit and push the branch, open one
-   matching draft PR. Use `Closes #123` when it completes the issue; use
+   matching draft PR with [appropriate topic labels](#pull-request-labels). Use `Closes #123` when it completes the issue; use
    `Related to #123` for a partial increment and list the work still outstanding.
    Explain the change and record the relevant checks. Repeat the original user
    interaction and independently read back the changed state; report blocked or unproved outcomes explicitly.

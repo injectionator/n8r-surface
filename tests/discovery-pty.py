@@ -14,20 +14,20 @@ import time
 
 def terminal(root, entry, node, mode, answers, expected):
     home = root / mode
-    home.mkdir()
-    (home / '.n8r').mkdir()
+    home.mkdir(exist_ok=True)
+    (home / '.n8r').mkdir(exist_ok=True)
     vault = home / 'vault'
     for name in ['research', 'artifacts', 'surfaces']:
-        (vault / name).mkdir(parents=True)
+        (vault / name).mkdir(parents=True,exist_ok=True)
     settings = home / '.n8r/n8r-surface.json'
     settings.write_text(json.dumps({'version': 1, 'vaultRoot': str(vault)}))
     source = home / 'source'
-    source.mkdir()
+    source.mkdir(exist_ok=True)
     source_file = source / 'case.md'
     source_file.write_text('ACTUAL_SYNTHETIC_SOURCE_BYTES\n')
     (home / 'outside.txt').write_text('OUTSIDE_SCOPE_SENTINEL')
     bin_dir = home / 'bin'
-    bin_dir.mkdir()
+    bin_dir.mkdir(exist_ok=True)
     trace = home / 'trace.jsonl'
     surface_content = json.loads(subprocess.check_output([node, '--input-type=module', '-e', "const {content}=await import(process.argv[1]); console.log(JSON.stringify(content()));", (Path(__file__).resolve().parent/'surface-fixture.mjs').as_uri()]))
     surface_content['research']['sources'][0]['location'] = 'case.md'
@@ -39,7 +39,7 @@ const mode=MODE, trace=TRACE, surfaceContent=SURFACE_CONTENT;
 if(process.env.OPENAI_API_KEY) throw new Error('API key inherited');
 fs.appendFileSync(trace,JSON.stringify({pid:process.pid,args:process.argv.slice(2)})+'\n');
 if(process.argv.includes('--version')) {console.log('codex-cli 0.166.0');process.exit(0);}
-let thread, count=0;
+let thread, count=0, surfaceSave=false;
 const send=x=>console.log(JSON.stringify(x));
 readline.createInterface({input:process.stdin}).on('line',l=>{
  const x=JSON.parse(l);fs.appendFileSync(trace,JSON.stringify(x)+'\n');
@@ -54,7 +54,7 @@ readline.createInterface({input:process.stdin}).on('line',l=>{
   result({thread:{id:thread,ephemeral:true,environments:[]},model:'fixture-model',modelProvider:'openai',approvalPolicy:'never',activePermissionProfile:{id:'n8r_source_tools'},sandbox:{type:'readOnly',networkAccess:false}});
  }
  if(x.method==='turn/start') {
-  count++;
+  count++;surfaceSave=x.params.input[0].text.startsWith('HOST_SURFACE_SAVE_REQUEST');
   if(mode==='malformed-start'){result({turn:{}});return;}
   if(mode==='stale' && count===2){
    send({method:'turn/completed',params:{threadId:thread,turn:{id:'turn-1',status:'completed'}}});
@@ -88,7 +88,7 @@ readline.createInterface({input:process.stdin}).on('line',l=>{
   const text=JSON.stringify(x.result);
   if(mode==='outside') {if(x.result.success!==false || text.includes('OUTSIDE_SCOPE_SENTINEL'))throw new Error('scope escaped');}
   else if(!text.includes('ACTUAL_SYNTHETIC_SOURCE_BYTES'))throw new Error('not actual source bytes');
-  if(mode.startsWith('surface') && count===1) {
+  if((mode.startsWith('surface') && count===1) || (mode.startsWith('launcher') && surfaceSave)) {
    send({id:'surface-'+count,method:'item/tool/call',params:{threadId:thread,turnId:'turn-'+count,tool:'surface_draft',arguments:surfaceContent}});return;
   }
   send({method:'item/completed',params:{threadId:thread,turnId:'turn-'+count,item:{type:'agentMessage',text:'TEST_RESPONSE_'+count}}});
@@ -111,17 +111,20 @@ readline.createInterface({input:process.stdin}).on('line',l=>{
         newer.write_bytes(old.read_bytes())
         os.utime(old, (2000000000, 2000000000))
         predecessor_bytes = old.read_bytes()
+    if mode=='launcher-index-bad':
+        (home/'.n8r/recent.json').write_text('human edits')
     before = settings.read_bytes(), source_file.read_bytes()
     master, slave = pty.openpty()
     env = {**os.environ, 'HOME': str(home), 'OPENAI_API_KEY': 'PRIVATE_VALUE_MUST_NOT_APPEAR',
            'PATH': os.pathsep.join([str(bin_dir), str(Path(node).parent), os.environ['PATH']])}
-    command = ['discover', str(source)]
+    before_saved={str(p):p.read_bytes() for p in vault.rglob('*') if p.is_file()}
+    command = [] if mode.startswith('launcher') else ['discover', str(source)]
     if mode.startswith('reopen'):
         command = ['reopen', '--source', str(source)]
         if mode == 'reopen-explicit':
             command.insert(1, str(old))
     child = subprocess.Popen([node, entry, *command], env=env,
-                             stdin=slave, stdout=slave, stderr=slave, cwd=home)
+                             stdin=slave, stdout=slave, stderr=slave, cwd=home if mode=='launcher-parent' else source)
     os.close(slave)
     output = b''
     cursor = sent = 0
@@ -144,6 +147,8 @@ readline.createInterface({input:process.stdin}).on('line',l=>{
                     if at >= 0:
                         cursor = at + len(answers[sent][0])
                         answer = answers[sent][1]
+                        if answer==b'/source SELECTED\n':
+                            answer=('/source '+str(source)+'\n').encode()
                         if answer == 'SIGINT':
                             child.send_signal(signal.SIGINT)
                         else:
@@ -164,6 +169,17 @@ readline.createInterface({input:process.stdin}).on('line',l=>{
             assert b'Saved and read back:' in output
             assert b'Preparing note' in output
             assert b'Waiting for Codex' in output
+        elif mode.startswith('launcher'):
+            assert len(list(vault.rglob('surface.json')))==1+sum(p.endswith('/surface.json') for p in before_saved)
+            assert all(Path(p).read_bytes()==data for p,data in before_saved.items())
+            if mode=='launcher-index-bad':
+                assert (home/'.n8r/recent.json').read_text()=='human edits'
+                assert b'could not be updated' in output and b'Next time, open' not in output
+            else:
+                recent=json.loads((home/'.n8r/recent.json').read_text())
+                assert len(recent)==1 and recent[0]['source']==str(source)
+                assert Path(recent[0]['path']).exists()
+            assert b'Saved' in output
         elif mode == 'surface':
             assert len(list(vault.rglob('surface.json'))) == 1, output.decode()
             assert len(list(vault.rglob('research.html'))) == 1
@@ -235,5 +251,9 @@ with tempfile.TemporaryDirectory(prefix='n8r-discovery-pty-') as temporary:
         ('cancel-connect', [(confirm, b'y\n'), (b'Connecting to Codex', 'SIGINT')], 130),
         ('eof-prompt', [(confirm, b'y\n'), (prompt, b'\x04')], 0),
     ]
+    cases.insert(0,('launcher',[(prompt,b'Describe the AI connections\n'),(confirm,b'y\n'),(prompt,b'save the result\n'),(prompt,b'exit\n')],0))
+    cases.insert(1,('launcher',[(prompt,b'1\n'),(confirm,b'y\n'),(prompt,b'Keep my decision and explain the unknowns\n'),(prompt,b'save\n'),(prompt,b'exit\n')],0))
+    cases.append(('launcher-parent',[(prompt,b'Describe the AI connections\n'),(prompt,b'/source SELECTED\n'),(confirm,b'y\n'),(prompt,b'save\n'),(prompt,b'exit\n')],0))
+    cases.append(('launcher-index-bad',[(prompt,b'Describe the AI connections\n'),(confirm,b'y\n'),(prompt,b'save\n'),(prompt,b'exit\n')],0))
     for mode, answers, expected in cases:
         terminal(root, entry, node, mode, answers, expected)

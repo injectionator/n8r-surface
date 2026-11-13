@@ -1,115 +1,74 @@
-# Create a Surface from saved research
+# Research with n8r-surface
 
-The experimental command saves a linked research HTML record and partial Surface
-JSON alongside Markdown research notes. Reopen either saved file to revise the pair.
-The first published package is `@n8r/surface@0.1.0-experimental.2`; see the
-[release and verification record](npm-release.md#verified-scoped-release).
-Use Node 22, 24 or 26, Codex CLI **0.166.0**, and an existing ChatGPT sign-in with
-access to `gpt-6-astra`. No API-key billing or model fallback is used.
+The current local candidate opens a conversation. From the project folder you
+want to investigate, run:
 
-For isolated checks of locally built candidates, use the
-[distribution walkthrough](npm-distribution.md). The registry install below
-replaces the command in your npm global prefix. The unscoped npm package is not
-published; the executable is still named `n8r-surface`.
+```sh
+n8r-surface
+```
 
-## 1. Install
+Tell it what you want to know. For example:
 
-- Open a terminal and paste:
+```text
+Which AI services does this project connect to, and what is still unclear?
+```
 
-  ```sh
-  npm install --global @n8r/surface@0.1.0-experimental.2
-  n8r-surface --version
-  ```
+You can ask follow-up questions, correct a finding, or change the emphasis.
+There is no required research sequence. `/source PATH` at the opening prompt
+selects another local folder or file; otherwise it uses the current folder.
+Before research starts, you confirm sending source text and messages to OpenAI
+through your existing Codex ChatGPT sign-in. Source files stay unchanged.
 
-  Expect successful installation and `n8r-surface 0.1.0-experimental.2`.
-  Use this exact version or `@experimental`; npm's `latest` tag still points to
-  its first-stage placeholder and has not been promoted.
-  If installation fails, stop and report the error.
+When you want to keep the result, type:
 
-## 2. Create and save a Surface
+```text
+save
+```
 
-Use your existing saved note and its original source. Replace `NOTE` and `SOURCE`
-with their paths (keep quotes). If you have no note, use the optional steps below.
+The command prepares and checks the saved Surface, preserves your decisions and
+unknowns, and shows where to open it. You can keep talking afterward. Type `exit`
+when you want to leave.
 
-- Paste:
+Next time, run `n8r-surface` again. Choose your saved work by its displayed number.
+The command remembers its source and model, opens a fresh conversation and checks
+for changed source evidence. Ask whatever comes next. Saving creates a successor
+and keeps earlier files intact.
 
-  ```sh
-  n8r-surface reopen "NOTE" --source "SOURCE" --model gpt-6-astra
-  ```
+## Installation
 
-  Type **y** at the transmission prompt. Expect evidence comparisons, a fresh
-  conversation and your retained choices. At `You>`, paste:
+The conversation-first experience is a local candidate, not yet a public npm
+release. Follow the [local candidate installation](npm-release.md) or use the
+candidate already installed by your maintainer. Check the command in the same
+terminal where you will use it; npm global commands belong to the active Node
+installation.
 
-  ```text
-  Create a Surface from these notes; show me what is selected and still unknown. Preserve the component IDs, source evidence and my decisions. Prepare the linked research and Surface preview.
-  ```
+Prerequisites are Node.js 22, 24 or 26 and Codex CLI 0.166.0 signed in with
+ChatGPT. The command uses your configured Codex model. Existing vault settings
+are reused; a new installation asks where to save research once. Installation
+and upgrades preserve existing settings and research.
 
-  Expect a **Validated partial Surface preview** listing components, declared
-  connections, human decisions, requirements, coverage, gaps and evidence.
-- Enter `/save surface`. Expect **Saved and read back** for `research.html` and
-  `surface.json`. Open both: they should match the preview. Copy the JSON path,
-  then enter `/exit`; expect exit 0 and the terminal prompt.
+The historical registry version `@n8r/surface@0.1.0-experimental.2` does not include
+this opening conversation. See the [release record](npm-release.md#verified-scoped-release).
 
-## 3. Reopen and revise
+## Other ways to work
 
-- Paste, replacing `SURFACE_JSON` with the saved JSON path and `SOURCE` with the
-  same source path:
+Existing explicit commands remain available:
 
-  ```sh
-  n8r-surface reopen "SURFACE_JSON" --source "SOURCE" --model gpt-6-astra
-  ```
+```sh
+n8r-surface discover . --model gpt-6-astra
+n8r-surface --help
+```
 
-  Type **y**. Expect the same component identities and decisions. Ask to change
-  one decision, with your reason, and prepare an updated Surface. For the optional
-  Lumen case below, paste:
+`reopen SAVED_FILE --source SOURCE` opens an existing note or Surface by path,
+including older files. Those placeholders represent your selected files; ordinary
+continuation through the opening saved-work list does not require them.
 
-  ```text
-  Select external OIDC in the desired composition because this investigation now requires centralized sign-in. This is my selection, not proof of a configured provider. Keep the provider and model unknown, preserve existing IDs and evidence, and prepare the updated Surface preview.
-  ```
+`/save note` saves a Markdown working note. The explicit `discover` and `reopen`
+commands retain their original `/save` Markdown behavior; plain `save` saves a
+Surface. `/save surface` saves a current preview. A save request in the opening
+conversation can prepare the Surface for you, without a separate preview command.
 
-- Inspect the preview, enter `/save surface`, then `/exit`. Expect a new numbered
-  pair, exit 0 and the original pair unchanged. Open both revisions and compare
-  component IDs, evidence, the decision and parent references. The new
-  `research.html` path can also be used with the same reopen command.
-
-Report **Pass**, **Fail** or **Blocked**, with the changed decision and unexpected
-message or excerpt. Wording and filenames vary. Lost evidence/IDs/decisions,
-overwrites or a claimed save without files are failures. Keep test pairs or delete
-only their numbered directories afterward; keep your vault, source and earlier work.
-
-`/save` still writes Markdown. `/save surface` needs a current validated preview;
-a later question invalidates the old preview, so request an updated one after a
-correction. Edited HTML or mismatched pair bytes are rejected and preserved; make
-changes conversationally in a new revision. Ctrl-C cancels with exit 130. The
-[maintainer evidence](surface-revisions-verification.md) distinguishes agent
-rehearsal from human acceptance and lists remaining limits.
-
-## Optional: create a research note first
-
-- Paste:
-
-  ```sh
-  n8r-surface
-  research_source="$(npm root -g)/@n8r/surface/examples/researcher/sources/lumen-guide.md"
-  n8r-surface discover "$research_source" --model gpt-6-astra
-  ```
-
-  The first command reuses your vault (or asks you to choose/create it once).
-  The `discover` command uses the fictional source bundled in your installed
-  package and requests permission to send inspected
-  text to OpenAI. Type **y**; expect the connected model and `You>` prompt.
-- At `You>`, paste this as one line:
-
-  ```text
-  Describe the AI components and connections with stable component IDs and source citations. For this investigation I choose not to use external OIDC: retain that as my decision, not a change to the source. Keep unknowns and useful next steps clear.
-  ```
-
-  Expect a source read and cited findings. The [source](../../examples/researcher/sources/lumen-guide.md)
-  describes configured inference; OIDC is an option, not proof of selected or
-  exercised authentication. Your decision must stay separate from source claims.
-- Enter `/save`. Expect a numbered destination followed by **Saved and read back**,
-  its full path and SHA-256 digest. While waiting, a spinner shows
-  **Preparing note** and elapsed seconds; answers use **Waiting for Codex**.
-  It should stop when the operation finishes or you cancel. Open that file: it should retain component IDs,
-  your OIDC choice, evidence and next steps. Copy its path, then enter `/exit`.
-  Expect exit 0 and the terminal prompt.
+If a source has moved, select its new location with `/source PATH` before choosing
+saved work. If saved bytes were edited or damaged, the command preserves them and
+reports the conflict. Older saves without a recent-work entry can still be opened
+with `reopen`; saving them adds them to the list.
