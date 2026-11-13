@@ -66,6 +66,29 @@ Old native/exchange saves remain readable when deliberately supplied. Migration
 requires reviewing their evidence and recording limits; no automatic lossless
 conversion is claimed. See the [format details](skill-cyclonedx.md).
 
+## What the fresh rehearsal showed
+
+The installed Researcher saved an initial plan before inspecting sources, then a
+second revision with the partial graph and next options. It worked from the
+explicitly supplied checkout, without the old operational notes. It reported that
+Git inspection was unavailable in its session and used inspected-file hashes.
+That is a useful distinction: source identity can be bounded without pretending
+the entire checkout or deployment has been verified.
+
+A scripted user diversion successfully moved the investigation to authentication.
+The journal kept the tool/document paths as deferred, with reasons, and retained
+the choice as a rehearsal decision. Earlier files were unchanged. The agent's
+presentation check initially missed a setting name because Markdown escaped its
+underscores; it normalized that escaping and completed readback. If a check fails,
+ask what failed and how readback was verified, rather than accepting a bare success
+claim.
+
+The fresh continuation received only a copied BOM and source access. It recovered
+the authentication-first choice and deferred work, proposed two next steps with
+access requirements, and saved another revision. Earlier files, relationships and
+source evidence remained intact. This exercises the ordinary “continue this
+Surface” interaction; human visual review and acceptance remain separate.
+
 ## Report your check
 
 Pass when the brief is useful, evidence is inspectable, choices survive reopening

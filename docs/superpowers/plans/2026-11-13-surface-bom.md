@@ -36,15 +36,15 @@ authority for new saves; retain deliberate legacy access. No new runtime package
   paths, changed views and escaped HTML. Bundle standalone `surface.mjs` and
   exercise it outside the checkout. Retain deliberate legacy reading and document manual migration with explicit
   limitations; do not claim an automatic converter.
-- [ ] Update installed skill instructions/references and the manual for fresh
+- [x] Update installed skill instructions/references and the manual for fresh
   context, automatic evidence inference, ordinary save, living journal, links and
   next steps. Use current behavior as baseline and installed sessions as outcome
   evidence. Update command intents and repository candidate descriptions.
-- [ ] Evaluate a pinned Sunshine checkout with the synthetic BOM; record actual
+- [x] Evaluate a pinned Sunshine checkout with the synthetic BOM; record actual
   service/model/profile behavior and select the useful renderer. Install exact
   candidate bytes and run fresh LibreChat assessment, diversion and continuation
   in a private workspace. Independently check saved bytes and BOM-only recovery.
-- [ ] Run all relevant checks, fresh whole-branch review, fix material findings,
+- [x] Run all relevant checks, fresh whole-branch review, fix material findings,
   commit/push and update draft PR with exercised human verification and limits.
 
 ## Ledger
@@ -70,3 +70,10 @@ suite: 15/15. No deferred minor findings. Installed behavior, research accuracy,
 browser acceptance and general consumer fidelity require their separate evidence.
 The package smoke check initially failed on the previous instruction digest;
 updated the exact candidate digest after reviewing the new instructions.
+
+Final verification: 224/224 tests and package checks on Node 22.23.2, 24.22.2
+and 26.13.0. Markdown, offline links/anchors, citation, JSON and workflow checks
+passed. Initial installed assessment at `2b2816e`; reviewed bytes at `bd2b8ae`
+completed diversion and BOM-only fresh-session continuation. Fifteen predecessor
+files were unchanged. Browser visual QA was blocked by the local-file URL policy;
+no workaround attempted. Human acceptance remains pending, with the PR draft.
