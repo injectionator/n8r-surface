@@ -29,6 +29,49 @@ revision, without adding a CLI command. See the [task, evidence and human
 check](skill-surface-artifacts.md). Installed rehearsal and human acceptance remain
 distinct from contract checks.
 
+## Open, research, save and return (#17)
+
+Given a configured vault and signed-in Codex, running `n8r-surface` in a terminal
+opens a research prompt and lists saved work by title. Type the investigation;
+the current folder is the default source. Optional `/source PATH` changes it. Confirm source
+transmission once, then converse normally. Type `save` to save the result and
+`exit` to leave. Running `n8r-surface` again offers the saved title; selecting its
+number reopens it with the remembered source and model. Save a successor without
+replacing earlier files. Missing/moved sources require a new source selection.
+
+Plain `save`, `save the result` and guided `/save` prepare a checked Surface if
+needed and persist it only after validation. `/save note` saves Markdown.
+Explicit `discover`, `reopen`, their options and legacy `/save` note behavior
+remain available. Noninteractive startup retains the read-only overview.
+A local recent-work index beside settings remembers source/model/output paths;
+it is not part of portable Surface data. Index failure must not conceal an
+otherwise successful artifact save. No saved outputs are removed by this flow.
+
+Installed .3 baseline prints configuration and exits after vault readiness;
+it offers no research prompt or remembered-work selection. Verification will
+exercise bare startup, plain-language research/save, exit and fresh startup
+selection through the installed command, then independently check the files.
+
+## CLI Capability/Bound increment (#17)
+
+Given an installed candidate, a configured vault, Codex 0.166.0 signed in with
+ChatGPT and permitted local sources, ask `discover SOURCE` to prepare a Capability
+or Bound Surface. Enter `/save surface`, exit, then run
+`reopen SAVED/surface.json --source SOURCE` and request a successor. The same
+commands remain public; there is no new subcommand or automatic migration.
+
+Expected: a preview distinguishes possibilities from configured bindings;
+explicit save creates brief, HTML, JSON, dependencies and a checked manifest in
+the next numbered directory. Fresh reopening retains exact dependencies,
+identities, human decisions and parent references. Read the files independently
+and compare predecessor/source bytes. Existing 0.1 pairs remain readable and
+continue in their original format. No runtime-use or Labs compatibility follows.
+
+The installed baseline at `5eed2ac` produced an older 0.1 definition for the
+Capability request. The installed development candidate completed save/reopen/revise with independent
+readback; see [the task and bounded evidence](cli-bundles.md). Final candidate
+bytes and human acceptance remain separate from that rehearsal.
+
 ## Grow the specification with working verification
 
 Work one useful behavior at a time, including behavior that already exists. Add a

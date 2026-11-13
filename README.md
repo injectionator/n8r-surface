@@ -94,8 +94,8 @@ graphs, reusable product knowledge and comparing descriptions with evidence. See
 [verification and pending Work-mode checks](docs/n8r-surface/researcher-skill-verification.md).
 The [freeform component journey](docs/n8r-surface/guided-journey-verification.md)
 records installed-skill exploration, later source intake and saved continuation.
-The delivery order is skill first, standalone CLI second, then separate n8r-labs
-adaptation. CLI and Labs work remains deferred until the skill milestone is accepted.
+The accepted delivery order is skill first, standalone CLI second, then separate
+n8r-labs adaptation.
 The [local vault](docs/n8r-surface/researcher-vault.md) holds research notes, intermediate artifacts
 and Surface descriptions at a user-selected local path. It also includes prepared test material
 and a walkthrough for investigating another chat-system repository.
