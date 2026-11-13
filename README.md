@@ -168,8 +168,11 @@ does not establish absence.
 
 ## Working with existing standards and tools
 
-We intend to exchange supported subsets through CycloneDX and SPDX, using native
-constructs where suitable and reporting omitted or transformed information.
+We have adopted CycloneDX as the standards direction for AI Surface exchange and
+SBOM-first discovery. See the [strategic brief](docs/cyclonedx-adoption.md) for the
+decision, discovery policy and open representation choices. Implementation remains
+future work; SPDX remains an interoperability candidate. Use native constructs
+where suitable and report omitted or transformed information.
 Compatibility and round-trip fidelity still need evidence from named versions and
 consuming tools. See the [interoperability research](docs/interoperability.md) for
 mapping questions and related work, including Prismor and sbom-tools.
