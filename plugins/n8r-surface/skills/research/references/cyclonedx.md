@@ -154,6 +154,12 @@ all secrets. Keep sensitive data out before staging; no raw source snapshots.
 
 ## Continue and reconcile
 
+Before generating a successor, follow the [current-state and concise-brief
+procedure](first-use-overview.md#keep-the-successor-current-and-the-brief-short).
+The renderer omits superseded entries and entries named by a `supersedes` link
+from current findings/actions, retaining them in the journey. It cannot detect
+obsolete prose in scope or gap strings: reconcile those explicitly from evidence.
+
 A supplied BOM alone suffices. Read it with the helper; re-establish source access
 and disclose unavailable sources. Keep IDs, decisions, uncertainty, dated observations and evidence. Correct an
 observation with a new annotation/entry explaining the correction; retain the

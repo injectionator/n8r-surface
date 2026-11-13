@@ -112,6 +112,20 @@ not modify deployments.
 
 ## Inspect live connections with the human
 
+Identify the user's target before listing runtime resources. For source-only
+research, continue source analysis without runtime inventory. If inspection is
+requested but the target is unknown, ask for its identity or location while
+continuing the source work; do not expand into unrelated projects or contexts.
+
+Filter at collection time, before stdout, stderr, tool results or saved evidence.
+Use a server-side target filter and a narrow field projection when available.
+If only a broad response is available, capture it inside the local process,
+select the target and safe fields there, then emit only that projection. Report
+sanitized failure categories without dumping raw responses or stderr. Do not
+print unrelated names, images, IDs, mount paths or Compose file locations and
+then redact them only in the saved artifact. No match means only that the scoped
+query did not identify the target; it does not establish global absence.
+
 Use live inspection when the user's task calls for it and the host provides
 authorized access. Establish the selected application, environment/tenant and
 question from available context; ask only for missing information needed to

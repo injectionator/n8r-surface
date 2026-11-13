@@ -29,7 +29,7 @@ test('brief leads with application meaning and linked implications; mechanics an
  assert.match(brief,/Stored conversations need an access policy/);
  assert.match(brief,/Store choice determines where conversation records are retained/);
  assert.match(brief,/surface.html#ev-evidence-support/);
- assert.match(brief,/intended model connections, identity, stores and enabled tools/);
+ assert.match(brief,/Source-only research needs no running services/);
  assert(!brief.includes('Supported; selection is unknown'));
  assert(page.indexOf('id="overview"')<page.indexOf('id="edge-0"'));
  assert.match(page,/not a comprehensive dependency SBOM/);
@@ -86,4 +86,33 @@ test('grouping based on a human decision is visibly identified as user evidence 
 test('an explicitly unclassified node with no evidence says placement basis is not recorded',()=>{
  const b=described();b.services[0].properties=[property('presentation',{boundary:'unknown',area:'Persistence',evidence:[]})];
  const brief=renderSurface(checkSurfaceBom(b))['brief.md'];assert.match(brief,/Placement basis: Not recorded/);
+});
+
+test('superseded findings and actions leave current views but remain in history',()=>{
+ const b=described();
+ const old=JSON.parse(b.properties.find(p=>p.name==='n8r:surface:entry'&&JSON.parse(p.value).id==='storage-finding').value);
+ b.properties.push(property('entry',{...old,id:'replacement',title:'Current storage finding',supersedes:old.id}));
+ const action={...old,id:'old-action',kind:'next',status:'open',title:'Start unavailable daemon'};
+ b.properties.push(property('entry',action),property('entry',{...action,id:'new-action',title:'Trace source authorization',supersedes:action.id}));
+ const f=renderSurface(checkSurfaceBom(b));
+ assert(!f['brief.md'].includes(old.title));assert(!f['brief.md'].includes(action.title));
+ assert(f['brief.md'].includes('Current storage finding'));
+ const current=f['surface.html'].split('<section id="journey">')[0];
+ assert(!current.includes(old.title));assert(!current.includes(action.title));
+ assert(f['investigation.md'].includes(old.title));assert(f['investigation.md'].includes(action.title));
+});
+test('brief bounds growing lists, prefers the active action and preserves full detail elsewhere',()=>{
+ const b=described();
+ const entry=JSON.parse(b.properties.find(p=>p.name==='n8r:surface:entry'&&JSON.parse(p.value).id==='storage-finding').value);
+ for(let i=0;i<12;i++)b.properties.push(property('entry',{...entry,id:'finding-'+i,title:'Observation '+i,text:'Conditional finding '+i+'; runtime remains unverified.'}));
+ for(let i=0;i<8;i++)b.properties.push(property('entry',{...entry,id:'action-'+i,kind:'next',status:i===7?'active':'open',title:'Action '+i}));
+ for(let i=0;i<20;i++){b.properties.push(property('coverage','Coverage '+i),property('gap','Gap '+i));b.components.push({'bom-ref':'extra-'+i,type:'library',name:'Extra node '+i});}
+ const f=renderSurface(checkSurfaceBom(b)),brief=f['brief.md'];
+ assert.equal((brief.match(/\*\*Observation /g)||[]).length,5);
+ assert(brief.includes('Conditional finding 11; runtime remains unverified.'));
+ assert.equal((brief.match(/\*\*Action /g)||[]).length,1);assert(brief.includes('Action 7'));
+ assert(!brief.includes('Coverage 19'));assert(!brief.includes('Gap 19'));assert(!brief.includes('Extra node 19'));
+ assert.match(brief,/additional/);assert.match(brief,/surface.html#findings/);assert.match(brief,/surface.html#next/);
+ for(const value of ['Observation 0','Action 0','Coverage 19','Gap 19','Extra node 19'])assert(f['surface.html'].includes(value));
+ assert(!brief.includes('Describe your intended model connections'));
 });

@@ -27535,12 +27535,15 @@ function renderSurface(s) {
   const title = focus ? `${focus.name} \u2014 initial security overview` : "Surface overview";
   const intro = focus?.description ?? s.objective;
   const groups = nodeGroups(s);
-  const findings = s.entries.filter((e) => e.kind === "finding" && e.status === "done" && e.evidence.length > 0);
-  const next = s.entries.filter((e) => ["next", "question"].includes(e.kind) && ["open", "active"].includes(e.status));
+  const replaced = new Set(s.entries.flatMap((e) => e.supersedes ? [e.supersedes] : []));
+  const current = s.entries.filter((e) => !replaced.has(e.id) && e.status !== "superseded");
+  const findings = current.filter((e) => e.kind === "finding" && e.status === "done" && e.evidence.length > 0);
+  const next = current.filter((e) => ["next", "question"].includes(e.kind) && ["open", "active"].includes(e.status)).sort((a, b) => Number(b.status === "active") - Number(a.status === "active"));
+  const briefFindings = findings.slice(-5).reverse();
   const label = (e) => `${e.selection === "selected" ? "Selected" : e.support === "supported" ? "Possible" : "Support " + e.support} \xB7 ${e.kind}${e.observations.length ? " \xB7 observed " + e.observations.map((o) => o.at).join(", ") : ""}`;
   const mechanics = `BOM revision ${s.bom.version}. Generated view; propose edits for reconciliation into a successor. The BOM remains authoritative.`;
   const scopeNote = "Supported paths describe options. Selection can reflect human intent or configuration; inspect its evidence. Dated observations stand separately. Missing information does not establish absence.";
-  const continuation = "Describe your intended model connections, identity, stores and enabled tools. We can record those choices, then investigate permitted configuration and dated runtime evidence separately. This does not configure or deploy the system.";
+  const continuation = "Continue with the available evidence: trace a source-level path, describe an intended setup, or inspect an identified deployment. Source-only research needs no running services. Choose another direction or stop at any time.";
   const interchange = "This architecture and research record is not a comprehensive dependency SBOM. Standard dependencies contain only selected dependency relationships; profile properties retain other paths and evidence. Generic consumers may omit that detail.";
   const evidence2 = (ids) => ids.map((id2) => `<a href="#${fragmentId("ev", id2)}">${escapeHtml(id2)}</a>`).join(", ") || "No evidence yet";
   const evidenceMd = (ids) => ids.map((id2) => `[${md(id2)}](surface.html#${fragmentId("ev", id2)})`).join(", ");
@@ -27553,9 +27556,18 @@ function renderSurface(s) {
     return p ? " Placement basis: " + (p.evidence.map((e) => `${md(basis2(e))} \u2014 ${evidenceMd([e])}`).join("; ") || "Not recorded") : "";
   };
   const list = (xs, empty) => xs.length ? xs.map((x) => "- " + md(x)).join("\n") : "- " + empty;
-  const grouped = groups.map((g) => `### ${boundaryNames[g.boundary]} \xB7 ${md(g.area)}
+  const more = (count, section) => count > 0 ? `
 
-` + g.nodes.map((n) => `- **${md(n.name)}**${n.description ? " \u2014 " + md(n.description) : ""} \xB7 ${md(n.type ?? "service")} \xB7 ${md(n["bom-ref"])}${placementMd(n["bom-ref"])}${s.relationships.some((e) => e.from === n["bom-ref"] || e.to === n["bom-ref"]) ? "" : " \xB7 Connections unknown."}`).join("\n")).join("\n\n");
+${count} additional items in [the full ${section}](surface.html#${section}).` : "";
+  const briefList = (xs, empty) => list(xs.slice(0, 7), empty) + more(xs.length - 7, "coverage");
+  let remaining = 12;
+  const grouped = groups.flatMap((g) => {
+    const shown = g.nodes.slice(0, remaining);
+    remaining -= shown.length;
+    return shown.length ? [`### ${boundaryNames[g.boundary]} \xB7 ${md(g.area)}
+
+` + shown.map((n) => `- **${md(n.name)}** \xB7 ${md(n.type ?? "service")} \xB7 ${md(n["bom-ref"])}${placementMd(n["bom-ref"])}${s.relationships.some((e) => e.from === n["bom-ref"] || e.to === n["bom-ref"]) ? "" : " \xB7 Connections unknown."}`).join("\n")] : [];
+  }).join("\n\n") + more(nodes.length - 12, "inventory");
   const brief = `# ${md(title)}
 
 ${md(intro)}
@@ -27572,21 +27584,21 @@ Open the [connected overview and relationship details](surface.html#overview). G
 
 ## Security observations and investigation leads
 
-${findings.length ? findings.map((e) => `- **${md(e.title)}** \u2014 ${md(e.text)} Why it matters: ${md(e.reason)} Evidence: ${evidenceMd(e.evidence)}.`).join("\n") : "No evidence-backed findings recorded. Continue research; this is not an assurance conclusion."}
+${findings.length ? briefFindings.map((e) => `- **${md(e.title)}** \u2014 ${md(e.text)} Why it matters: ${md(e.reason)} Evidence: ${evidenceMd(e.evidence)}.`).join("\n") : "No evidence-backed findings recorded. Continue research; this is not an assurance conclusion."}${more(findings.length - 5, "findings")}
 
-## Coverage and gaps
+${findings.length > 5 ? "Showing the five most recently recorded current findings, not a severity ranking.\n\n" : ""}## Coverage and gaps
 
 Researched:
 
-${list(s.coverage, "No coverage recorded.")}
+${briefList(s.coverage, "No coverage recorded.")}
 
 Unknown or not researched:
 
-${list(s.gaps, "No gaps recorded; completeness is not established.")}
+${briefList(s.gaps, "No gaps recorded; completeness is not established.")}
 
 ## Next step
 
-${next.map((e) => `- **${md(e.title)}** \u2014 ${md(e.text)} Why: ${md(e.reason)} Access: ${md(e.access)}`).join("\n")}
+${next.slice(0, 1).map((e) => `- **${md(e.title)}** \u2014 ${md(e.text)} Why: ${md(e.reason)} Access: ${md(e.access)}`).join("\n") || "No current action recorded."}${more(next.length - 1, "next")}
 
 ${continuation}
 

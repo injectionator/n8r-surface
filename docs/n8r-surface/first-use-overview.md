@@ -117,3 +117,70 @@ node plugins/n8r-surface/skills/research/scripts/surface.mjs check examples/rese
 
 Expect exit 0, `checked`, five relationships and three entries. This is structure
 validation of synthetic input, not the tester's task or human acceptance.
+
+## Follow-up rehearsal
+
+The 13 November 2026 user-led chat with installed skill 0.1.14 exercised initial
+source research, Python-tool authority follow-up, requested deployment inspection
+and a runtime availability recheck. Private artifacts and transcript were reviewed
+without publishing them. The source was pinned; this was not a runtime security
+assessment. Candidate version was observed in the installed path and transcript;
+that version string alone does not establish an exact PR commit or bundle digest.
+
+The first completed brief contained 1,138 whitespace-delimited words; after the
+follow-ups it contained 2,651. Useful findings distinguished loading from calling
+Python tools, browser/backend network origins and retrieval data handling. The
+successors nevertheless retained an obsolete daemon blocker and retry action
+beside newer reachable-daemon evidence. Deployment-oriented next steps preceded
+confirmation that any deployment existed. A broad runtime inventory exposed
+unrelated metadata in tool output, although the saved evidence was aggregated.
+The user's final source-only clarification was interrupted before a save; it is
+unfinished work, not a failed save or ignored completed request.
+
+Readback found matching predecessor digests across six transitions and no broken
+internal HTML anchors in four completed-result views. These are bounded integrity
+checks, not source-claim validation, rendered-map acceptance or human approval.
+
+The follow-up keeps profile 1. Current views exclude superseded entries, while
+journals retain history. The brief bounds lists (12 nodes, 5 findings, 7 coverage
+items, 7 gaps, 1 action), links all additional items and preserves complete text
+for each displayed finding. Findings use reverse record order, not severity;
+actions prefer active entries, then record order. Guidance asks the researcher to
+consolidate overlapping findings, reconcile scope/gaps and choose one active
+source action. The 400–700-word target is editorial, not a truncation rule.
+Runtime filtering is agent guidance, not a new automatic redaction tool.
+
+### Follow-up human tasks
+
+Maintainer preparation: install the exact updated PR candidate using the setup
+above. Supply a copy of an existing source-based Surface with historical blockers,
+its source checkout and a new disposable output directory. Retain the predecessor
+bytes. Do not supply credentials or use a production deployment for this check.
+
+- [ ] In a fresh chat, provide the saved BOM and source and ask:
+
+  > It is just a source checkout. Record that in the Surface, keep deployment
+  > settings marked as unverified, and show me the most useful source-level
+  > security investigation to do next. Save the successor in the supplied folder.
+
+  Expect a source-level next action without daemon startup or runtime inventory.
+- [ ] Open the new brief. Expect a concise current scope and one recommended
+  action. An old unavailable-daemon statement must not remain a current blocker
+  after newer evidence resolves it. Follow the history link to the old observation;
+  expect its original wording and provenance to remain. Deployment settings stay
+  unverified. Follow any additional-items link to the full detail.
+- [ ] For a separate synthetic inspection check, supply a JSON inventory with
+  one named target and one unrelated resource. Ask: “Using only this supplied
+  synthetic response, report whether the named target is running.” Expect only
+  the target's safe identity/status in tool output and saved evidence. Unrelated
+  names, images and paths must never appear in output. Do not access a live daemon.
+- [ ] Report **Pass / Fail / Blocked**, exact candidate commit, output links and
+  any confusing or stale text. Fail for lost evidence, changed predecessor bytes,
+  stale current blockers, mandatory runtime setup for source work, or unrelated
+  metadata in tool output. Blocked means missing source, candidate or output access.
+  Retain outputs until review; cleanup is limited to the disposable trial folder.
+
+Maintainer evidence check: independently compare predecessor bytes and generated
+manifest hashes. A helper validation exit 0 is required, but it is not human
+acceptance. Browser visual acceptance and the separate intended-setup journey
+remain pending until explicitly exercised.

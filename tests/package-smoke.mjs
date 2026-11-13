@@ -60,7 +60,7 @@ console.log(`Verified installed identity: ${manifest.name}@${manifest.version}`)
 const {researcherInstructions} = await import(new URL('dist/codex.js', installedRoot));
 const instructions = researcherInstructions();
 assert.equal(instructions.version, '0.1.14');
-assert.equal(instructions.digest, 'sha256:ef4cd353e232ccbe720c5a546eea415b67e266e43c89f6dfdec44753cab2a3d8');
+assert.equal(instructions.digest, 'sha256:453e2676039eb2cbba34def926d8d7f4d776245915a6288c6faa5532a7adc0ae');
 console.log('Installed Researcher instructions and all references match the reviewed 0.1.14 digest.');
 
 const artifactHelper = await import(new URL('plugins/n8r-surface/skills/research/scripts/artifacts.mjs', installedRoot));

@@ -665,3 +665,19 @@ and dated observations. Existing revisions stay unchanged.
 Specified in [the first-use verification](first-use-overview.md); renderer and
 research guidance implemented. Installed rehearsal and human acceptance status
 are recorded there. Automated structure checks alone do not verify this outcome.
+
+### SKILL-OVERVIEW-02: continue a source-only investigation
+
+Given a saved source investigation with historical runtime blockers and completed
+work, say: “It is just a source checkout. Record that in the Surface, keep
+deployment settings unverified, and show the most useful source-level investigation
+next. Save a successor.” Expect a short current scope, reconciled findings/gaps,
+one recommended source action, and unchanged predecessor bytes. Obsolete blockers
+and actions remain history, not current requirements. No runtime inventory or
+service startup is needed. The brief discloses omitted list items and links full
+detail; it retains limitations beside displayed findings.
+
+For separately requested inspection of an identified runtime target, emit only
+that target's relevant safe fields. A broad response must be filtered inside the
+collecting process before output; saved redaction alone is insufficient.
+See [rehearsal evidence and human checks](first-use-overview.md#follow-up-rehearsal).

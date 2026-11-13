@@ -87,3 +87,30 @@ Agent rehearsal is not human acceptance; browser policy refusals stay blockers.
 - The parallel-path regression was strengthened to compare reversed geometry too;
   it reproduced an opposite-direction overlap. Shared unordered endpoint-pair lanes
   now distinguish both directions as well as repeated paths and self-loops.
+
+## Authorized PR 73 follow-up
+
+The 13 November user rehearsal supplies the observed baseline: source research
+was useful, but continuation presumed deployment, obsolete blockers/actions
+survived in successors, the brief grew, and unrelated runtime metadata entered
+tool output. The user authorized these four corrections and evidence recording.
+
+Design: retain profile 1 and its existing entry states/supersedes links. Derive
+current findings/actions without superseded entries; show at most five current
+findings and one action in the brief, with explicit links to the full record.
+Keep complete finding text and limitations together. Bound inventory/coverage
+lists with disclosed omissions, not silent sentence truncation. Research guidance
+owns semantic reconciliation and source-only continuation; rendering cannot infer
+that contradictory prose is obsolete. Runtime guidance filters before output.
+
+- [ ] Add failing renderer cases for supersession, active-action preference,
+  bounded lists, retained details and a deployment-neutral continuation.
+- [ ] Implement in `src/surface-view.ts`, rebuild the standalone helper, and run
+  focused checks followed by repository checks.
+- [ ] Update first-use, persistence and live-inspection guidance; rehearse a
+  source-only successor with the candidate, independently reading saved outputs.
+- [ ] Record baseline and successor evidence with limits, review the diff, push
+  the existing branch and update draft PR 73. Keep issue 72 WIP.
+
+No schema migration, new runtime inspection tool, deployment or release. Earlier
+private research stays unchanged; public evidence uses sanitized summaries only.

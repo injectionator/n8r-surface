@@ -29,7 +29,7 @@ names belong in interoperability details. Never invoke the product CLI.
 [Legacy artifacts](references/artifacts.md) are for deliberately supplied old
 saves only, not the destination for new records.
 
-For broad first-use research, read [first-use overview](references/first-use-overview.md)
+For broad first-use research and every continuation save, read [first-use overview](references/first-use-overview.md)
 to make application meaning, security implications, coverage and next decisions
 visible without turning the first pass into an exhaustive audit.
 
@@ -117,7 +117,9 @@ do not invent an AI node. Ask the next question that would clarify the graph.
 When the user corrects or selects something, retain it as a dated human decision
 with its scope. A decision does not rewrite contradictory source evidence. When
 continuing, read the saved notes and re-establish source access and identity;
-retain component IDs, accepted choices and unresolved questions.
+retain component IDs, accepted choices and unresolved questions. Reconcile current
+scope, gaps and action states using the first-use guidance before saving; retain
+obsolete observations as history, not as current blockers.
 
 Begin an investigation map with the objective, scope, available evidence and a
 useful initial plan. Adapt it through conversation: findings, open questions,

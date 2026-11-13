@@ -47,11 +47,50 @@ consequential exception from its associated finding.
 
 ## Invite the next decision
 
-Offer a concrete next step: describe intended model connections, identity, stores
-and enabled tools. Record human choices with dated user-basis evidence. Later,
-inspect permitted configuration and runtime evidence separately; an intention
-must never be relabeled as an observed setup. Save a successor without rewriting
-prior records. This skill does not configure or deploy the system.
+Match the next step to the established investigation context:
+
+- **Source checkout only:** recommend one concrete source-level trace, naming the
+  entry point, authorization boundary and question it can answer. Keep deployment
+  settings unverified. Research can continue without a daemon, deployed instance
+  or chosen provider. Ask about intended setup only if the user wants planning.
+- **Intended setup:** record choices as dated user-basis evidence, then explain
+  what configuration evidence would establish them later.
+- **Identified deployment:** inspect only the permitted target and relevant safe
+  fields. Keep configuration and dated runtime observations separate.
+- **Context unclear:** continue useful source research; before requesting runtime
+  access, establish whether the user wants source analysis, planning or inspection
+  of an existing deployment. A checked-out Compose file identifies a declaration,
+  not a running target. An available Docker daemon is not a target identity.
+
+## Keep the successor current and the brief short
+
+Before each save, reconcile the current scope, findings, coverage, gaps and actions:
+
+1. Record new evidence with its date and applicability. Preserve old observations
+   and accepted decisions in the journal and predecessor; do not rewrite their text.
+2. Mark obsolete entries `superseded` and link a replacement with `supersedes`.
+   Mark completed actions `done`; mark out-of-scope work `deferred` with a reason.
+   For example, reachable runtime evidence supersedes an unavailable-daemon blocker
+   and completes the retry action; it does not establish a deployment's presence.
+3. Replace obsolete current scope/gap strings in the successor. Preserve their
+   historical content in dated journal entries/evidence. Do not append contradictory
+   current statements and leave the reader to determine which applies.
+4. Keep one recommended action `active`, with a clear result and access requirement.
+   Other genuinely useful choices can remain open or deferred in the journal.
+5. Read the generated brief as a newcomer. Aim for roughly 400–700 words: a short
+   current scope, major areas, a few current implications, concise coverage/gaps
+   and one next action. Consolidate overlapping findings using supersession while
+   preserving each consequential exception and its evidence. A word target never
+   justifies dropping a limitation or inventing a summary.
+
+The renderer shows at most twelve nodes, five current findings (most recently
+recorded, not severity-ranked), seven coverage items, seven gaps and one action
+(active first, otherwise recorded order). It explicitly links additional items to
+full HTML detail. Complete finding text, reasons and evidence stay together;
+long individual entries are not silently truncated. Prioritise and consolidate
+research content before saving; list limits alone do not guarantee a short brief.
+The journal and full map retain the complete record, including superseded entries.
+This skill does not configure or deploy the system.
 
 End the chat with a short statement of what the research clarified, links to the
 brief and map (journal/detail links can follow), and the next useful question.
