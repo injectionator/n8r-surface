@@ -25,6 +25,10 @@ export interface Evidence {
 export interface Surface {
  bom:Bom;objective:string;scope:string;relationships:Relationship[];entries:Entry[];
  evidence:Evidence[];coverage:string[];gaps:string[];
+ presentation:Record<string,Presentation>;
+}
+export interface Presentation {
+ boundary:'internal'|'external'|'unknown';area:string;focus?:boolean;evidence:string[];
 }
 export const prefix='n8r:surface:';
 export const property=(name:string,value:unknown)=>({name:prefix+name,value:typeof value==='string'?value:JSON.stringify(value)});
@@ -80,6 +84,17 @@ export function checkSurfaceBom(input:unknown):Surface {
   for(const s of e.sources)requireThat(keys(s,['index','locator'])&&Number.isSafeInteger(s.index)&&s.index>=0&&b.externalReferences?.[s.index]&&nonempty(s.locator),'source reference');
  }
  const evidenceFor=(ids:unknown,subjects:string[],basis?:string[])=>strings(ids)&&ids.every(id=>evidenceIds.has(id)&&subjects.every(n=>annotations.get(id).subjects.includes(n))&&(!basis||basis.includes(evidence.find(e=>e.id===id)!.basis)));
+ const presentation:Record<string,Presentation>=Object.create(null);
+ for(const n of [...(b.components??[]),...(b.services??[])]){
+  const hints=(n.properties??[]).filter((p:any)=>p.name===prefix+'presentation');
+  requireThat(hints.length<=1,'single node presentation');
+  if(!hints.length)continue;
+  let p:Presentation;try{p=decodeJsonValue(hints[0].value) as Presentation;}catch{return fail('node presentation JSON');}
+  requireThat(keys(p,['boundary','area','evidence'],['focus'])&&['internal','external','unknown'].includes(p.boundary)&&nonempty(p.area)&&(p.focus===undefined||typeof p.focus==='boolean'),'node presentation shape');
+  requireThat(evidenceFor(p.evidence,[n['bom-ref']])&&(p.boundary==='unknown'||p.evidence.length>0),'node presentation evidence');
+  presentation[n['bom-ref']]=p;
+ }
+ requireThat(Object.values(presentation).filter(p=>p.focus).length<=1,'single focus application');
  const edgeKeys=['id','from','to','kind','optionality','group','support','selection','observations','evidence','selectionEvidence','purpose','mechanism','configuration','conditions','note'];
  for(const e of relationships){
   requireThat(keys(e,edgeKeys)&&nonempty(e.id)&&nodes.has(e.from)&&nodes.has(e.to),'relationship endpoints/shape');
@@ -106,5 +121,5 @@ export function checkSurfaceBom(input:unknown):Surface {
  requireThat((b.dependencies??[]).every((d:any)=>!d.provides)&&canonical(deps)===canonical(projectDependencies(relationships)),'selected dependency projection');
  requireThat(b.compositions?.some((c:any)=>c.aggregate==='unknown'),'bounded coverage declaration');
  const coverage=values('coverage'),gaps=values('gap');requireThat(strings(coverage)&&strings(gaps),'coverage/gaps');
- return {bom:b,objective:one('objective'),scope:one('scope'),relationships,entries,evidence,coverage,gaps};
+ return {bom:b,objective:one('objective'),scope:one('scope'),relationships,entries,evidence,coverage,gaps,presentation};
 }

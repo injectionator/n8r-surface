@@ -1,6 +1,8 @@
 # Self-contained CycloneDX Surface
 
-Candidate skill **0.1.13** replaces the 0.1.12 alongside-native exchange as the
+Skill **0.1.13** introduced the format below; candidate [0.1.14](first-use-overview.md)
+adds checked optional grouping and a connected overview without changing profile 1.
+The 0.1.13 increment replaces the 0.1.12 alongside-native exchange as the
 destination for new Surface saves. Issue [#68](https://github.com/injectionator/n8r-surface/issues/68).
 One CycloneDX 1.7 BOM carries inventory, relationships, evidence, decisions,
 uncertainties and investigation state. The brief, HTML map and Markdown journal

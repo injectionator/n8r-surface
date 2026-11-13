@@ -405,7 +405,7 @@ and actual registry/provenance verification distinct from local checks.
 
 ## Standalone skill artifact helper
 
-Candidate skill 0.1.13 bundles a self-contained CycloneDX Surface helper and
+Candidate skill 0.1.14 bundles a self-contained CycloneDX Surface helper and
 retains legacy Capability/Bound and exchange readers for deliberately supplied old saves.
 New Surface saves use the BOM authority with generated brief, map and journal.
 Run `npm run build:skill` after helper/library changes; `npm run check:skill`

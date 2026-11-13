@@ -1,7 +1,8 @@
 # n8r-surface Researcher: start an investigation
 
-For the current 0.1.13 candidate, use the [tester guide](tester-candidate.md):
-pinned installation, host boundaries and a short trial. Installation versions and
+For candidate 0.1.14, use the [first-use overview check](first-use-overview.md).
+The [0.1.13 tester guide](tester-candidate.md) retains pinned baseline installation
+and host boundaries; use the exact 0.1.14 PR revision for the new check. Installation versions and
 branch references below describe historical rehearsals, not the current candidate.
 
 **Previously accepted standalone skill 0.1.11:** produces working notes and checked

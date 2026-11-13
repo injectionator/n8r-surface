@@ -652,3 +652,16 @@ Earlier bytes remain unchanged. View edits require explicit reconciliation.
 See the [human tasks and evidence](skill-bom-verification.md) and
 [working manual](skill-manual.md). Automated profile checks do not establish
 research accuracy or human acceptance.
+
+## SKILL-OVERVIEW-01: understand a supplied application
+
+Given the identified 0.1.14 candidate, readable source and a new output folder,
+when the user asks for an initial architecture/security overview and saves it,
+the brief explains application meaning, major areas, evidence-backed implications,
+coverage gaps and next decisions. The HTML shows connected nodes once, before
+relationship/evidence detail. Intended choices remain separate from configuration
+and dated observations. Existing revisions stay unchanged.
+
+Specified in [the first-use verification](first-use-overview.md); renderer and
+research guidance implemented. Installed rehearsal and human acceptance status
+are recorded there. Automated structure checks alone do not verify this outcome.
