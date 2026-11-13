@@ -1,6 +1,6 @@
 {
   "name": "n8r-surface",
-  "version": "0.1.0-experimental.2",
+  "version": "0.1.0-experimental.4",
   "private": true,
   "description": "Experimental AI Surface Model library and Codex research command",
   "bin": {

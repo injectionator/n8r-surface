@@ -33,12 +33,12 @@ export function packCandidates(destination, {publishable = false} = {}) {
     delete manifest.scripts;
     delete manifest.devDependencies;
     if (publishable) {
-      if (manifest.version !== '0.1.0-experimental.2') throw new Error('Publishable preparation is limited to approved version 0.1.0-experimental.2');
+      if (manifest.version !== '0.1.0-experimental.4') throw new Error('Publishable preparation is limited to candidate version 0.1.0-experimental.4');
       manifest.private = false;
       manifest.publishConfig = {access:'public', registry:'https://registry.npmjs.org', tag:'experimental'};
     }
     const report = {revision, dirty, version:manifest.version, packages:[]};
-    for (const name of ['@n8r/surface', 'n8r-surface']) {
+    for (const name of ['@n8r/surface']) {
       writeFileSync(manifestPath, JSON.stringify({...manifest, name}, null, 2) + '\n');
       const folder = name.startsWith('@') ? 'scoped' : 'unscoped';
       mkdirSync(join(output, folder));

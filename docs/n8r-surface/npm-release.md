@@ -1,4 +1,35 @@
-# First public npm release
+# npm release
+
+## Next local candidate: 0.1.0-experimental.4
+
+This candidate adds CLI Capability/Bound save and fresh-session continuation.
+Only `@n8r/surface` is packed and eligible for the updated manual workflow.
+The executable remains `n8r-surface`; the source stays private. No new tag,
+registry write, npm-tag promotion or release is authorized by preparation.
+
+From a dependency-ready checkout, prepare and install a local candidate:
+
+```sh
+release_run=$(mktemp -d)
+npm run pack:candidates -- "$release_run/packages"
+npm install --global --ignore-scripts --no-audit --no-fund "$release_run/packages/scoped/n8r-surface-0.1.0-experimental.4.tgz"
+n8r-surface --version
+n8r-surface
+```
+
+Expect version `0.1.0-experimental.4`. Bare startup reuses existing settings or
+offers vault setup; it does not start research. Installation changes the active
+Node installation's global command, not user settings or saved research. Use
+[the save/reopen task](cli-bundles.md) to check research. The candidate archive
+is local, not available from the public registry until separately published.
+
+`--publishable` prepares the same scoped payload with public registry metadata;
+it does not publish. Before any actual release, review authentication, approve
+review readiness and merge, approve a new permanent tag, then explicitly choose
+workflow preparation/staging. The workflow is guarded to version .4 and requires
+its tag to be on main. Maintainer 2FA and independent registry/provenance checks
+remain required. No `latest` promotion is included. Historical .1/.2 verification
+still expects their retained dual archives; their tags and bytes are unchanged.
 
 ## Verified scoped release
 
@@ -34,8 +65,7 @@ and unpublished draft artifacts remain retained.
 
 The procedure below records the original dual-package preparation. Its two-name
 acceptance requirement was superseded by the maintainer's scoped-only decision.
-Do not rerun it for the released version. The existing workflow still expects
-both names; remove that legacy behavior before a future scoped release. Future
+Do not rerun it for the released version. The historical workflow expected both names; current candidate tooling is scoped-only. Future
 releases require updated version guards, reviewed
 authentication configuration, and a new permanent version/tag. Trusted publishing
 has not been exercised; this release used stage-only token authentication and
