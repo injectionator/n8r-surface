@@ -103,14 +103,21 @@ lists with disclosed omissions, not silent sentence truncation. Research guidanc
 owns semantic reconciliation and source-only continuation; rendering cannot infer
 that contradictory prose is obsolete. Runtime guidance filters before output.
 
-- [ ] Add failing renderer cases for supersession, active-action preference,
+- [x] Add failing renderer cases for supersession, active-action preference,
   bounded lists, retained details and a deployment-neutral continuation.
-- [ ] Implement in `src/surface-view.ts`, rebuild the standalone helper, and run
+- [x] Implement in `src/surface-view.ts`, rebuild the standalone helper, and run
   focused checks followed by repository checks.
-- [ ] Update first-use, persistence and live-inspection guidance; rehearse a
+- [x] Update first-use, persistence and live-inspection guidance; rehearse a
   source-only successor with the candidate, independently reading saved outputs.
-- [ ] Record baseline and successor evidence with limits, review the diff, push
+- [x] Record baseline and successor evidence with limits, review the diff, push
   the existing branch and update draft PR 73. Keep issue 72 WIP.
 
 No schema migration, new runtime inspection tool, deployment or release. Earlier
 private research stays unchanged; public evidence uses sanitized summaries only.
+
+Follow-up result: implementation and checks at `92c1c0b`; evidence recorded in
+[first-use verification](../../n8r-surface/first-use-overview.md#follow-up-rehearsal).
+Fresh reviewer found no actionable issues. Exact final helper readback produced a
+976-word brief, shorter than baseline but above the editorial aim. Candidate-copy
+identity differences and privacy-guard false positive are recorded explicitly.
+Human/browser acceptance remains pending; no merge or publication authorized.

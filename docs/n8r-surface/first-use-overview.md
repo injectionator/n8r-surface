@@ -45,10 +45,10 @@ cycles/parallel relationships, disconnected nodes, full names, linked findings,
 retained exceptions and inert source text. These checks establish bounded rendering
 and reference behavior, not the quality or truth of an investigation.
 
-Installed-candidate rehearsal and final check results will be recorded here before
-handoff. No fresh installed-product success or browser visual acceptance is claimed
-by this implementation status. A prior local-file browser-policy refusal remains
-a blocker for that route; it must not be bypassed.
+The user-led 0.1.14 rehearsal and follow-up candidate checks are recorded
+[below](#follow-up-rehearsal), with exact identity limits. Browser visual acceptance
+remains pending. A prior local-file browser-policy refusal remains a blocker for
+that route; it must not be bypassed.
 
 ## Human verification task list
 
@@ -149,6 +149,58 @@ actions prefer active entries, then record order. Guidance asks the researcher t
 consolidate overlapping findings, reconcile scope/gaps and choose one active
 source action. The 400–700-word target is editorial, not a truncation rule.
 Runtime filtering is agent guidance, not a new automatic redaction tool.
+
+### Successor results and exact candidate
+
+At code commit `92c1c0bca1e2adfcc2b134b0259ed8856f337bce`, Node 26.13.0:
+241 tests, exact skill bundle check, offline installed package/terminal rehearsal,
+Markdown lint 0.24.0, local links/fragments with lychee 0.24.2, citation validation
+with cffconvert 2.0.0 and diff whitespace checks passed. All 18 JSON example files
+parsed. Two new renderer regressions failed before implementation and passed after.
+The full suite caught omitted inventory types/IDs during shortening; restoring
+those fields passed the suite. Package verification first rejected the obsolete
+instruction digest; the reviewed digest was updated and the full package check
+passed. These checks do not establish research accuracy.
+
+A fresh-context agent invoked an isolated standalone candidate copy against a
+private copy of the prior BOM and the same source checkout. It received the
+source-only continuation task below, reread source entry points itself, reconciled
+scope and journal states, and saved revision 8. No live runtime was accessed.
+Independent readback found one active source action, deployment settings still
+unverified, matching predecessor digest and every prior annotation retained.
+Old runtime blockers/actions remained historical rather than current requirements.
+
+The agent's copied helper preceded the type/ID restoration (SHA-256
+`b7a1572bb6fee44093bb5dad4a9867001a864f506394c4d5e07ece15573b854f`).
+Its generated brief was 928 words. The exact committed helper was then copied
+independently, used to save the same agent-authored BOM against the same predecessor
+in a new directory, and read back: 976 words, no missing internal HTML anchors,
+same predecessor digest and retained annotations. Its SHA-256 is
+`3087fad27e2f38bde37a251e762cdead220dab2d3b30e07a1c37e7226613b79b`.
+No developer-prewritten findings were presented as Researcher output. The 976-word
+brief is substantially shorter than 2,651, but exceeds the editorial 400–700-word
+aim; list bounds alone do not ensure that target. Human readability acceptance
+remains open. This was isolated candidate invocation and helper readback, not a
+fresh installation into the user's everyday plugin registry.
+
+A separate fresh-context agent read a synthetic two-resource runtime response
+inside a local process and emitted only the selected target identity and an
+allowlisted state. Its command and readback were reviewed; unrelated names,
+images and paths were absent from tool output and the saved result. This checks
+one guidance scenario, not automatic redaction or all live runtime failure modes.
+No actual Docker daemon was accessed for this follow-up.
+
+The source rehearsal encountered the existing privacy guard's false positive on
+a paragraph separator serialized inside entry text, then an empty authored reason.
+It retained the historical text with spaces and supplied the missing reason;
+validation and save then succeeded. No guard was disabled or bypassed. Broader
+privacy-guard ergonomics are outside this increment. Private prompts, candidate
+file hashes, predecessor copy, agent outputs and readback reports remain in the
+local rehearsal vault, not in this public repository.
+
+These are agent rehearsals, not human Pass acceptance. Rendered browser usability,
+the intended-setup continuation and end-to-end runtime control behavior remain
+unproved. Keep the PR draft and issue #72 WIP.
 
 ### Follow-up human tasks
 
