@@ -85,6 +85,19 @@ A completed investigation with a negative recommendation can still be Done.
 When reopening, replace Done with the appropriate active status. Maintain these
 labels manually alongside the issue/PR workflow; no synchronization is automated.
 
+### Pull request labels
+
+Kanban status labels (`Icebox`, `Backlog`, `Planned`, `WIP`, `Done`) apply only
+to issues. Use GitHub's native draft, review and merged/closed states for PRs;
+do not duplicate them with status labels.
+
+Apply relevant shared topic labels to each PR, such as `bug`, `enhancement`,
+`documentation` or `accessibility`, based on the actual change. Do not copy issue
+labels wholesale. Use `documentation` for documentation-focused or substantial
+documentation work, not automatically for every supporting docs update. Check
+labels when opening the draft PR and when its scope changes. See the
+[PR labeling policy](CONTRIBUTING.md#pull-request-labels).
+
 ### Workspace and publication rules
 
 - Never create, use, enter or recommend Git worktrees for this repository,
