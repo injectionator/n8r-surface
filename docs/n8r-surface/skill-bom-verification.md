@@ -28,6 +28,18 @@ Browser review of the generated local HTML was blocked by the browser tool's
 `file:` URL policy. No alternate route was attempted. File-level checks do not
 establish visual/browser acceptance.
 
+CycloneDX Python Library 11.12.0 with JSON validation extras accepted the synthetic
+BOM against 1.7 and loaded both components, four services and sixteen properties.
+It exposes no `annotations` attribute in this deserialization API; no complete
+profile round-trip claim is made. The native profile reader checks the complete
+BOM directly, including annotations and references.
+
+## Independent review
+
+Three material findings were reproduced in tests and fixed: BOM-path bypass of
+edited sibling views, disconnected inventory missing from human views, and dropped
+historical observations. The focused suite now has fifteen passing checks.
+
 ## Installed assessment
 
 Pending exact-candidate assessment, diversion and BOM-only fresh-session continuation.

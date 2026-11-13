@@ -27427,7 +27427,7 @@ function checkSurfaceBom(input) {
 
 // src/skill-surface-store.ts
 import fs from "node:fs";
-import { resolve, dirname, join } from "node:path";
+import { resolve, dirname, join, basename } from "node:path";
 import { createHash } from "node:crypto";
 
 // src/surface-view.ts
@@ -27439,12 +27439,17 @@ function renderSurface(s) {
   const label = (e) => `${e.selection === "selected" ? "Selected" : e.support === "supported" ? "Possible" : "Support " + e.support} \xB7 ${e.kind}${e.observations.length ? " \xB7 observed " + e.observations.map((o) => o.at).join(", ") : ""}`;
   const header = `BOM revision ${s.bom.version}. Generated view; propose edits for reconciliation into a successor. The BOM remains authoritative.
 `;
+  const inventory = nodes.map((n) => `- **${md(n.name)}** \u2014 ${md(n.type ?? "service")} \xB7 ${md(n["bom-ref"])}${s.relationships.some((e) => e.from === n["bom-ref"] || e.to === n["bom-ref"]) ? "" : " \xB7 Connections unknown."}`).join("\n");
   const brief = `# Surface brief
 
 ${header}
 ${md(s.objective)}
 
 Scope: ${md(s.scope)}
+
+## Inventory
+
+${inventory}
 
 ## Connections
 
@@ -27500,7 +27505,7 @@ Choose a next step, inspect the whole map, redirect or stop.
     const source = s.bom.externalReferences[ref2.index];
     return `<p>Source: ${html(source.url)} \xB7 ${html(ref2.locator)}<br>${html(source.comment ?? "")}<br>${html((source.hashes ?? []).map((h) => h.alg + ": " + h.content).join("; "))}</p>`;
   }).join("")}`).join("")}</article>`).join("");
-  const body = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Surface investigation</title><style>body{margin:0;background:#f5f3ec;color:#18362e;font:17px/1.6 system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:40px 28px}header{border-bottom:2px solid #18362e;padding-bottom:25px}h1{font:42px/1.1 Georgia,serif;max-width:900px}h2{font:28px Georgia,serif;margin-top:48px}a{color:#14634b}nav{display:flex;gap:22px;flex-wrap:wrap}small,.muted{color:#58675f}svg{width:100%;min-width:850px}svg rect{fill:#e6ebe1;stroke:#a3b7a7}svg text{fill:#18362e;font-size:14px}.edge-label{font-size:12px}.selected{stroke:#14634b;stroke-width:3;fill:none}.possible{stroke:#64746d;stroke-width:2;stroke-dasharray:7 5;fill:none}.map{overflow:auto;background:white;border:1px solid #d6dace;border-radius:8px;margin:24px 0}details,article{background:#fff;padding:18px 22px;margin:12px 0;border:1px solid #d6dace;border-radius:6px;overflow-wrap:anywhere}summary{cursor:pointer;font-weight:600}summary small{display:block;font-weight:400}:target{outline:3px solid #ba882f}li{margin:10px 0}.tag{letter-spacing:.12em;font-size:12px;text-transform:uppercase}</style></head><body><main><header><p class="tag">AI Surface \xB7 revision ${s.bom.version}</p><h1>${html(s.objective)}</h1><p>${html(s.scope)}</p><nav><a href="#map">Map</a><a href="#journey">Investigation</a><a href="#evidence">Evidence</a><a href="brief.md">Brief</a><a href="investigation.md">Journal file</a><a href="surface.cdx.json">Saved Surface</a></nav></header><section id="map"><h2>Possible and selected paths</h2><p>Solid green: selected. Dashed: selection unestablished or not selected; inspect each path for its support state. Observations are dated separately. Click a path, then expand its details.</p><div class="map"><svg role="img" aria-label="Possible and selected paths" viewBox="0 0 900 ${Math.max(100, s.relationships.length * 76 + 20)}"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#64746d"/></marker></defs>${rows}</svg></div>${details}<h3>Coverage and gaps</h3><ul>${[...s.coverage, ...s.gaps].map((g) => `<li>${html(g)}</li>`).join("")}</ul></section><section id="journey"><h2>Investigation journey</h2><p>Choose a next step, inspect the full journey, redirect or stop.</p>${s.entries.map((e) => `<article><p class="tag">${html(e.kind)} \xB7 ${html(e.status)}</p><h3>${html(e.title)}</h3><p>${html(e.text)}</p><p>Why: ${html(e.reason)}<br>Access needed: ${html(e.access)}</p><p>${html(e.at)} \xB7 ${html(e.id)}${e.parent ? " \xB7 Branch of " + html(e.parent) : ""}${e.supersedes ? " \xB7 Supersedes " + html(e.supersedes) : ""}</p><p>${evidence2(e.evidence)}</p></article>`).join("")}</section><section id="evidence"><h2>Evidence and decisions</h2>${ev}</section><footer><p>${html(header)} This view proves neither completeness nor runtime use.</p></footer></main></body></html>
+  const body = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Surface investigation</title><style>body{margin:0;background:#f5f3ec;color:#18362e;font:17px/1.6 system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:40px 28px}header{border-bottom:2px solid #18362e;padding-bottom:25px}h1{font:42px/1.1 Georgia,serif;max-width:900px}h2{font:28px Georgia,serif;margin-top:48px}a{color:#14634b}nav{display:flex;gap:22px;flex-wrap:wrap}small,.muted{color:#58675f}svg{width:100%;min-width:850px}svg rect{fill:#e6ebe1;stroke:#a3b7a7}svg text{fill:#18362e;font-size:14px}.edge-label{font-size:12px}.selected{stroke:#14634b;stroke-width:3;fill:none}.possible{stroke:#64746d;stroke-width:2;stroke-dasharray:7 5;fill:none}.map{overflow:auto;background:white;border:1px solid #d6dace;border-radius:8px;margin:24px 0}details,article{background:#fff;padding:18px 22px;margin:12px 0;border:1px solid #d6dace;border-radius:6px;overflow-wrap:anywhere}summary{cursor:pointer;font-weight:600}summary small{display:block;font-weight:400}:target{outline:3px solid #ba882f}li{margin:10px 0}.tag{letter-spacing:.12em;font-size:12px;text-transform:uppercase}</style></head><body><main><header><p class="tag">AI Surface \xB7 revision ${s.bom.version}</p><h1>${html(s.objective)}</h1><p>${html(s.scope)}</p><nav><a href="#map">Map</a><a href="#journey">Investigation</a><a href="#evidence">Evidence</a><a href="brief.md">Brief</a><a href="investigation.md">Journal file</a><a href="surface.cdx.json">Saved Surface</a></nav></header><section id="inventory"><h2>Identified components and services</h2><ul>${nodes.map((n) => `<li><strong>${html(n.name)}</strong> \u2014 ${html(n.type ?? "service")} \xB7 ${html(n["bom-ref"])}${s.relationships.some((e) => e.from === n["bom-ref"] || e.to === n["bom-ref"]) ? "" : " \xB7 Connections unknown."}</li>`).join("")}</ul></section><section id="map"><h2>Possible and selected paths</h2><p>Solid green: selected. Dashed: selection unestablished or not selected; inspect each path for its support state. Observations are dated separately. Click a path, then expand its details.</p><div class="map"><svg role="img" aria-label="Possible and selected paths" viewBox="0 0 900 ${Math.max(100, s.relationships.length * 76 + 20)}"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#64746d"/></marker></defs>${rows}</svg></div>${details}<h3>Coverage and gaps</h3><ul>${[...s.coverage, ...s.gaps].map((g) => `<li>${html(g)}</li>`).join("")}</ul></section><section id="journey"><h2>Investigation journey</h2><p>Choose a next step, inspect the full journey, redirect or stop.</p>${s.entries.map((e) => `<article><p class="tag">${html(e.kind)} \xB7 ${html(e.status)}</p><h3>${html(e.title)}</h3><p>${html(e.text)}</p><p>Why: ${html(e.reason)}<br>Access needed: ${html(e.access)}</p><p>${html(e.at)} \xB7 ${html(e.id)}${e.parent ? " \xB7 Branch of " + html(e.parent) : ""}${e.supersedes ? " \xB7 Supersedes " + html(e.supersedes) : ""}</p><p>${evidence2(e.evidence)}</p></article>`).join("")}</section><section id="evidence"><h2>Evidence and decisions</h2>${ev}</section><footer><p>${html(header)} This view proves neither completeness nor runtime use.</p></footer></main></body></html>
 `;
   return { "brief.md": brief, "investigation.md": journal, "surface.html": body };
 }
@@ -27538,7 +27543,15 @@ function location2(file) {
   safeParents(dirname(file));
   return fs.lstatSync(file).isDirectory() ? join(file, "surface.cdx.json") : file;
 }
+function savedDirectory(file) {
+  const p = resolve(file);
+  if (fs.lstatSync(p).isDirectory()) return p;
+  if (basename(p) === "surface.cdx.json" && fs.existsSync(join(dirname(p), "manifest.json"))) return dirname(p);
+  return void 0;
+}
 function readSurface(file) {
+  const directory = savedDirectory(file);
+  if (directory) checkViews(directory, false);
   return checkSurfaceBom(readJson(location2(resolve(file))));
 }
 function checkViews(directory, reconcile) {
@@ -27559,7 +27572,8 @@ function saveSurface(input, destination, previous, reconcile = false) {
     prevFile = location2(prior);
     previousBytes = readBytes(prevFile);
     const old = checkSurfaceBom(decodeJsonValue(previousBytes.toString("utf8")));
-    if (fs.lstatSync(prior).isDirectory()) checkViews(prior, reconcile);
+    const saved2 = savedDirectory(prior);
+    if (saved2) checkViews(saved2, reconcile);
     if (s.bom.serialNumber !== old.bom.serialNumber || s.bom.version !== old.bom.version + 1 || prop(s, "predecessor-digest") !== byteDigest(previousBytes)) refuse2("revision identity/digest");
     const link = `urn:cdx:${old.bom.serialNumber.slice(9)}/${old.bom.version}`;
     if (!s.bom.externalReferences?.some((r) => r.type === "bom" && r.url === link)) refuse2("versioned predecessor BOM-Link");
@@ -27567,6 +27581,7 @@ function saveSurface(input, destination, previous, reconcile = false) {
     for (const e of old.relationships) {
       const n = s.relationships.find((x) => x.id === e.id);
       if (!n || n.from !== e.from || n.to !== e.to || n.kind !== e.kind) refuse2("lost or changed relationship identity");
+      for (const o of e.observations) if (!n.observations.some((x) => canonical(x) === canonical(o))) refuse2("lost historical observation");
     }
     for (const e of old.entries) if (!s.entries.some((x) => x.id === e.id)) refuse2("lost investigation entry");
     for (const a of old.bom.annotations ?? []) if (!s.bom.annotations?.some((n) => canonical(n) === canonical(a))) refuse2("rewritten historical evidence");

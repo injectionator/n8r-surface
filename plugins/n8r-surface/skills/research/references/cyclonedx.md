@@ -129,7 +129,9 @@ all secrets. Keep sensitive data out before staging; no raw source snapshots.
 ## Continue and reconcile
 
 A supplied BOM alone suffices. Read it with the helper; re-establish source access
-and disclose unavailable sources. Keep IDs, decisions, uncertainty and evidence.
+and disclose unavailable sources. Keep IDs, decisions, uncertainty, dated observations and evidence. Correct an
+observation with a new annotation/entry explaining the correction; retain the
+original observation and its relationship association.
 Copy its serial, increment version by one, retain previous entries, update the
 journal, and add an `externalReferences` entry of type `bom` with exact predecessor
 `urn:cdx:UUID/VERSION`. Set `n8r:surface:predecessor-digest` to `sha256:HEX` over
@@ -139,8 +141,8 @@ previous BOM file bytes (not canonical JSON). Replace this property on each save
 node /INSTALLED/skills/research/scripts/surface.mjs save /WORKSPACE/next.cdx.json /WORKSPACE/surfaces/002 /WORKSPACE/surfaces/001
 ```
 
-Previous argument may be a lone BOM. For a directory, the helper also checks
-view hashes. An edited journal/HTML/brief is a proposal, not new authority. Preserve
+Previous argument may be a lone BOM. A saved directory or its canonical
+`surface.cdx.json` path also checks sibling view hashes. An edited journal/HTML/brief is a proposal, not new authority. Preserve
 it, read it, clarify conflicting meaning only when needed, record the accepted
 choice and add a plain-text `n8r:surface:reconciliation` explanation. Then use
 `reconcile NEXT_BOM NEW_DIRECTORY PREVIOUS_DIRECTORY` instead of `save`. This still

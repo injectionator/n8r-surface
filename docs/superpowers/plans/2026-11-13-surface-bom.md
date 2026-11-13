@@ -62,3 +62,11 @@ Ruling: retain legacy reading and documented deliberate manual migration, withou
 an automatic converter. The user allowed migration/reading; automatic conversion
 would need separate treatment of legacy-only contract meanings. Cost: migrating
 an old save requires host review and explicit transfer, not one command.
+
+Final review: three P2 findings reproduced as failing tests, then fixed. Canonical
+BOM paths now check sibling view edits; disconnected nodes remain in human views;
+historical observations retain dates, notes and relationship association. Focused
+suite: 15/15. No deferred minor findings. Installed behavior, research accuracy,
+browser acceptance and general consumer fidelity require their separate evidence.
+The package smoke check initially failed on the previous instruction digest;
+updated the exact candidate digest after reviewing the new instructions.

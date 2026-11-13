@@ -1,6 +1,6 @@
 /** Immutable BOM revisions, with disposable views and explicit edit reconciliation. */
 import fs from 'node:fs';
-import {resolve,dirname,join} from 'node:path';
+import {resolve,dirname,join,basename} from 'node:path';
 import {createHash} from 'node:crypto';
 import {canonical} from './portable.js';
 import {decodeJsonValue} from './codec.js';
@@ -16,7 +16,12 @@ export function readBytes(file:string){safeParents(dirname(file));const fd=fs.op
 export const readJson=(file:string)=>decodeJsonValue(new TextDecoder('utf8',{fatal:true}).decode(readBytes(file)));
 const prop=(s:Surface,key:string)=>s.bom.properties.find((p:any)=>p.name===prefix+key)?.value;
 function location(file:string){safeParents(dirname(file));return fs.lstatSync(file).isDirectory()?join(file,'surface.cdx.json'):file;}
-export function readSurface(file:string):Surface{return checkSurfaceBom(readJson(location(resolve(file))));}
+function savedDirectory(file:string):string|undefined {
+ const p=resolve(file);if(fs.lstatSync(p).isDirectory())return p;
+ if(basename(p)==='surface.cdx.json'&&fs.existsSync(join(dirname(p),'manifest.json')))return dirname(p);
+ return undefined;
+}
+export function readSurface(file:string):Surface{const directory=savedDirectory(file);if(directory)checkViews(directory,false);return checkSurfaceBom(readJson(location(resolve(file))));}
 function checkViews(directory:string,reconcile:boolean){
  const manifest=readJson(join(directory,'manifest.json')) as any;
  if(manifest.profile!=='n8r.surface-save/1'||Object.keys(manifest.files??{}).sort().join(',')!=='brief.md,investigation.md,surface.cdx.json,surface.html')refuse('manifest');
@@ -31,12 +36,12 @@ export function saveSurface(input:unknown,destination:string,previous?:string,re
  if(previous){
   const prior=resolve(previous);prevFile=location(prior);previousBytes=readBytes(prevFile);
   const old=checkSurfaceBom(decodeJsonValue(previousBytes.toString('utf8')));
-  if(fs.lstatSync(prior).isDirectory())checkViews(prior,reconcile);
+  const saved=savedDirectory(prior);if(saved)checkViews(saved,reconcile);
   if(s.bom.serialNumber!==old.bom.serialNumber||s.bom.version!==old.bom.version+1||prop(s,'predecessor-digest')!==byteDigest(previousBytes))refuse('revision identity/digest');
   const link=`urn:cdx:${old.bom.serialNumber.slice(9)}/${old.bom.version}`;
   if(!s.bom.externalReferences?.some((r:any)=>r.type==='bom'&&r.url===link))refuse('versioned predecessor BOM-Link');
   for(const n of [...(old.bom.components??[]),...(old.bom.services??[])])if(![...(s.bom.components??[]),...(s.bom.services??[])].some(x=>x['bom-ref']===n['bom-ref']))refuse('lost node identity');
-  for(const e of old.relationships){const n=s.relationships.find(x=>x.id===e.id);if(!n||n.from!==e.from||n.to!==e.to||n.kind!==e.kind)refuse('lost or changed relationship identity');}
+  for(const e of old.relationships){const n=s.relationships.find(x=>x.id===e.id);if(!n||n.from!==e.from||n.to!==e.to||n.kind!==e.kind)refuse('lost or changed relationship identity');for(const o of e.observations)if(!n!.observations.some(x=>canonical(x)===canonical(o)))refuse('lost historical observation');}
   for(const e of old.entries)if(!s.entries.some(x=>x.id===e.id))refuse('lost investigation entry');
   for(const a of old.bom.annotations??[])if(!s.bom.annotations?.some((n:any)=>canonical(n)===canonical(a)))refuse('rewritten historical evidence');
   for(const [i,r] of (old.bom.externalReferences??[]).entries())if(canonical(s.bom.externalReferences?.[i])!==canonical(r))refuse('changed source reference');

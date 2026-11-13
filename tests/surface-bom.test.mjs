@@ -84,3 +84,18 @@ test('successors retain relationship identity, source references and historical 
  const dir=path.join(root,'001');persistence.saveSurface(fixture(),dir);const bytes=fs.readFileSync(path.join(dir,'surface.cdx.json'));
  for(const mutate of [b=>b.properties=b.properties.filter(p=>!(p.name==='n8r:surface:relationship'&&JSON.parse(p.value).id==='inference')),b=>b.annotations[0].text='Silently rewritten evidence',b=>b.externalReferences[0].comment='Changed source applicability']){const next=successor(fixture(),bytes);mutate(next);assert.throws(()=>persistence.saveSurface(next,path.join(root,'next'),dir));}
 }));
+test('canonical BOM path checks sibling edited views; a copied standalone BOM remains independent',()=>temporary(root=>{
+ const dir=path.join(root,'001');persistence.saveSurface(fixture(),dir);const file=path.join(dir,'surface.cdx.json'),bytes=fs.readFileSync(file);
+ fs.appendFileSync(path.join(dir,'investigation.md'),'\nEdited proposal\n');assert.throws(()=>persistence.readSurface(dir));assert.throws(()=>persistence.readSurface(file));
+ assert.throws(()=>persistence.saveSurface(successor(fixture(),bytes),path.join(root,'002'),file));
+ fs.writeFileSync(path.join(root,'copy.json'),bytes);assert.equal(persistence.readSurface(path.join(root,'copy.json')).relationships.length,5);
+}));
+test('unconnected identified components remain inspectable in brief and HTML',()=>{
+ const b=fixture();b.components.push({'bom-ref':'isolated-model',type:'machine-learning-model',name:'Model with unknown serving path'});
+ const files=views.renderSurface(check(b));for(const name of ['brief.md','surface.html']){assert.match(files[name],/Model with unknown serving path/);assert.match(files[name],/machine-learning-model/);assert.match(files[name],/isolated-model/);}
+});
+test('successors cannot drop historical observation date, note or relationship association',()=>temporary(root=>{
+ const b=fixture();b.annotations.push({...b.annotations[1],'bom-ref':'observation-1',text:'Synthetic observed runtime call.'});b.properties.push({name:'n8r:surface:evidence',value:JSON.stringify({id:'observation-1',basis:'observation',sources:[{index:0,locator:'trace.txt:1'}],applicability:'One synthetic run'})});
+ const p=b.properties.find(p=>p.name==='n8r:surface:relationship'&&JSON.parse(p.value).to==='db-b');const e=JSON.parse(p.value);e.observations=[{at:'2026-11-13T12:00:00Z',note:'One synthetic observed call',evidence:['observation-1']}];p.value=JSON.stringify(e);
+ const dir=path.join(root,'001');persistence.saveSurface(b,dir);const next=successor(b,fs.readFileSync(path.join(dir,'surface.cdx.json')));const np=next.properties.find(p=>p.name==='n8r:surface:relationship'&&JSON.parse(p.value).to==='db-b');const ne=JSON.parse(np.value);ne.observations=[];np.value=JSON.stringify(ne);assert.throws(()=>persistence.saveSurface(next,path.join(root,'002'),dir));
+}));
