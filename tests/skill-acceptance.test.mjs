@@ -117,3 +117,20 @@ test('session startup is owned immediately and times out before Cucumber',async 
  t.mock.timers.tick(30001);
  await assert.rejects(started,/startup closed/);assert(closed>=1);assert.equal(owned,fake);
 });
+
+test('installed byte verification supports the self-contained schema helper above one MiB',async()=>{
+ const fs=await import('node:fs'),os=await import('node:os'),path=await import('node:path');
+ const {execFileSync}=await import('node:child_process');
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'skill-installation-'));
+ try{
+  const plugin=path.join(root,'plugins/n8r-surface');fs.mkdirSync(plugin,{recursive:true});
+  fs.writeFileSync(path.join(plugin,'plugin.json'),JSON.stringify({version:'0.1.12'}));
+  fs.writeFileSync(path.join(plugin,'helper.mjs'),'//'+'.'.repeat(1200000));
+  const git=args=>execFileSync('git',args,{cwd:root,stdio:'pipe'}).toString().trim();
+  git(['init','-q']);git(['add','plugins']);
+  git(['-c','user.name=Synthetic Tester','-c','user.email=tester@example.invalid','-c','commit.gpgsign=false','commit','-qm','Synthetic large helper']);
+  const revision=git(['rev-parse','HEAD']);
+  const host=new URL('../scripts/skill-acceptance/host.mjs',import.meta.url).href;
+  execFileSync(process.execPath,['--input-type=module','-e',`import {verifyInstallation} from ${JSON.stringify(host)};verifyInstallation(process.argv[1],process.argv[2]);`,plugin,revision],{cwd:root,stdio:'pipe'});
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});

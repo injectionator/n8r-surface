@@ -99,6 +99,9 @@ source access and conversation to produce evidence-backed working notes. The
 [discovery guide](docs/n8r-surface/researcher-discovery.md) focuses on AI-relevant
 graphs, reusable product knowledge and comparing descriptions with evidence. See
 [verification and pending Work-mode checks](docs/n8r-surface/researcher-skill-verification.md).
+Candidate 0.1.13 saves a [self-contained CycloneDX Surface](docs/n8r-surface/skill-cyclonedx.md)
+with a generated brief, visual and investigation journal. Follow the [working user manual](docs/n8r-surface/skill-manual.md)
+for multi-component research, saving and continuation.
 The [freeform component journey](docs/n8r-surface/guided-journey-verification.md)
 records installed-skill exploration, later source intake and saved continuation.
 The accepted delivery order is skill first, standalone CLI second, then separate

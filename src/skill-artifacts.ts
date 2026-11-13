@@ -1,7 +1,6 @@
 /** Standalone installed-skill persistence. No CLI, runner, network or source reads. */
 import fs from 'node:fs';
 import {resolve, dirname, join} from 'node:path';
-import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {decode, encode, decodeJsonValue} from './codec.js';
 import {validateArtefact, verifyReferences} from './validate.js';
@@ -16,7 +15,7 @@ const hash=(s:string|Buffer)=>`sha256:${createHash('sha256').update(s).digest('h
 function fail(code:string):never {throw new Error(`Surface operation refused: ${code}. No input values are included.`);}
 function guarded<T>(code:string,fn:()=>T):T {try{return fn();}catch{ return fail(code);}}
 /** Conservative defense in depth; host must omit sensitive values before staging. */
-function privacy(value:unknown) {
+export function privacy(value:unknown) {
  const text=canonical(value);
  if (/(?:https?|mongodb(?:\+srv)?|postgres(?:ql)?):\/\/|\b(?:\d{1,3}\.){3}\d{1,3}\b|\b(?:[a-f0-9]{1,4}:){2,}[a-f0-9:]+\b|(?:password|passwd|token|secret|username|api[_-]?key)\s*[=:]\s*[^\s"},]+|(?:\/Users\/|\/home\/|[A-Z]:\\\\)|[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text)) fail('privacy review required');
 }
@@ -107,7 +106,7 @@ export function saveBundle(input:unknown,destination:string,predecessor?:string)
   }
  });
 }
-function main(args:string[]) {
+export function main(args:string[]) {
  const [op,file,destination,previous]=args;
  if(op==='help' && args.length===1){console.log('Standalone Surface helper: check BUNDLE.json | save BUNDLE.json NEW_DIRECTORY [PREDECESSOR_DIRECTORY] | read DIRECTORY. JSON bundle: {research,surface,dependencies}. Save only with user authorization. Node 22/24/26; no network or n8r-surface CLI.');return;}
  if(op==='read' && args.length===2){const b=readBundle(file!);console.log(JSON.stringify({status:'checked',kind:b.surface.kind,research:b.research,surface:b.surface,dependencies:b.dependencies},null,2));return;}
@@ -117,9 +116,6 @@ function main(args:string[]) {
   console.log(JSON.stringify({status:op==='save'?'saved-and-read-back':'checked',kind:b.surface.kind,researchDigest:digest(b.research),surfaceDigest:digest(b.surface)}));return;
  }
  fail('arguments; run help');
-}
-if(process.argv[1] && import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
- try{main(process.argv.slice(2));}catch{console.error('Surface operation failed. Check input contracts, privacy, references, predecessor and destination; no success claimed.');process.exitCode=1;}
 }
 
 /** Same canonical digest, with value-free diagnostics at the skill boundary. */

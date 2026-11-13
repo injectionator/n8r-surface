@@ -1,10 +1,14 @@
 # n8r-surface Researcher: start an investigation
 
-**Standalone skill 0.1.11:** produces working notes and checked Capability/Bound
-Surface bundles using the host's source access and conversation. The skill and
-[accepted two-product verification](skill-usefulness-verification.md) are merged
-in PRs #54 and #58. It needs neither the `n8r-surface` executable nor an npm
-release. Related to [#17](https://github.com/injectionator/n8r-surface/issues/17).
+For the current 0.1.13 candidate, use the [tester guide](tester-candidate.md):
+pinned installation, host boundaries and a short trial. Installation versions and
+branch references below describe historical rehearsals, not the current candidate.
+
+**Previously accepted standalone skill 0.1.11:** produces working notes and checked
+Capability/Bound Surface bundles using the host's source access and conversation.
+The skill and [accepted two-product verification](skill-usefulness-verification.md)
+are merged in PRs #54 and #58. It needs neither the `n8r-surface` executable nor
+an npm release. Related to [#17](https://github.com/injectionator/n8r-surface/issues/17).
 
 The team installation below pins merged commit
 [`5eed2ac9a31933caa2ae306e4b407e327d147bf7`](https://github.com/injectionator/n8r-surface/commit/5eed2ac9a31933caa2ae306e4b407e327d147bf7).

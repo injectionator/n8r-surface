@@ -23,7 +23,7 @@ export function verifyInstallation(root, revision) {
   if (!paths.length || !paths[0].startsWith(prefix)) throw new Blocked('Pinned plugin source is unavailable');
   const files=paths.map(path=>{
     const relative=path.slice(prefix.length);
-    const source=execFileSync('git',['show',`${revision}:${path}`]);
+    const source=execFileSync('git',['show',`${revision}:${path}`],{maxBuffer:16*1024*1024});
     const bytes=readFileSync(join(root,relative));
     assert(bytes.equals(source),`Installed bytes differ: ${relative}`);
     return {path:relative,sha256:createHash('sha256').update(bytes).digest('hex')};
@@ -37,7 +37,7 @@ export function verifyInstallation(root, revision) {
   }
   assert.deepEqual(walk(root).sort(),files.map(f=>f.path).sort(),'Unexpected installed files');
   const version=JSON.parse(readFileSync(join(root,'plugin.json'),'utf8')).version;
-  assert(['0.1.9','0.1.10','0.1.11'].includes(version),'Unsupported installed candidate');
+  assert(['0.1.9','0.1.10','0.1.11','0.1.12','0.1.13'].includes(version),'Unsupported installed candidate');
   return {root,revision,version,files};
 }
 

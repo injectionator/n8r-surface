@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2024"],
+    "lib": [
+      "ES2024"
+    ],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "rootDir": "src",
@@ -10,7 +12,12 @@
     "declaration": true,
     "noUncheckedIndexedAccess": true,
     "verbatimModuleSyntax": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ],
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/**/*.ts"
+  ]
 }
