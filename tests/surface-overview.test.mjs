@@ -60,3 +60,24 @@ test('overview content and generated links keep hostile source strings inert',()
  const page=renderSurface(checkSurfaceBom(b))['surface.html'];
  assert(!page.includes('<script>'));assert(!page.includes('<img src=x'));assert.match(page,/&lt;script&gt;/);assert.match(page,/default-src 'none'/);
 });
+test('parallel routes and self-loops have distinct geometry rather than covered links',()=>{
+ const b=described(),edge=JSON.parse(b.properties.find(p=>p.name==='n8r:surface:relationship').value);
+ for(let i=0;i<8;i++)for(const [kind,to] of [['parallel','db-a'],['loop','app']])b.properties.push(property('relationship',{...edge,id:kind+i,to}));
+ const page=renderSurface(checkSurfaceBom(b))['surface.html'];
+ const paths=[...page.matchAll(/data-edge="[^"]+" d="([^"]+)"/g)].map(m=>m[1]);
+ assert.equal(new Set(paths).size,paths.length);
+});
+test('punctuation-bearing evidence IDs produce working Markdown and HTML fragment targets',()=>{
+ const b=described(),id='finding)1 #é';
+ b.annotations.push({...b.annotations[0],'bom-ref':id});b.properties.push(property('evidence',{id,basis:'source',sources:[{index:0,locator:'synthetic:1'}],applicability:'Synthetic only'}));
+ const p=b.properties.find(p=>p.name==='n8r:surface:entry'&&JSON.parse(p.value).id==='storage-finding');const e=JSON.parse(p.value);e.evidence=[id];p.value=JSON.stringify(e);
+ const files=renderSurface(checkSurfaceBom(b));
+ const target=files['brief.md'].match(/\]\(surface.html#(ev-[^\s)]+)\)/)?.[1];
+ assert(target);assert(files['surface.html'].includes(`id="${decodeURIComponent(target)}"`));
+});
+test('grouping based on a human decision is visibly identified as user evidence in brief and node detail',()=>{
+ const b=described(),p=JSON.parse(b.components[0].properties[0].value);p.evidence=['decision-1'];b.components[0].properties[0].value=JSON.stringify(p);
+ const files=renderSurface(checkSurfaceBom(b));
+ for(const f of ['brief.md','surface.html']){assert.match(files[f],/user intent/);assert(!files[f].includes('Grouping describes source architecture'));}
+ assert.match(files['brief.md'],/decision-1/);
+});

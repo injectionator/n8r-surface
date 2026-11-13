@@ -27448,6 +27448,7 @@ import { createHash } from "node:crypto";
 
 // src/surface-overview.ts
 var escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+var fragmentId = (kind, id2) => kind + "-" + Array.from(id2).map((c) => /[a-zA-Z0-9-]/.test(c) ? c : "_" + c.codePointAt(0).toString(16) + "_").join("");
 var boundaryNames = { internal: "Inside the application", external: "External integrations", unknown: "Unclassified" };
 function nodeGroups(s) {
   const groups = /* @__PURE__ */ new Map();
@@ -27484,8 +27485,15 @@ function renderOverview(s) {
   const columns = Object.keys(boundaryNames);
   const heights = [65, 65, 65];
   let labels = "";
+  const counts = /* @__PURE__ */ new Map();
+  for (const e of s.relationships) {
+    const key = JSON.stringify([e.from, e.to]);
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  const columnWidth = 370 + Math.max(0, ...counts.values()) * 12, canvasWidth = columnWidth * 3 + 10;
+  const lanes = /* @__PURE__ */ new Map();
   for (const g of groups) {
-    const col = columns.indexOf(g.boundary), x = 25 + col * 370;
+    const col = columns.indexOf(g.boundary), x = 25 + col * columnWidth;
     let y = heights[col];
     const areaLines = wrap(g.area);
     labels += `<text x="${x}" y="${y}" class="area-label">${areaLines.map((line, i) => `<tspan x="${x}" dy="${i ? 18 : 0}">${h(line)}</tspan>`).join("")}</text>`;
@@ -27500,20 +27508,22 @@ function renderOverview(s) {
   const edges = s.relationships.map((e, i) => {
     const a = positions.get(e.from), b = positions.get(e.to);
     const ay = a.y + a.height / 2, by = b.y + b.height / 2;
+    const key = JSON.stringify([e.from, e.to]), rank = lanes.get(key) ?? 0;
+    lanes.set(key, rank + 1);
     let d;
-    if (e.from === e.to) d = `M${a.x + 280} ${ay - 9} C${a.x + 330} ${ay - 65} ${a.x + 330} ${ay + 65} ${a.x + 280} ${ay + 9}`;
+    if (e.from === e.to) d = `M${a.x + 280} ${ay - 9} C${a.x + 330 + rank * 12} ${ay - 28} ${a.x + 330 + rank * 12} ${ay + 28} ${a.x + 280} ${ay + 9}`;
     else if (a.x === b.x) {
-      const lane = a.x + 300 + i % 6 * 8;
+      const lane = a.x + 300 + rank * 12;
       d = `M${a.x + 280} ${ay} C${lane} ${ay} ${lane} ${by} ${b.x + 280} ${by}`;
     } else {
       const right = b.x > a.x, ax = a.x + (right ? 280 : 0), bx = b.x + (right ? 0 : 280), bend = (ax + bx) / 2;
-      const offset = (i % 5 - 2) * 9;
+      const offset = (rank + 1) * 12;
       d = `M${ax} ${ay} C${bend + offset} ${ay + offset} ${bend + offset} ${by + offset} ${bx} ${by}`;
     }
     return `<a href="#edge-${i}"><path data-edge="${h(e.id)}" d="${d}" class="${e.selection === "selected" ? "selected" : "possible"}" marker-end="url(#arrow)"><title>${h(a.n.name + " \u2192 " + b.n.name + ": " + e.purpose + "; support " + e.support + "; selection " + e.selection)}</title></path></a>`;
   }).join("");
-  const nodes = [...positions].map(([id2, p]) => `<a href="#node-${encodeURIComponent(id2)}"><g data-node="${h(id2)}"><title>${h(p.n.name)}</title><rect x="${p.x}" y="${p.y}" width="280" height="${p.height}" rx="6"/><text x="${p.x + 12}" y="${p.y + 24}">${p.lines.map((line, i) => `<tspan x="${p.x + 12}" dy="${i ? 18 : 0}">${h(line)}</tspan>`).join("")}</text></g></a>`).join("");
-  return `<div class="map"><svg role="img" aria-label="Connected application overview; full relationships follow" viewBox="0 0 1120 ${Math.max(...heights) + 20}"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#64746d"/></marker></defs>${columns.map((c, i) => `<text x="${25 + i * 370}" y="30" class="boundary-label">${h(boundaryNames[c])}</text>`).join("")}${labels}${edges}${nodes}</svg></div>`;
+  const nodes = [...positions].map(([id2, p]) => `<a href="#${fragmentId("node", id2)}"><g data-node="${h(id2)}"><title>${h(p.n.name)}</title><rect x="${p.x}" y="${p.y}" width="280" height="${p.height}" rx="6"/><text x="${p.x + 12}" y="${p.y + 24}">${p.lines.map((line, i) => `<tspan x="${p.x + 12}" dy="${i ? 18 : 0}">${h(line)}</tspan>`).join("")}</text></g></a>`).join("");
+  return `<div class="map"><svg role="img" aria-label="Connected application overview; full relationships follow" viewBox="0 0 ${canvasWidth} ${Math.max(...heights) + 20}"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#64746d"/></marker></defs>${columns.map((c, i) => `<text x="${25 + i * columnWidth}" y="30" class="boundary-label">${h(boundaryNames[c])}</text>`).join("")}${labels}${edges}${nodes}</svg></div>`;
 }
 
 // src/surface-view.ts
@@ -27532,12 +27542,20 @@ function renderSurface(s) {
   const scopeNote = "Supported paths describe options. Selection can reflect human intent or configuration; inspect its evidence. Dated observations stand separately. Missing information does not establish absence.";
   const continuation = "Describe your intended model connections, identity, stores and enabled tools. We can record those choices, then investigate permitted configuration and dated runtime evidence separately. This does not configure or deploy the system.";
   const interchange = "This architecture and research record is not a comprehensive dependency SBOM. Standard dependencies contain only selected dependency relationships; profile properties retain other paths and evidence. Generic consumers may omit that detail.";
-  const evidence2 = (ids) => ids.map((id2) => `<a href="#ev-${encodeURIComponent(id2)}">${escapeHtml(id2)}</a>`).join(", ") || "No evidence yet";
-  const evidenceMd = (ids) => ids.map((id2) => `[${md(id2)}](surface.html#ev-${encodeURIComponent(id2)})`).join(", ");
+  const evidence2 = (ids) => ids.map((id2) => `<a href="#${fragmentId("ev", id2)}">${escapeHtml(id2)}</a>`).join(", ") || "No evidence yet";
+  const evidenceMd = (ids) => ids.map((id2) => `[${md(id2)}](surface.html#${fragmentId("ev", id2)})`).join(", ");
+  const basis2 = (id2) => {
+    const b = s.evidence.find((e) => e.id === id2)?.basis;
+    return b === "user" ? "user intent" : b ?? "unknown";
+  };
+  const placementMd = (id2) => {
+    const p = s.presentation[id2];
+    return p ? " Placement basis: " + p.evidence.map((e) => `${md(basis2(e))} \u2014 ${evidenceMd([e])}`).join("; ") : "";
+  };
   const list = (xs, empty) => xs.length ? xs.map((x) => "- " + md(x)).join("\n") : "- " + empty;
   const grouped = groups.map((g) => `### ${boundaryNames[g.boundary]} \xB7 ${md(g.area)}
 
-` + g.nodes.map((n) => `- **${md(n.name)}**${n.description ? " \u2014 " + md(n.description) : ""} \xB7 ${md(n.type ?? "service")} \xB7 ${md(n["bom-ref"])}${s.relationships.some((e) => e.from === n["bom-ref"] || e.to === n["bom-ref"]) ? "" : " \xB7 Connections unknown."}`).join("\n")).join("\n\n");
+` + g.nodes.map((n) => `- **${md(n.name)}**${n.description ? " \u2014 " + md(n.description) : ""} \xB7 ${md(n.type ?? "service")} \xB7 ${md(n["bom-ref"])}${placementMd(n["bom-ref"])}${s.relationships.some((e) => e.from === n["bom-ref"] || e.to === n["bom-ref"]) ? "" : " \xB7 Connections unknown."}`).join("\n")).join("\n\n");
   const brief = `# ${md(title)}
 
 ${md(intro)}
@@ -27550,7 +27568,7 @@ ${grouped || "No components recorded yet."}
 
 ${scopeNote}
 
-Open the [connected overview and relationship details](surface.html#overview). Grouping describes source architecture, not verified deployed trust boundaries.
+Open the [connected overview and relationship details](surface.html#overview). Grouping records placement, not verified deployed trust boundaries. Inspect its evidence basis: source, user intent, configuration or dated observation.
 
 ## Security observations and investigation leads
 
@@ -27615,7 +27633,7 @@ ${list(s.gaps, "No gaps recorded; completeness is not established.")}
 Choose a next step, inspect the whole map, redirect or stop.
 `;
   const details = s.relationships.map((e, i) => `<details id="edge-${i}"><summary>${escapeHtml(name(e.from))} \u2192 ${escapeHtml(name(e.to))} <small>${escapeHtml(label(e))}</small></summary><p>${escapeHtml(e.purpose)}</p><p>Support: ${escapeHtml(e.support)}. Selection: ${escapeHtml(e.selection)}. Optionality: ${escapeHtml(e.optionality)}. ${escapeHtml(e.group ? "Alternative group: " + e.group : "")}</p><p>${escapeHtml(e.note)}</p><p>Integration: ${escapeHtml(e.mechanism)}. Configuration locations: ${escapeHtml(e.configuration.join("; ") || "Unknown")}</p><p>Conditions: ${escapeHtml(e.conditions.join("; ") || "None recorded")}</p><p>Support evidence: ${evidence2(e.evidence)}. Selection evidence: ${evidence2(e.selectionEvidence)}</p>${e.observations.map((o) => `<p>Observed ${escapeHtml(o.at)}: ${escapeHtml(o.note)} \u2014 ${evidence2(o.evidence)}</p>`).join("")}</details>`).join("");
-  const ev = (s.bom.annotations ?? []).map((a) => `<article id="ev-${encodeURIComponent(a["bom-ref"])}"><h3>${escapeHtml(a["bom-ref"])}</h3><p>${escapeHtml(a.text)}</p><p>${escapeHtml(a.timestamp)} \xB7 ${escapeHtml(a.annotator.individual?.name ?? a.annotator.organization?.name ?? "Recorded annotator")}</p>${s.evidence.filter((e) => e.id === a["bom-ref"]).map((e) => `<p>${escapeHtml(e.basis)} \u2014 ${escapeHtml(e.applicability)}</p>${e.sources.map((ref2) => {
+  const ev = (s.bom.annotations ?? []).map((a) => `<article id="${fragmentId("ev", a["bom-ref"])}"><h3>${escapeHtml(a["bom-ref"])}</h3><p>${escapeHtml(a.text)}</p><p>${escapeHtml(a.timestamp)} \xB7 ${escapeHtml(a.annotator.individual?.name ?? a.annotator.organization?.name ?? "Recorded annotator")}</p>${s.evidence.filter((e) => e.id === a["bom-ref"]).map((e) => `<p>${escapeHtml(e.basis)} \u2014 ${escapeHtml(e.applicability)}</p>${e.sources.map((ref2) => {
     const source = s.bom.externalReferences[ref2.index];
     return `<p>Source: ${escapeHtml(source.url)} \xB7 ${escapeHtml(ref2.locator)}<br>${escapeHtml(source.comment ?? "")}<br>${escapeHtml((source.hashes ?? []).map((h) => h.alg + ": " + h.content).join("; "))}</p>`;
   }).join("")}`).join("")}</article>`).join("");
@@ -27624,12 +27642,12 @@ Choose a next step, inspect the whole map, redirect or stop.
   const body = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>${escapeHtml(title)}</title><style>
 body{margin:0;background:#f5f3ec;color:#18362e;font:17px/1.6 system-ui,sans-serif}main{max-width:1200px;margin:auto;padding:40px 28px}header{border-bottom:2px solid #18362e;padding-bottom:25px}h1{font:42px/1.1 Georgia,serif;max-width:1000px}h2{font:28px Georgia,serif;margin-top:48px}a{color:#14634b}nav{display:flex;gap:22px;flex-wrap:wrap}small,.muted{color:#58675f}svg{width:100%;min-width:1000px}svg rect{fill:#e6ebe1;stroke:#a3b7a7}svg text{fill:#18362e;font:14px system-ui,sans-serif}.boundary-label{font-weight:bold}.area-label{font-style:italic}.selected{stroke:#14634b;stroke-width:3;fill:none}.possible{stroke:#64746d;stroke-width:2;stroke-dasharray:7 5;fill:none}svg a:focus{outline:3px solid #ba882f}svg path:hover{stroke:#ba882f;stroke-width:5}.map{overflow:auto;background:white;border:1px solid #d6dace;border-radius:8px;margin:24px 0}details,article{background:#fff;padding:18px 22px;margin:12px 0;border:1px solid #d6dace;border-radius:6px;overflow-wrap:anywhere}summary{cursor:pointer;font-weight:600}summary small{display:block;font-weight:400}:target{outline:3px solid #ba882f}li{margin:10px 0}.tag{letter-spacing:.12em;font-size:12px;text-transform:uppercase}p,li,h1,h2,h3{overflow-wrap:anywhere}
 </style></head><body><main><header><p class="tag">Initial security overview</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(intro)}</p><p>Scope: ${escapeHtml(s.scope)}</p><nav><a href="#overview">Overview</a><a href="#findings">Security observations</a><a href="#coverage">Coverage</a><a href="#next">Next step</a><a href="#relationships">Relationships</a><a href="#evidence">Evidence</a><a href="brief.md">Brief</a></nav></header>
-<section id="overview"><h2>Connected application overview</h2><p>Each node appears once. Grouping describes source architecture, not verified deployed trust boundaries. Unclassified means placement has not been established.</p><p>Solid green: selected. Dashed: selection unestablished or not selected; inspect the support state in details. Arrowheads show direction. Click a node for its record or a path for its details.</p><p>${escapeHtml(scopeNote)}</p>${renderOverview(s)}</section>
+<section id="overview"><h2>Connected application overview</h2><p>Each node appears once. Grouping records placement, not verified deployed trust boundaries. Inspect its evidence basis: source, user intent, configuration or dated observation. Unclassified means placement has not been established.</p><p>Solid green: selected. Dashed: selection unestablished or not selected; inspect the support state in details. Arrowheads show direction. Click a node for its record or a path for its details.</p><p>${escapeHtml(scopeNote)}</p>${renderOverview(s)}</section>
 <section id="findings"><h2>Security observations and investigation leads</h2>${findings.length ? journey(findings) : "<p>No evidence-backed findings recorded. Continue research; this is not an assurance conclusion.</p>"}</section>
 <section id="coverage"><h2>Coverage and gaps</h2><h3>Researched</h3>${s.coverage.length ? ul(s.coverage) : "<p>No coverage recorded.</p>"}<h3>Unknown or not researched</h3>${s.gaps.length ? ul(s.gaps) : "<p>No gaps recorded; completeness is not established.</p>"}</section>
 <section id="next"><h2>Next step</h2><p>${escapeHtml(continuation)}</p>${journey(next)}</section>
 <section id="relationships"><h2>Detailed relationships</h2>${details || "<p>No relationships recorded yet.</p>"}</section>
-<section id="inventory"><h2>Component and service records</h2>${groups.map((g) => `<h3>${escapeHtml(boundaryNames[g.boundary])} \xB7 ${escapeHtml(g.area)}</h3>${g.nodes.map((n) => `<article id="node-${encodeURIComponent(n["bom-ref"])}"><h3>${escapeHtml(n.name)}</h3><p>${escapeHtml(n.description ?? "Description not recorded.")}</p><p>${escapeHtml(n.type ?? "service")} \xB7 ${escapeHtml(n["bom-ref"])}${s.relationships.some((e) => e.from === n["bom-ref"] || e.to === n["bom-ref"]) ? "" : " \xB7 Connections unknown."}</p><p>Grouping evidence: ${evidence2(s.presentation[n["bom-ref"]]?.evidence ?? [])}</p></article>`).join("")}`).join("")}</section>
+<section id="inventory"><h2>Component and service records</h2>${groups.map((g) => `<h3>${escapeHtml(boundaryNames[g.boundary])} \xB7 ${escapeHtml(g.area)}</h3>${g.nodes.map((n) => `<article id="${fragmentId("node", n["bom-ref"])}"><h3>${escapeHtml(n.name)}</h3><p>${escapeHtml(n.description ?? "Description not recorded.")}</p><p>${escapeHtml(n.type ?? "service")} \xB7 ${escapeHtml(n["bom-ref"])}${s.relationships.some((e) => e.from === n["bom-ref"] || e.to === n["bom-ref"]) ? "" : " \xB7 Connections unknown."}</p><p>Grouping evidence: ${(s.presentation[n["bom-ref"]]?.evidence ?? []).map((id2) => escapeHtml(basis2(id2)) + " \u2014 " + evidence2([id2])).join("; ") || "Not recorded"}</p></article>`).join("")}`).join("")}</section>
 <section id="journey"><h2>Investigation journey</h2><p>Choose a next step, inspect the full journey, redirect or stop.</p>${journey(s.entries)}</section><section id="evidence"><h2>Evidence and decisions</h2>${ev}</section><footer><h2>Saved detail and interoperability</h2><p>${escapeHtml(interchange)}</p><p><a href="investigation.md">Journal file</a> \xB7 <a href="surface.cdx.json">Saved Surface</a></p><p>${escapeHtml(mechanics)} This view proves neither completeness nor runtime use.</p></footer></main></body></html>
 `;
   return { "brief.md": brief, "investigation.md": journal, "surface.html": body };

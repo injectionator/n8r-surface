@@ -14,8 +14,8 @@ and observed behavior. Narrow questions remain narrow.
 
 The HTML starts with a connected graph: each identified node appears once, with
 its directed relationships. Explicit, checked presentation hints group nodes
-inside the application, externally or as unclassified. Grouping is a source
-architecture description, not proof of deployed trust boundaries. Full edge
+inside the application, externally or as unclassified. Grouping records placement with its evidence basis (including user intent),
+not proof of deployed trust boundaries. Full edge
 conditions, exceptions, observations, evidence and investigation history remain
 below the overview. The brief links to that detail instead of repeating every
 relationship's generic uncertainty.

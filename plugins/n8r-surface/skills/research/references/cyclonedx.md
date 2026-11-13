@@ -123,8 +123,9 @@ named `n8r:surface:presentation` per node, with a JSON-text value:
 on at most one node; give that node a standard `description` explaining the app.
 `evidence` contains existing evidence IDs whose annotations include this node in
 `subjects`. Internal/external placement requires at least one evidence reference.
-Do not classify by CycloneDX component/service type alone. Grouping explains the
-inspected architecture; it does not establish a deployed trust boundary.
+Do not classify by CycloneDX component/service type alone. Grouping records placement; its evidence basis distinguishes source support,
+human intent, configuration and dated observation. It does not establish a
+deployed trust boundary.
 
 The property is optional and additive: old profile-1 readers may ignore it; the
 0.1.14 reader checks its shape and references. Old saves without hints remain

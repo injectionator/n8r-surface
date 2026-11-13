@@ -71,3 +71,16 @@ tool choices, then continue from the saved BOM in a fresh chat. Expect intended
 choices to remain distinct from configured or observed facts and earlier files
 to remain unchanged. Report Pass / Fail / Blocked with revision and output links.
 Agent rehearsal is not human acceptance; browser policy refusals stay blockers.
+
+## Execution record
+
+- Initial five focused checks: four failed against the baseline; inert-text check
+  already passed. All five passed after implementation; full suite passed 235.
+- Independent review found three material defects: parallel/self-loop geometry
+  collisions, punctuation-bearing evidence anchors and user-intent grouping labeled
+  as source architecture. Three new regression tests failed before fixes and passed
+  after them. The first link test accidentally selected the overview link; it was
+  corrected to select an evidence link before the implementation fix.
+- Decision: retain user-evidenced placement, label it as recorded placement and
+  expose its basis in brief and node details. This preserves planning usefulness
+  without silently promoting intended architecture to source or runtime evidence.
