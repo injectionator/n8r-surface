@@ -1,0 +1,188 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.7",
+  "serialNumber": "urn:uuid:94141625-a8d3-4cec-984a-c46be305058d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-13T12:00:00Z"
+  },
+  "components": [
+    {
+      "bom-ref": "app",
+      "type": "application",
+      "name": "Synthetic Assistant"
+    },
+    {
+      "bom-ref": "model",
+      "type": "machine-learning-model",
+      "name": "Synthetic Model"
+    }
+  ],
+  "services": [
+    {
+      "bom-ref": "db-a",
+      "name": "Database A"
+    },
+    {
+      "bom-ref": "db-b",
+      "name": "Database B"
+    },
+    {
+      "bom-ref": "db-c",
+      "name": "Database C"
+    },
+    {
+      "bom-ref": "db-d",
+      "name": "Database D"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "app",
+      "dependsOn": [
+        "db-b"
+      ]
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "unknown"
+    }
+  ],
+  "annotations": [
+    {
+      "bom-ref": "evidence-support",
+      "subjects": [
+        "app",
+        "db-a",
+        "db-b",
+        "db-c",
+        "db-d"
+      ],
+      "annotator": {
+        "individual": {
+          "name": "Researcher"
+        }
+      },
+      "timestamp": "2026-11-13T12:00:00Z",
+      "text": "The synthetic source describes four supported database alternatives. This does not establish a selected deployment."
+    },
+    {
+      "bom-ref": "evidence-selection",
+      "subjects": [
+        "app",
+        "db-b"
+      ],
+      "annotator": {
+        "individual": {
+          "name": "Researcher"
+        }
+      },
+      "timestamp": "2026-11-13T12:00:00Z",
+      "text": "A synthetic safe configuration projection identifies database B; connection values were not retained."
+    },
+    {
+      "bom-ref": "decision-1",
+      "subjects": [
+        "app"
+      ],
+      "annotator": {
+        "individual": {
+          "name": "User"
+        }
+      },
+      "timestamp": "2026-11-13T12:00:00Z",
+      "text": "Investigate storage before model hosting."
+    }
+  ],
+  "externalReferences": [
+    {
+      "type": "evidence",
+      "url": "synthetic-source-pack",
+      "comment": "Synthetic source pack; version 1; inspected support and safe projection only.",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ]
+    }
+  ],
+  "citations": [
+    {
+      "bom-ref": "citation-1",
+      "pointers": [
+        "/annotations/0/text"
+      ],
+      "timestamp": "2026-11-13T12:00:00Z",
+      "attributedTo": "app",
+      "note": "Synthetic fixture attribution, not real product evidence."
+    }
+  ],
+  "properties": [
+    {
+      "name": "n8r:surface:profile",
+      "value": "1"
+    },
+    {
+      "name": "n8r:surface:objective",
+      "value": "Understand storage choices and the selected connection."
+    },
+    {
+      "name": "n8r:surface:scope",
+      "value": "Synthetic assistant; no live runtime access."
+    },
+    {
+      "name": "n8r:surface:relationship",
+      "value": "{\"id\":\"storage-a\",\"from\":\"app\",\"to\":\"db-a\",\"kind\":\"dependency\",\"optionality\":\"alternative\",\"group\":\"storage\",\"support\":\"supported\",\"selection\":\"unknown\",\"observations\":[],\"evidence\":[\"evidence-support\"],\"selectionEvidence\":[],\"purpose\":\"Persist conversation state\",\"mechanism\":\"Database driver\",\"configuration\":[],\"conditions\":[],\"note\":\"Supported alternative; selection of other targets is unestablished.\"}"
+    },
+    {
+      "name": "n8r:surface:relationship",
+      "value": "{\"id\":\"storage-b\",\"from\":\"app\",\"to\":\"db-b\",\"kind\":\"dependency\",\"optionality\":\"alternative\",\"group\":\"storage\",\"support\":\"supported\",\"selection\":\"selected\",\"observations\":[],\"evidence\":[\"evidence-support\"],\"selectionEvidence\":[\"evidence-selection\"],\"purpose\":\"Persist conversation state\",\"mechanism\":\"Database driver\",\"configuration\":[\"safe-projection.json: database-kind\"],\"conditions\":[],\"note\":\"Supported alternative; selection of other targets is unestablished.\"}"
+    },
+    {
+      "name": "n8r:surface:relationship",
+      "value": "{\"id\":\"storage-c\",\"from\":\"app\",\"to\":\"db-c\",\"kind\":\"dependency\",\"optionality\":\"alternative\",\"group\":\"storage\",\"support\":\"supported\",\"selection\":\"unknown\",\"observations\":[],\"evidence\":[\"evidence-support\"],\"selectionEvidence\":[],\"purpose\":\"Persist conversation state\",\"mechanism\":\"Database driver\",\"configuration\":[],\"conditions\":[],\"note\":\"Supported alternative; selection of other targets is unestablished.\"}"
+    },
+    {
+      "name": "n8r:surface:relationship",
+      "value": "{\"id\":\"storage-d\",\"from\":\"app\",\"to\":\"db-d\",\"kind\":\"dependency\",\"optionality\":\"alternative\",\"group\":\"storage\",\"support\":\"supported\",\"selection\":\"unknown\",\"observations\":[],\"evidence\":[\"evidence-support\"],\"selectionEvidence\":[],\"purpose\":\"Persist conversation state\",\"mechanism\":\"Database driver\",\"configuration\":[],\"conditions\":[],\"note\":\"Supported alternative; selection of other targets is unestablished.\"}"
+    },
+    {
+      "name": "n8r:surface:relationship",
+      "value": "{\"id\":\"inference\",\"from\":\"app\",\"to\":\"model\",\"kind\":\"integration\",\"optionality\":\"unknown\",\"group\":\"\",\"support\":\"unknown\",\"selection\":\"unknown\",\"observations\":[],\"evidence\":[],\"selectionEvidence\":[],\"purpose\":\"Generate a response\",\"mechanism\":\"Unknown\",\"configuration\":[],\"conditions\":[],\"note\":\"Model serving connection remains uninvestigated.\"}"
+    },
+    {
+      "name": "n8r:surface:entry",
+      "value": "{\"id\":\"plan-1\",\"kind\":\"next\",\"title\":\"Inspect storage selection\",\"text\":\"Establish the selected database from a safe configuration projection.\",\"status\":\"done\",\"reason\":\"Projection supplied in this synthetic example.\",\"access\":\"Safe configuration projection\",\"evidence\":[\"evidence-selection\"],\"at\":\"2026-11-13T12:00:00Z\"}"
+    },
+    {
+      "name": "n8r:surface:entry",
+      "value": "{\"id\":\"choice-1\",\"kind\":\"decision\",\"title\":\"Storage first\",\"text\":\"Investigate storage before model hosting.\",\"status\":\"active\",\"reason\":\"User priority\",\"access\":\"None\",\"evidence\":[\"decision-1\"],\"at\":\"2026-11-13T12:00:00Z\"}"
+    },
+    {
+      "name": "n8r:surface:entry",
+      "value": "{\"id\":\"question-1\",\"kind\":\"question\",\"title\":\"Which service hosts inference?\",\"text\":\"Inspect the serving configuration to identify the model endpoint role.\",\"status\":\"open\",\"reason\":\"Source does not establish this connection.\",\"access\":\"Safe inference configuration\",\"evidence\":[],\"at\":\"2026-11-13T12:00:00Z\"}"
+    },
+    {
+      "name": "n8r:surface:coverage",
+      "value": "Only synthetic support and selection sources inspected."
+    },
+    {
+      "name": "n8r:surface:gap",
+      "value": "Runtime use has not been observed."
+    },
+    {
+      "name": "n8r:surface:evidence",
+      "value": "{\"id\": \"evidence-support\", \"basis\": \"source\", \"sources\": [{\"index\": 0, \"locator\": \"support.md:1-20\"}], \"applicability\": \"Synthetic fixture only.\"}"
+    },
+    {
+      "name": "n8r:surface:evidence",
+      "value": "{\"id\": \"evidence-selection\", \"basis\": \"configuration\", \"sources\": [{\"index\": 0, \"locator\": \"safe-projection.json: database-kind\"}], \"applicability\": \"Synthetic fixture only.\"}"
+    },
+    {
+      "name": "n8r:surface:evidence",
+      "value": "{\"id\": \"decision-1\", \"basis\": \"user\", \"sources\": [], \"applicability\": \"Synthetic fixture only.\"}"
+    }
+  ]
+}

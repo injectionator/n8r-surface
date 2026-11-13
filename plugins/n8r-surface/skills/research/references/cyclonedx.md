@@ -1,102 +1,154 @@
-# CycloneDX 1.7 alongside native records
+# Save and continue a Surface
 
-Use this workflow when the user asks for CycloneDX or an interoperable BOM of a
-Surface. Research with the host, save a checked native bundle using
-[artifacts](artifacts.md), then export through the bundled `scripts/cyclonedx.mjs`.
-The helper is offline and standalone: Node.js 22/24/26, no product CLI or install.
+Use the host to investigate. Use bundled `scripts/surface.mjs` to check and save
+CycloneDX 1.7 Surface profile 1. This is the sole authority for new saved Surfaces;
+brief, map and journal are generated views. Node.js 22/24/26; no runtime install,
+network, product CLI or source execution. Research uses the host's permitted tools.
 
-## Source intake and user explanation
+## Ordinary interaction
 
-Explain the user journey as you go: sources → useful graph → checked native save →
-CycloneDX exchange → independent readback → fresh-session continuation. Keep the
-brief concise and explanations available on request. Treat the user's product list
-as intended scope, not evidence of connections. Incrementally introduce sources;
-no hidden knowledge of another repository or the team's deployment.
+The user says “save the Surface.” Do not ask them to choose a format or classify
+it as Capability/Bound. Infer supported possibilities, selected connections and
+dated observations per relationship. Missing configuration and placeholders do
+not establish selection or absence. A safe static configuration projection can
+establish selection; runtime probes are not required or implied.
 
-Seek applicable SBOMs in explicitly available libraries, supplied repositories,
-release artifacts and permitted upstream locations. Check version, source and
-coverage before using them. With no network or suitable inventory, record that
-blocker and produce a partial source-derived inventory. Do not invent transitive
-packages or claim the helper imports/merges arbitrary upstream BOMs. This release
-projects researched native nodes; broader SBOM collection remains outside it.
+Start a useful investigation plan immediately. With saving authorized, save the
+initial journal and update it at useful milestones, choices and diversions. Show
+what each next step could establish and the access it needs. Keep deferred paths
+and reasons. Offer a few next options, allow inspection of the whole map and stop
+when the user has enough. Do not search past chats or old vault research.
 
-Historical deployment notes describe their original observation period, not fresh
-configuration. Keep selected model, actual model and provider identity distinct.
-Inspect safe configuration projections only; never print or retain connection
-strings, credentials, private endpoints or actual user records. Follow the native
-artifact privacy rules before staging any output.
+## Prepare a BOM
 
-## Prepare the mapping
+Use [the synthetic BOM](examples/surface.cdx.json) for structure only. Replace its
+identities, claims, dates, sources and hashes; never treat it as product evidence.
+An initial plan may have no nodes, relationships or evidence yet. Keep the required
+properties and unknown composition; record open steps and gaps honestly.
 
-After a native bundle is saved, create a mapping JSON with exactly two keys:
+Standard fields:
+
+- `serialNumber`: a fresh `urn:uuid:` identity; `version: 1` initially.
+  `metadata.timestamp`: UTC capture/save time. `metadata.lifecycles`, if used,
+  describe capture phases, not one evidence classification for the whole graph.
+- `components` / `services`: stable `bom-ref`, `name`, appropriate standard type
+  for components. Models use `machine-learning-model`; serving endpoints are
+  separate services when evidenced. Do not invent versions or transitive packages.
+- `annotations`: individually identified findings/decisions with `bom-ref`,
+  `subjects` (node refs or other valid BOM refs), `annotator`, `timestamp`, `text`.
+  Record disagreements and qualifications in the text, not just a conclusion.
+- `externalReferences`: source `url` (safe relative locator or public HTTPS URL),
+  standard `type`, `comment` with source version, capture scope and limitations,
+  and SHA-256 `hashes` over the inspected bytes. No credentials, query strings,
+  private endpoints or absolute local paths. Inspect safe configuration projections
+  only; do not print or store raw connection strings. Generic URLs are not evidence
+  of source access. Say when exact source identity is unavailable.
+- `citations`: optional attribution with `pointers` (resolvable JSON Pointers),
+  UTC `timestamp`, `attributedTo` (existing BOM reference), and `note`. This is
+  attribution, not a replacement for the evidence/source locations below.
+- `dependencies`: exactly selected relationships whose kind is `dependency`,
+  grouped by `from` as `{ref, dependsOn:[to]}`, deduplicated. Omit or use `[]` when
+  none are selected. Other edges remain in the profile. Do not emit empty
+  dependency entries to imply dependency-free nodes. Keep
+  `compositions: [{aggregate: "unknown"}]` for this bounded inventory.
+
+## Profile properties
+
+Use standard `{name, value}` properties, with prefix `n8r:surface:`. This is an
+experimental, unregistered property profile. Values are strings; records below
+use JSON text per individual record, not an embedded old native bundle.
+
+Exactly one each: `profile` = `1`, `objective`, `scope`. Repeated plain-text
+`coverage` and `gap` properties retain inspected scope and unknowns.
+
+One `evidence` property per source-backed annotation used by the graph/journal:
 
 ```json
-{
-  "nodes": [
-    {"id": "urn:component:assistant", "kind": "component", "type": "application", "rationale": "Application role established by the supplied source."},
-    {"id": "urn:component:storage", "kind": "service", "rationale": "Managed storage service described by the supplied configuration evidence."}
-  ],
-  "dependencies": []
-}
+{"id":"finding-storage","basis":"source","sources":[{"index":0,"locator":"src/storage.ts:12-28"}],"applicability":"Inspected source revision only; no deployment observation."}
 ```
 
-These are shape examples, not findings. Include every native node exactly once.
-Copy IDs from the saved Surface; names come from that record. Classify each as a
-CycloneDX `component` with an appropriate native type, or `service` without `type`.
-For example `application`, `library`, `operating-system`, `platform` and
-`machine-learning-model` are component types. Separate a model from its serving
-service and connector when evidence supports those distinct entities. Do not force
-unknown software to be a service just to avoid classifying it; investigate or
-report the unresolved mapping. `rationale` records your classification basis.
-Do not add versions, package IDs, endpoints, extra keys or arbitrary extensions.
+`id` resolves to an annotation. `basis` is `source`, `configuration`, `observation`
+or `user`. `sources` identifies zero-based external-reference indices and exact
+inspected locations; non-user evidence needs at least one. User choices may have
+no source reference; their annotation records the human decision and date.
+Evidence annotations must include both relationship endpoints in `subjects`.
 
-`dependencies` lists native relationship IDs explicitly judged to mean dependency.
-Only Bound relationships with a single configured target are eligible. The helper
-uses the concrete target, not merely the abstract role endpoint. Do not add an
-edge just because it is in the graph: hosting, identity, containment and data flow
-are not interchangeable with dependency. Possible, unknown and conflicting links
-stay in the report/native records. Capability exports use an empty dependency list.
-The BOM is a partial view; the mapping report and native records retain richer
-semantics, evidence and uncertainty. This output does not assert runtime use.
+One `relationship` property per meaningful path:
 
-## Export and check
+```json
+{"id":"storage","from":"app","to":"database","kind":"dependency","optionality":"optional","group":"","support":"supported","selection":"unknown","observations":[],"evidence":["finding-storage"],"selectionEvidence":[],"purpose":"Persist conversation state","mechanism":"Database driver","configuration":[],"conditions":[],"note":"Supported; the selected deployment target is unknown."}
+```
 
-Resolve the helper from this installed skill. Resolve filesystem parents to their
-real paths; use a new numbered destination beside the existing native directory.
-The user request to save CycloneDX authorizes preparing the mapping and export.
+- `kind`: `dependency`, `integration`, `hosting`, `data-flow`.
+- `optionality`: `required`, `optional`, `alternative`, `unknown`; alternatives
+  name a nonempty `group`. A group does not by itself assert mutual exclusion;
+  put known exclusivity/conditions in the conditions and evidence.
+- `support`: `supported`, `unknown`, `absent`, `conflicting`, `out-of-scope`.
+  Supported/absent/conflicting need evidence. Missing detail does not mean absent.
+- `selection`: `selected`, `unknown`, `not-selected`, `conflicting`. Every state
+  other than unknown needs configuration or human-choice `selectionEvidence`.
+  Explain whether it is configured selection or human intent in that evidence.
+- `observations`: independent `{at, evidence:[annotationId], note}` records.
+  These require observation-basis evidence and UTC dates. Do not infer from selection.
+- `purpose`, `mechanism`, `note`: readable text, explicit unknowns where needed.
+  `configuration`: safe setting names/relative locations only. Placeholder values
+  cannot justify selection. `conditions`: applicable preconditions as strings.
+
+One ordered `entry` property per investigation step/question/choice:
+
+```json
+{"id":"inspect-storage","kind":"next","title":"Inspect storage selection","text":"Establish the chosen target from safe configuration.","status":"open","reason":"Support alone does not identify a target.","access":"A safe configuration projection","evidence":[],"at":"2026-11-13T12:00:00Z"}
+```
+
+`kind`: `next`, `question`, `decision`, `diversion`, `finding`.
+`status`: `open`, `active`, `done`, `deferred`, `superseded`.
+Use optional `parent` for a branch and `supersedes` for a correction (entry IDs).
+Retain ordering, deferred reasons and access needs. Decisions reference user-basis
+evidence. Preserve earlier decisions verbatim; a later decision can supersede one,
+changing only the earlier status to `superseded` and retaining its provenance.
+
+## Check, save, read back
+
+Resolve helper paths relative to this installed skill. Show the destination and
+provide links; keep outputs outside source repositories. Parent directories must
+exist and be real directories; the numbered revision directory must be new.
 
 ```sh
-node /INSTALLED/skills/research/scripts/cyclonedx.mjs export /WORKSPACE/native-001 /WORKSPACE/mapping.json /WORKSPACE/exchange-001
-node /INSTALLED/skills/research/scripts/cyclonedx.mjs read /WORKSPACE/exchange-001
+node /INSTALLED/skills/research/scripts/surface.mjs check /WORKSPACE/draft.cdx.json
+node /INSTALLED/skills/research/scripts/surface.mjs save /WORKSPACE/draft.cdx.json /WORKSPACE/surfaces/001
+node /INSTALLED/skills/research/scripts/surface.mjs read /WORKSPACE/surfaces/001/surface.cdx.json
 ```
 
-Exit 0 with `saved-and-read-back`, then `checked`, establishes the bounded helper
-checks. Open the saved files independently. Provide links to the native brief,
-`surface.cdx.json`, `mapping.json` and `README.md`. Explain projected dependencies,
-retained meanings and gaps. `surface-records.json` carries the exact native snapshot;
-keep it and the mapping report with the BOM. The helper validates pinned official
-CycloneDX 1.7 schemas and references, not the truth or completeness of research.
-Never claim a named consumer works unless it was actually exercised.
+Exit 0: `checked`, then `saved-and-read-back`, then `checked` with recovered state.
+Exit 1 is failure. The output contains `surface.cdx.json`, `surface.html`, `brief.md`,
+`investigation.md`, `manifest.json`. Read the saved BOM and views independently.
+Link the folder and each human-readable file. There is no native sibling authority.
+Source validity/privacy checks are bounded; they cannot establish truth or detect
+all secrets. Keep sensitive data out before staging; no raw source snapshots.
 
-On failure, preserve the output, report no success and inspect the specific
-contract/mapping/predecessor issue without printing unsafe input. Do not replace
-failed validation with hand-authored unchecked JSON. A fresh native successor
-cannot become a new initial export: supply its prior exchange. If an older native
-lineage has no exchange, export its root first and follow the lineage in order.
+## Continue and reconcile
 
-## Reopen and revise
-
-Read both native and exchange directories with their helpers. Check current source
-identity; keep prior decisions and contrary evidence. Save a native successor using
-the existing helper, then export with its prior exchange:
+A supplied BOM alone suffices. Read it with the helper; re-establish source access
+and disclose unavailable sources. Keep IDs, decisions, uncertainty and evidence.
+Copy its serial, increment version by one, retain previous entries, update the
+journal, and add an `externalReferences` entry of type `bom` with exact predecessor
+`urn:cdx:UUID/VERSION`. Set `n8r:surface:predecessor-digest` to `sha256:HEX` over
+previous BOM file bytes (not canonical JSON). Replace this property on each save.
 
 ```sh
-node /INSTALLED/skills/research/scripts/cyclonedx.mjs export /WORKSPACE/native-002 /WORKSPACE/mapping-002.json /WORKSPACE/exchange-002 /WORKSPACE/exchange-001
+node /INSTALLED/skills/research/scripts/surface.mjs save /WORKSPACE/next.cdx.json /WORKSPACE/surfaces/002 /WORKSPACE/surfaces/001
 ```
 
-Expect stable BOM serial number, incremented BOM version and a predecessor digest.
-Keep retained node classifications stable; changes to those require a separately
-reviewed mapping evolution, not silent relabeling. Exact unchanged native records
-may also be reprojected as a new exchange version. Read both saved outputs and
-verify old manifests/bytes remain unchanged. Edited files are conflicts; do not
-overwrite or regenerate them in place. No deployment, runtime probe or posture score.
+Previous argument may be a lone BOM. For a directory, the helper also checks
+view hashes. An edited journal/HTML/brief is a proposal, not new authority. Preserve
+it, read it, clarify conflicting meaning only when needed, record the accepted
+choice and add a plain-text `n8r:surface:reconciliation` explanation. Then use
+`reconcile NEXT_BOM NEW_DIRECTORY PREVIOUS_DIRECTORY` instead of `save`. This still
+verifies predecessor BOM bytes; it never overwrites the edited files. A changed
+BOM or missing original manifest needs investigation, not a bypass.
+
+For explicitly supplied legacy saves use `artifacts.mjs read DIRECTORY` or
+`cyclonedx.mjs read EXCHANGE_DIRECTORY`. Preserve them. Deliberate migration means
+reading that evidence and authoring a fresh profile BOM, recording provenance and
+limitations in `n8r:surface:migration`. No automatic lossless converter is claimed.
+Never quietly keep native and BOM formats as two new authorities.

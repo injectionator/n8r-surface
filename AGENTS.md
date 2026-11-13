@@ -392,15 +392,16 @@ and actual registry/provenance verification distinct from local checks.
 
 ## Standalone skill artifact helper
 
-Candidate skill 0.1.12 bundles the checked Capability/Bound artifact helper and
-a bounded CycloneDX 1.7 exchange helper.
+Candidate skill 0.1.13 bundles a self-contained CycloneDX Surface helper and
+retains legacy Capability/Bound and exchange readers for deliberately supplied old saves.
+New Surface saves use the BOM authority with generated brief, map and journal.
 Run `npm run build:skill` after helper/library changes; `npm run check:skill`
 checks exact bundle bytes and is included in `npm test`. The focused check is
-`node --test tests/skill-artifacts.test.mjs tests/skill-cyclonedx.test.mjs` after
+`node --test tests/skill-artifacts.test.mjs tests/skill-cyclonedx.test.mjs tests/surface-bom.test.mjs` after
 `npm run build`.
 It needs Node.js 22/24/26 and no network after dependency installation.
 See [scope, privacy limits and installed human check](docs/n8r-surface/skill-surface-artifacts.md).
 The helpers have no product CLI or runtime package-install dependency. The
-[CycloneDX mapping](docs/n8r-surface/skill-cyclonedx.md) preserves native records
-and explicitly limits projected meanings; schema validation is not consumer
+[CycloneDX mapping](docs/n8r-surface/skill-cyclonedx.md) uses standard inventory and selected dependencies with a bounded property profile
+for evidence, possible paths and investigation state; schema validation is not consumer
 compatibility, research accuracy or runtime conformance.

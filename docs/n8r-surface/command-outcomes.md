@@ -592,3 +592,20 @@ both HTML and brief. Exact-parent comparison is unavailable when parent research
 is not retained. All checked data and original bytes remain unchanged; the new
 manifest covers the new presentation. No new research or CLI behavior is added.
 See the [human task and readback](skill-surface-artifacts.md#short-human-check).
+
+## SKILL-SURFACE-02: save and continue an investigation
+
+**Candidate 0.1.13 implemented; installed assessment tracked separately.**
+No new product CLI command. Given current-chat supplied sources and an authorized
+Surface destination, ask: “Explain the AI paths, save the Surface and maintain an
+investigation journal as we go.” Expect an initial plan, possible/selected paths,
+inspectable evidence, useful next options and numbered saved revisions.
+
+The state change is a self-contained CycloneDX BOM plus derived brief, HTML map,
+Markdown journal and manifest. Given only the latest BOM in a fresh chat, ask to
+continue: evidence, decisions, uncertainties and investigation state must recover.
+A user-directed diversion remains recorded, with deferred work and its reason.
+Earlier bytes remain unchanged. View edits require explicit reconciliation.
+See the [human tasks and evidence](skill-bom-verification.md) and
+[working manual](skill-manual.md). Automated profile checks do not establish
+research accuracy or human acceptance.

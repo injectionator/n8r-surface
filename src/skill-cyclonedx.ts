@@ -3,13 +3,6 @@ import fs from 'node:fs';
 import {resolve, dirname, join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
-import {Ajv} from 'ajv';
-import formats from 'ajv-formats';
-import extendedFormats from 'ajv-formats-draft2019';
-import bomSchema from './cyclonedx-schemas/bom-1.7.schema.json' with {type:'json'};
-import cryptoSchema from './cyclonedx-schemas/cryptography-defs.schema.json' with {type:'json'};
-import spdxSchema from './cyclonedx-schemas/spdx.schema.json' with {type:'json'};
-import jsfSchema from './cyclonedx-schemas/jsf-0.82.schema.json' with {type:'json'};
 import {checkBundle,readBundle,privacy,digest} from './skill-artifacts.js';
 import type {Bundle} from './skill-artifacts.js';
 import {canonical} from './portable.js';
@@ -25,23 +18,8 @@ const hash=(x:string|Buffer)=>`sha256:${createHash('sha256').update(x).digest('h
 const json=(x:unknown)=>JSON.stringify(x,null,2)+'\n';
 function refuse():never {throw Error('CycloneDX exchange refused: check contracts, mapping, privacy, lineage and saved bytes.');}
 function guard<T>(fn:()=>T):T {try{return fn();}catch{return refuse();}}
-const ajv=new Ajv({strict:false,allErrors:false,validateFormats:true});
-// ajv-formats CJS interop is normalized by Node and the standalone bundler.
-(formats as unknown as (a:Ajv)=>void)(ajv);
-(extendedFormats as unknown as (a:Ajv)=>void)(ajv);
-ajv.addSchema(spdxSchema);ajv.addSchema(jsfSchema);ajv.addSchema(cryptoSchema);
-const schemaCheck=ajv.compile(bomSchema);
-export function validateBom(bom:unknown):void {
- guard(()=>{
-  if(!schemaCheck(bom))refuse();const b=bom as Bom;
-  if(b.bomFormat!=='CycloneDX'||b.specVersion!=='1.7')refuse();
-  const refs=new Set<string>();
-  for(const n of [...(b.components??[]),...(b.services??[])]){
-   if(typeof n['bom-ref']!=='string'||refs.has(n['bom-ref']))refuse();refs.add(n['bom-ref']);
-  }
-  for(const d of b.dependencies??[])if(!refs.has(d.ref)||d.dependsOn?.some((r:string)=>!refs.has(r)))refuse();
- });
-}
+export {validateBom} from './cyclonedx-validation.js';
+import {validateBom} from './cyclonedx-validation.js';
 function mappingFor(input:unknown,b:Bundle):Mapping {
  privacy(input);
  if(!input||typeof input!=='object'||Object.keys(input).sort().join(',')!=='dependencies,nodes')refuse();

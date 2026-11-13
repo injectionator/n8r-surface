@@ -1,6 +1,6 @@
 {
   "name": "n8r-surface",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Discover and reconcile AI-relevant components and connections using source evidence and permitted live settings. Experimental working notes; no deployment or compatibility claims.",
   "author": {
     "name": "AI Surface Model contributors",
@@ -19,7 +19,7 @@
   "interface": {
     "displayName": "n8r-surface Researcher",
     "shortDescription": "Research AI system components",
-    "longDescription": "Build partial AI Surface graphs from supplied sources, prior descriptions and permitted live observations using the current host. Retain evidence, decisions and gaps in working notes. This experimental skill can save checked Capability and Bound artifacts using bundled resources; it does not change deployments. Access and saving depend on the host tools.",
+    "longDescription": "Build partial AI Surface graphs from supplied sources, prior descriptions and permitted live observations using the current host. Retain evidence, decisions and gaps in working notes. This experimental skill can save a self-contained Surface with an investigation journal and visual using bundled resources; it does not change deployments. Access and saving depend on the host tools.",
     "developerName": "AI Surface Model contributors",
     "category": "Developer Tools",
     "capabilities": [],

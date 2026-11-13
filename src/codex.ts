@@ -99,7 +99,7 @@ export function researcherInstructions() {
     hash.update(path).update('\0').update(bytes).update('\0');
     return `\n--- Bundled instruction: ${path} ---\n${bytes.toString('utf8')}`;
   });
-  if (manifest.version !== '0.1.12') throw new InspectionError('Unsupported bundled Researcher revision');
+  if (manifest.version !== '0.1.13') throw new InspectionError('Unsupported bundled Researcher revision');
   return {version: manifest.version as string, digest: `sha256:${hash.digest('hex')}`, text: sections.join('\n')};
 }
 

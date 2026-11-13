@@ -1,4 +1,8 @@
-# Skill 0.1.12 CycloneDX verification
+# Historical skill 0.1.12 CycloneDX verification
+
+This alongside-records rehearsal used explicitly supplied historical notes and
+model intent; it was not a neutral fresh assessment. It does not verify the revised
+BOM-authority design. See [candidate 0.1.13 evidence](skill-bom-verification.md).
 
 Issue [#68](https://github.com/injectionator/n8r-surface/issues/68), draft
 [PR #69](https://github.com/injectionator/n8r-surface/pull/69). Agent rehearsal on

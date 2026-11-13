@@ -1,4 +1,12 @@
-# Standalone Capability and Bound artifacts
+# Legacy Capability and Bound artifacts
+
+Use only for old records explicitly supplied for reading or deliberate migration.
+New saves follow [Surface persistence](cyclonedx.md). Preserve old bytes. Read the
+old evidence and transfer its supported meanings into a new profile BOM with a
+migration explanation; report any meaning that cannot be represented. Do not
+maintain two authorities for the new investigation. There is no automatic legacy
+conversion in this candidate. The instructions below describe the legacy reader
+and historical writer, not the default save journey.
 
 Use the host to research permitted sources. Use this skill's bundled Node helper
 for validation, rendering, saving and readback. No npm installation, repository

@@ -1,92 +1,78 @@
 # Researcher skill: working user manual
 
-This manual grows from actual candidate use for issue #68. It is an early working
-manual, not evidence that an unexercised step passes. Maintainer evidence and
-installation preparation stay separate from the user journey below.
+Candidate 0.1.13 saves the Surface with a brief, visual map and investigation
+journal. This manual develops through actual use; the
+[verification record](skill-bom-verification.md) distinguishes exercised behavior
+from pending human acceptance. The earlier [0.1.12 rehearsal](skill-cyclonedx-verification.md)
+used historical material and a different save format; it was not a neutral fresh
+assessment.
 
-## Start with the question and sources
+## Start with your question and sources
 
-Open a workspace with the installed Researcher and readable sources. Introduce
-one component first; add other folders, documentation and safe configuration
-summaries when relevant. Do not paste credentials or private connection strings.
+Open a fresh chat with the Researcher and explicitly supply a checkout, source
+pack or permitted documentation. You do not need to classify the Surface.
 
-> Use n8r-surface Researcher to explain the AI-relevant components and connections
-> in these sources. Explain what is supported, what is configured and what remains
-> unknown. I want a multi-component Surface, with evidence I can inspect.
+> Explain the AI-relevant components and paths in this source for a security
+> engineer. Save the Surface in this folder and maintain an investigation journal
+> as we go. Show me what is known, what remains uncertain and useful next steps.
 
-Expect a concise explanation and useful next enquiries. A list of products is
-context, not proof that they are connected. Historical deployment notes are not a
-fresh running-state check. If the selected model differs between sources, the
-Researcher should show the conflict or limit rather than silently choose one.
+Expect a useful initial plan and a shallow map, then evidence-driven investigation.
+The Researcher uses this chat's supplied sources. It should not search old chats or
+vault research automatically. If the host supplies recognizable historical context,
+it should disclose that context; ask it to exclude it when inappropriate. This
+is not a promise that the host has no memory.
 
-## Add evidence and save
+## Inspect the developing Surface
 
-> Include this additional component and configuration summary. Save checked
-> research and a Surface, then a CycloneDX 1.7 exchange alongside those records.
-> Explain which connections the exchange represents and which meanings remain in
-> the research records. Show me the saved brief and files.
+Open the latest brief for the current explanation, the HTML map for paths and
+expandable evidence, and the journal for the investigation journey. The Researcher
+should provide the working folder and absolute file links without changing projects.
+The journal retains scope, available evidence, findings, choices, questions,
+diversions, deferred paths and reasons. Each next step explains its purpose and
+needed access. You can inspect the whole map, redirect or stop at any time.
 
-Observed candidate result: native brief/HTML/JSON plus an exchange directory containing BOM,
-native snapshot and mapping report. Read the brief first. Inspect the mapping
-report for unknowns and omissions; a valid BOM is not a complete deployment audit.
-Do not treat a configured connection as proven working.
+A supported database is a possibility; it is not necessarily the selected target.
+Safe static configuration may establish selection, while a placeholder cannot.
+Missing configuration means unknown selection. Solid paths are selected; dashed
+paths require inspecting their support/selection details. Dated observed use is
+separate. Optional does not mean weak evidence.
 
-## Return and correct
+## Redirect and save
 
-In a fresh chat, supply the saved native and exchange directories and source access.
+> Pause this path and investigate authentication first. Keep the deferred work,
+> explain what access would help, and save the updated Surface.
 
-> Reopen this saved research and CycloneDX exchange. Keep the evidence and my
-> decisions. Apply this correction, save successors and leave earlier files
-> unchanged. Explain what changed and show me the evidence.
+Expect the choice and its reason in the journal, useful next options and a new
+numbered revision. Previous files remain unchanged. Saving generates a brief,
+map and journal from the same Surface; there is no separate native data authority.
+The technical file is CycloneDX 1.7 with a bounded Surface profile. Ordinary users
+need not choose that format or ask for a separate export.
 
-Expected result: new identifiable revisions with preserved history. Missing source
-access should be explicit. An edited or damaged saved artifact should be reported
-as a conflict rather than overwritten. The fresh-chat rehearsal recovered its evidence from saved files, added an owner
-design decision, preserved all ten earlier artifact files and advanced the BOM to
-version 2 with the same serial number. The
-[verification record](skill-cyclonedx-verification.md) separates exercised steps
-from pending human acceptance.
+## Return in a fresh chat
 
-## What we learned from the first use
+Supply the latest `surface.cdx.json` and selected sources. The BOM alone retains
+relationships, evidence, choices, uncertainty and the investigation journey.
 
-The installed candidate researched twelve supplied files and saved nine nodes and
-nine relationships. It separated five components from four services in CycloneDX.
-It also wrote a shorter consultant brief beside the generated native brief. Ask
-for that summary when you want the system explanation before the detailed evidence.
+> Continue this Surface. What did I choose, what remains uncertain, and what
+> should we investigate next? Keep earlier decisions and revisions.
 
-The evidence supported a Capability Surface. Consequently its BOM had no concrete
-dependency edges, although the native graph retained all nine connections. This is
-useful partial output: absence of BOM edges here does not mean the system has no
-connections. A [synthetic Bound example](../../examples/researcher/cyclonedx/configured/README.md)
-shows what an explicitly selected, configured dependency looks like in the exchange.
+The Researcher reads the supplied Surface, re-establishes access and tells you
+when evidence cannot be refreshed. A new observation does not rewrite old ones.
+If you edit a generated journal, supply that edited folder and ask to reconcile
+it. The Researcher treats edits as proposals, records accepted changes in a new
+revision and preserves the edited original. It must not silently overwrite it.
 
-The candidate kept the intended model distinct from a different model named in
-historical evidence. It found source-level control points but did not claim they
-were deployed or effective. No applicable SBOM was supplied, so package versions,
-transitive dependencies and complete licence coverage remained gaps.
+Old native/exchange saves remain readable when deliberately supplied. Migration
+requires reviewing their evidence and recording limits; no automatic lossless
+conversion is claimed. See the [format details](skill-cyclonedx.md).
 
-One readback command initially used the wrong level of the mapping report. The
-candidate corrected its inspection to use `mapping.nodes` and
-`mapping.dependencies`, reran it, and read the outputs successfully. Export itself
-had succeeded; the files were preserved. If a check fails, ask for the actual
-failure and corrected readback rather than accepting a bare success statement.
+## Report your check
 
-## Report the user check
+Pass when the brief is useful, evidence is inspectable, choices survive reopening
+and earlier files remain intact. Fail for invented relationships, lost decisions,
+missing state or unsupported claims of observed use. Blocked means a prerequisite
+such as source access or Node is unavailable. Return the interaction and relevant
+file paths without secrets. Agent rehearsals do not substitute for your acceptance.
 
-- Pass: you can explain the system from the brief, follow evidence, inspect the
-  exchange limits and reopen/correct it without losing prior records or decisions.
-- Fail: missing output, invented connections, an intended setting described as
-  observed, lost decisions or altered earlier files. Return the interaction and
-  relevant output paths; omit secrets.
-- Blocked: installation, source access or required runtime is unavailable. Record
-  the missing prerequisite; do not count an unattempted step as passing.
-
-Keep the rehearsal outputs until reviewed. Remove only the disposable workspace
-when no longer needed; leave original sources and established research intact.
-
-## What this release does not decide
-
-The skill describes and researches; it does not deploy, attack, certify, score or
-repair the target. Ask what a gap means and what evidence would resolve it before
-expanding the investigation. The [mapping guide](skill-cyclonedx.md) explains the
-bounded exchange and its limits.
+The Researcher describes and investigates; it does not deploy, attack, certify or
+score the target. A schema check is not evidence that a selected connection works.
