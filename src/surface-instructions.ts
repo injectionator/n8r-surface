@@ -1,5 +1,5 @@
 /** Content fields mirror the existing experimental contracts; host metadata is omitted. */
-export const surfaceInstructions = `
+export const legacySurfaceInstructions = `
 STRUCTURED SURFACE CAPABILITY (host adapter 0.1):
 When the user asks to create or update a Surface, call surface_draft with research and surface content objects. This stages a preview only. Never claim a save. Natural-language save requests explain /save surface. /save still saves Markdown. A later user turn invalidates the preview, so restage a revised pair after answering a correction. Retain stable component IDs from notes. If an old label is not namespaced, record the explicit old-to-new mapping in research.notes and show it to the human. Do not silently rename identities.
 
@@ -21,3 +21,13 @@ Requirement: {id,kind:"secret"|"resource"|"configuration",description,state}. Ne
 
 On pair reopening keep research and Surface identities via host bookkeeping. Retain all research sources, findings, alternatives, decisions, questions and component IDs. Keep historical claims and research notes exactly; append corrections and new evidence instead of removing history. Every node and relationship needs nonempty basis linking structured findings/decisions. Retained finding subjects/properties and node types cannot change; retain opaque extensions exactly. Removed selections remain rejected/deferred in research. Preserve prior unknowns unless evidence resolves them. Explain source unavailable/changed status and distinguish declared from reachable or exercised. On validation error, repair the staged content using feedback; do not discard evidence to make validation pass.
 `;
+
+export const surfaceInstructions = `
+STRUCTURED SURFACE HOST ADAPTER 0.3:
+For new research, use the bundled Capability/Bound contract and surface_draft with a COMPLETE bundle {research,surface,dependencies}. This tool validates and stages only; the user enters /save surface to save the preview as brief.md, research.html, surface.json, dependencies.json and manifest.json. /save still saves Markdown. A later conversational turn invalidates the preview.
+Use surface_digest with {artifact: COMPLETE_ARTIFACT} to get canonical SHA-256 for exact revision references. Never guess artifact or source digests. Source digests come from source_read/search. Use real UTC timestamps in seconds. All artifact envelopes include contract, id, revision, title, scope, extensions. Revision includes id, parent (null initially), createdAt, author and reason. The current UTC time is supplied by the host.
+Use the shapes below as schema examples ONLY: they are synthetic and are NOT evidence. Replace identities and findings with actual source evidence. Unknown details need explicit notes and empty claims. The host has no shell or filesystem staging tool. Use only surface_digest and surface_draft for structured work; do not attempt to invoke the standalone helper.
+Compute research digest first, then set surface.records to the exact research reference. Each basis is {record:research.id,revision:research.revision.id,items:[finding IDs]}. Bound dependencies include its pinned Capability and that Capability's exact research. For a successor retain research/surface identity and kind, use new revision IDs, exact parent references, unchanged prior decisions, stable component and relationship identities, and exact historical dependencies. Retain parent research in dependencies to explain changes. Do not discard contradictory evidence.
+On reopening a LEGACY n8r.surface/0.1 pair, continue that original format with the legacy content-only tool input described below; never silently migrate old files. For new work, always use n8r.surface/0.3. A saved Capability and a Bound description are distinct identities, not kind-changing successors.
+LEGACY INSTRUCTIONS (only for reopened definitions):
+` + legacySurfaceInstructions;

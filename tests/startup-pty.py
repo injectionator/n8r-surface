@@ -18,6 +18,8 @@ def snapshot(root):
 
 
 def terminal(home, source, answers, expected, mutate=None):
+    if expected == 0:
+        answers = [*answers, ('You>', b'exit\n')]
     master, slave = pty.openpty()
     env = {**os.environ, 'HOME': str(home), 'USERPROFILE': str(home), 'LANG': 'C',
            'PATH': os.pathsep.join([os.environ.get('N8R_TEST_BIN_DIR', ''),
@@ -88,7 +90,7 @@ with tempfile.TemporaryDirectory(prefix='n8r-vault-pty-') as temporary:
         vault = root / 'chosen vault' if custom else home / 'n8r'
         answer = b'../chosen vault\n' if custom else b'\n'
         output = terminal(home, source, [(location, answer), (confirm, b'y\n')], 0)
-        assert output.index('Configuration') < output.index(location) < output.index(confirm)
+        assert output.index('n8r-surface') < output.index(location) < output.index(confirm)
         assert 'Vault ready: '+str(vault) in output
         saved = json.loads(file.read_text())
         assert saved == ({**original, 'vaultRoot': str(vault)} if custom else {'version': 1, 'vaultRoot': str(vault)})
