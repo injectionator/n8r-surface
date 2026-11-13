@@ -92,6 +92,8 @@ source access and conversation to produce evidence-backed working notes. The
 [discovery guide](docs/n8r-surface/researcher-discovery.md) focuses on AI-relevant
 graphs, reusable product knowledge and comparing descriptions with evidence. See
 [verification and pending Work-mode checks](docs/n8r-surface/researcher-skill-verification.md).
+The [freeform component journey](docs/n8r-surface/guided-journey-verification.md)
+records installed-skill exploration, later source intake and saved continuation.
 The accepted delivery order is skill first, standalone CLI second, then separate
 n8r-labs adaptation.
 The [local vault](docs/n8r-surface/researcher-vault.md) holds research notes, intermediate artifacts
