@@ -37,7 +37,7 @@ export function verifyInstallation(root, revision) {
   }
   assert.deepEqual(walk(root).sort(),files.map(f=>f.path).sort(),'Unexpected installed files');
   const version=JSON.parse(readFileSync(join(root,'plugin.json'),'utf8')).version;
-  assert(['0.1.9','0.1.10','0.1.11'].includes(version),'Unsupported installed candidate');
+  assert(['0.1.9','0.1.10','0.1.11','0.1.12'].includes(version),'Unsupported installed candidate');
   return {root,revision,version,files};
 }
 

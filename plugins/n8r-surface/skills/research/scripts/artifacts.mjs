@@ -7362,10 +7362,13 @@ var require_dist = __commonJS({
   }
 });
 
+// src/skill-artifacts-cli.ts
+import { resolve as resolve2 } from "node:path";
+import { pathToFileURL } from "node:url";
+
 // src/skill-artifacts.ts
 import fs from "node:fs";
 import { resolve, dirname, join } from "node:path";
-import { pathToFileURL } from "node:url";
 import { createHash as createHash2 } from "node:crypto";
 
 // src/codec.ts
@@ -8318,7 +8321,12 @@ function main(args) {
   }
   fail2("arguments; run help");
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+function digest2(value2) {
+  return guarded("digest input", () => digest(value2));
+}
+
+// src/skill-artifacts-cli.ts
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve2(process.argv[1])).href) {
   try {
     main(process.argv.slice(2));
   } catch {
@@ -8326,12 +8334,11 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
     process.exitCode = 1;
   }
 }
-function digest2(value2) {
-  return guarded("digest input", () => digest(value2));
-}
 export {
   checkBundle,
   digest2 as digest,
+  main,
+  privacy,
   readBundle,
   saveBundle
 };

@@ -41,7 +41,7 @@ test('runner config disables inherited MCPs, requires ChatGPT and a complete per
 });
 test('bundled Researcher contains canonical instructions and references with a digest', () => {
   const instructions=researcherInstructions();
-  assert.equal(instructions.version,'0.1.11');
+  assert.equal(instructions.version,'0.1.12');
   assert.match(instructions.digest,/^sha256:[a-f0-9]{64}$/);
   assert.match(instructions.text,/Skeleton Surface/);
   assert.match(instructions.text,/Recommended next steps/);
