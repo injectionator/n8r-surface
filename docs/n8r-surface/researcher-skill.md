@@ -1,8 +1,9 @@
 # n8r-surface Researcher: start an investigation
 
-For candidate 0.1.14, use the [first-use overview check](first-use-overview.md).
+For published skill 0.1.14, use the [marketplace installation guide](marketplace-0.1.14.md)
+and [first-use overview check](first-use-overview.md).
 The [0.1.13 tester guide](tester-candidate.md) retains pinned baseline installation
-and host boundaries; use the exact 0.1.14 PR revision for the new check. Installation versions and
+and host boundaries; use the identified 0.1.14 revision for the new check. Installation versions and
 branch references below describe historical rehearsals, not the current candidate.
 
 **Previously accepted standalone skill 0.1.11:** produces working notes and checked

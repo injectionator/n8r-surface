@@ -99,7 +99,8 @@ source access and conversation to produce evidence-backed working notes. The
 [discovery guide](docs/n8r-surface/researcher-discovery.md) focuses on AI-relevant
 graphs, reusable product knowledge and comparing descriptions with evidence. See
 [verification and pending Work-mode checks](docs/n8r-surface/researcher-skill-verification.md).
-Candidate 0.1.14 saves a [self-contained CycloneDX Surface](docs/n8r-surface/skill-cyclonedx.md)
+[Skill 0.1.14 is available from the repository marketplace](docs/n8r-surface/marketplace-0.1.14.md).
+It saves a [self-contained CycloneDX Surface](docs/n8r-surface/skill-cyclonedx.md)
 with a generated brief, connected overview and investigation journal. See the
 [0.1.14 first-use verification](docs/n8r-surface/first-use-overview.md). Follow the [working user manual](docs/n8r-surface/skill-manual.md)
 for multi-component research, saving and continuation.
