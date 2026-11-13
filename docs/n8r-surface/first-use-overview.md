@@ -236,3 +236,27 @@ Maintainer evidence check: independently compare predecessor bytes and generated
 manifest hashes. A helper validation exit 0 is required, but it is not human
 acceptance. Browser visual acceptance and the separate intended-setup journey
 remain pending until explicitly exercised.
+
+### User retest readback — 13 November 2026
+
+The user reported liking the outputs after the everyday marketplace installation
+was pinned to `6d68b9c4c717fb2c5efc78d02f16cf094c538a6d`. The installation
+record identifies all 25 plugin files and helper SHA-256
+`3087fad27e2f38bde37a251e762cdead220dab2d3b30e07a1c37e7226613b79b`.
+Positive feedback is recorded as given; it is not a formal Pass for every task.
+
+Independent readback of the private retest found two saved revisions. The final
+brief has 867 whitespace-delimited words, source-only scope, unverified deployment
+settings and one active source-level next action. Resolved runtime blockers are
+superseded and other deployment actions deferred. Both manifests match all four
+saved-file hashes; both predecessor digests match the supplied preceding BOM.
+Inherited annotations and component/service identities remain present, and both
+HTML files have no missing internal anchors. The candidate profile checker accepts
+the final BOM with 22 relationships and 57 journal entries under Node 26.13.0.
+These checks establish retained structure and current presentation text, not
+independent validation of every source claim or proof of all tool activity.
+
+The 867-word brief still exceeds the editorial 400–700-word aim. Browser visual
+acceptance, intended-setup continuation and runtime behavior remain unproved by
+this readback. No new research was performed or findings authored for this check.
+Private source details, outputs and installation paths remain outside this record.
