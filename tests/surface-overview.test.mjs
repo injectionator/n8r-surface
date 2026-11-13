@@ -63,9 +63,11 @@ test('overview content and generated links keep hostile source strings inert',()
 test('parallel routes and self-loops have distinct geometry rather than covered links',()=>{
  const b=described(),edge=JSON.parse(b.properties.find(p=>p.name==='n8r:surface:relationship').value);
  for(let i=0;i<8;i++)for(const [kind,to] of [['parallel','db-a'],['loop','app']])b.properties.push(property('relationship',{...edge,id:kind+i,to}));
+ b.properties.push(property('relationship',{...edge,id:'reverse-route',from:edge.to,to:edge.from}));
  const page=renderSurface(checkSurfaceBom(b))['surface.html'];
  const paths=[...page.matchAll(/data-edge="[^"]+" d="([^"]+)"/g)].map(m=>m[1]);
- assert.equal(new Set(paths).size,paths.length);
+ const geometry=paths.map(d=>{const nums=d.match(/-?\d+(?:\.\d+)?/g);const points=[];for(let i=0;i<nums.length;i+=2)points.push(nums.slice(i,i+2).join(','));return [points.join(' '),points.reverse().join(' ')].sort()[0];});
+ assert.equal(new Set(geometry).size,paths.length);
 });
 test('punctuation-bearing evidence IDs produce working Markdown and HTML fragment targets',()=>{
  const b=described(),id='finding)1 #é';

@@ -29,7 +29,7 @@ export function renderOverview(s:Surface){
  const positions=new Map<string,{x:number;y:number;height:number;n:any;lines:string[]}>();
  const columns=Object.keys(boundaryNames);const heights=[65,65,65];let labels='';
  const counts=new Map<string,number>();
- for(const e of s.relationships){const key=JSON.stringify([e.from,e.to]);counts.set(key,(counts.get(key)??0)+1);}
+ for(const e of s.relationships){const key=JSON.stringify([e.from,e.to].sort());counts.set(key,(counts.get(key)??0)+1);}
  const columnWidth=370+Math.max(0,...counts.values())*12,canvasWidth=columnWidth*3+10;
  const lanes=new Map<string,number>();
  for(const g of groups){
@@ -42,7 +42,7 @@ export function renderOverview(s:Surface){
  const edges=s.relationships.map((e,i)=>{
   const a=positions.get(e.from)!,b=positions.get(e.to)!;
   const ay=a.y+a.height/2,by=b.y+b.height/2;
-  const key=JSON.stringify([e.from,e.to]),rank=lanes.get(key)??0;lanes.set(key,rank+1);
+  const key=JSON.stringify([e.from,e.to].sort()),rank=lanes.get(key)??0;lanes.set(key,rank+1);
   let d:string;
   if(e.from===e.to)d=`M${a.x+280} ${ay-9} C${a.x+330+rank*12} ${ay-28} ${a.x+330+rank*12} ${ay+28} ${a.x+280} ${ay+9}`;
   else if(a.x===b.x){const lane=a.x+300+rank*12;d=`M${a.x+280} ${ay} C${lane} ${ay} ${lane} ${by} ${b.x+280} ${by}`;}

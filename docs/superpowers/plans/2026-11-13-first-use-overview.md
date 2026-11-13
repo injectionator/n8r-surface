@@ -84,3 +84,6 @@ Agent rehearsal is not human acceptance; browser policy refusals stay blockers.
 - Decision: retain user-evidenced placement, label it as recorded placement and
   expose its basis in brief and node details. This preserves planning usefulness
   without silently promoting intended architecture to source or runtime evidence.
+- The parallel-path regression was strengthened to compare reversed geometry too;
+  it reproduced an opposite-direction overlap. Shared unordered endpoint-pair lanes
+  now distinguish both directions as well as repeated paths and self-loops.
