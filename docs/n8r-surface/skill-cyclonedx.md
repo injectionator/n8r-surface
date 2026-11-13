@@ -82,5 +82,9 @@ Validation runs offline. It does not establish research accuracy or interoperabi
 The independent consumer task is to load the BOM using a pinned CycloneDX Python
 Library version, list the separate components/services and inspect a selected
 concrete dependency. Record exact version and results before claiming support.
+The [synthetic configured example](../../examples/researcher/cyclonedx/configured/README.md)
+contains a complete checked exchange for inspection, including the selected
+application-to-Atlas dependency; its sources are illustrative fixtures, not real
+deployment evidence.
 Other tools, lossless import, live inspection, MBOM generation and posture ratings
 remain outside this bounded release.

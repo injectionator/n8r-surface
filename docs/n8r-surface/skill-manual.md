@@ -26,7 +26,7 @@ Researcher should show the conflict or limit rather than silently choose one.
 > Explain which connections the exchange represents and which meanings remain in
 > the research records. Show me the saved brief and files.
 
-Planned result: native brief/HTML/JSON plus an exchange directory containing BOM,
+Observed candidate result: native brief/HTML/JSON plus an exchange directory containing BOM,
 native snapshot and mapping report. Read the brief first. Inspect the mapping
 report for unknowns and omissions; a valid BOM is not a complete deployment audit.
 Do not treat a configured connection as proven working.
@@ -41,8 +41,48 @@ In a fresh chat, supply the saved native and exchange directories and source acc
 
 Expected result: new identifiable revisions with preserved history. Missing source
 access should be explicit. An edited or damaged saved artifact should be reported
-as a conflict rather than overwritten. Actual rehearsal observations and recovery
-notes will be added here before the candidate handoff.
+as a conflict rather than overwritten. The fresh-chat rehearsal recovered its evidence from saved files, added an owner
+design decision, preserved all ten earlier artifact files and advanced the BOM to
+version 2 with the same serial number. The
+[verification record](skill-cyclonedx-verification.md) separates exercised steps
+from pending human acceptance.
+
+## What we learned from the first use
+
+The installed candidate researched twelve supplied files and saved nine nodes and
+nine relationships. It separated five components from four services in CycloneDX.
+It also wrote a shorter consultant brief beside the generated native brief. Ask
+for that summary when you want the system explanation before the detailed evidence.
+
+The evidence supported a Capability Surface. Consequently its BOM had no concrete
+dependency edges, although the native graph retained all nine connections. This is
+useful partial output: absence of BOM edges here does not mean the system has no
+connections. A [synthetic Bound example](../../examples/researcher/cyclonedx/configured/README.md)
+shows what an explicitly selected, configured dependency looks like in the exchange.
+
+The candidate kept the intended model distinct from a different model named in
+historical evidence. It found source-level control points but did not claim they
+were deployed or effective. No applicable SBOM was supplied, so package versions,
+transitive dependencies and complete licence coverage remained gaps.
+
+One readback command initially used the wrong level of the mapping report. The
+candidate corrected its inspection to use `mapping.nodes` and
+`mapping.dependencies`, reran it, and read the outputs successfully. Export itself
+had succeeded; the files were preserved. If a check fails, ask for the actual
+failure and corrected readback rather than accepting a bare success statement.
+
+## Report the user check
+
+- Pass: you can explain the system from the brief, follow evidence, inspect the
+  exchange limits and reopen/correct it without losing prior records or decisions.
+- Fail: missing output, invented connections, an intended setting described as
+  observed, lost decisions or altered earlier files. Return the interaction and
+  relevant output paths; omit secrets.
+- Blocked: installation, source access or required runtime is unavailable. Record
+  the missing prerequisite; do not count an unattempted step as passing.
+
+Keep the rehearsal outputs until reviewed. Remove only the disposable workspace
+when no longer needed; leave original sources and established research intact.
 
 ## What this release does not decide
 

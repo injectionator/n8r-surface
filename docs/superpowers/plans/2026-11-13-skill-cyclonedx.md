@@ -31,10 +31,10 @@
 
 Files: create `docs/n8r-surface/skill-cyclonedx.md` and `skill-manual.md`; private source pack and runner receipts in the selected vault.
 
-- [ ] Recover only selected component sources and sanitized historical configuration context; record hashes and access limits.
-- [ ] Invoke installed 0.1.11 for the requested exchange; record unavailable capability or actual result before implementation.
-- [ ] Pin schema revision/licensing and settle explicit classifications, dependency projection, identity, evidence snapshot and loss reporting.
-- [ ] Record State X / Input Y / Outcome Z and a short user walkthrough.
+- [x] Recover only selected component sources and sanitized historical configuration context; record hashes and access limits.
+- [x] Invoke installed 0.1.11 for the requested exchange; record unavailable capability or actual result before implementation.
+- [x] Pin schema revision/licensing and settle explicit classifications, dependency projection, identity, evidence snapshot and loss reporting.
+- [x] Record State X / Input Y / Outcome Z and a short user walkthrough.
 
 ## Task 2: checked immutable exchange
 
@@ -42,20 +42,26 @@ Files: create `src/skill-cyclonedx.ts`, schema assets and `tests/skill-cyclonedx
 
 Interfaces: `projectBundle(bundle, mapping, previous?)` returns `{bom, report}`; `saveExchange(bundleDirectory, mapping, destination, previous?)` and `readExchange(directory)` retain/read checked exchange. Helper operations: `export BUNDLE_DIR MAPPING.json NEW_DIR [PREVIOUS_EXPORT]`, `read DIR`, `help`.
 
-- [ ] Write behavioral tests for node/service/model distinctions, configured targets, excluded possibility/conflict, invalid/missing classifications and invalid schema input; run and observe expected failures.
-- [ ] Implement pinned schema validation and deterministic projection with explicit loss report. Preserve full native records in the exchange snapshot; do not inject unsupported relationship semantics into CycloneDX dependencies.
-- [ ] Add failing persistence tests: tampering, destination overwrite, predecessor mismatch and successor identity/version preservation; implement exclusive save/readback.
-- [ ] Run focused and full suites; rebuild and check exact standalone helper bytes.
-- [ ] Commit and open one issue-linked draft PR after the first reviewable increment/checks.
+- [x] Write behavioral tests for node/service/model distinctions, configured targets, excluded possibility/conflict, invalid/missing classifications and invalid schema input; run and observe expected failures.
+- [x] Implement pinned schema validation and deterministic projection with explicit loss report. Preserve full native records in the exchange snapshot; do not inject unsupported relationship semantics into CycloneDX dependencies.
+- [x] Add failing persistence tests: tampering, destination overwrite, predecessor mismatch and successor identity/version preservation; implement exclusive save/readback.
+- [x] Run focused and full suites; rebuild and check exact standalone helper bytes.
+- [x] Commit and open one issue-linked draft PR after the first reviewable increment/checks.
 
 ## Task 3: installed skill and working manual
 
 Files: modify distributed skill/references/manifests to 0.1.12, documentation and verification record; no schema migration.
 
-- [ ] Add the positive CycloneDX workflow recipe addressing the recorded baseline gap; preserve accepted native behavior.
-- [ ] Install exact candidate into an isolated host home and verify all distributed bytes.
-- [ ] Exercise multi-component research, native save, exchange, correction and fresh-session reopen through the actual installed skill. Independently verify source claims, native/exchange outputs and prior hashes.
-- [ ] Run a pinned independent consumer: inventory and concrete dependency lookup; record unsupported meanings and limits.
-- [ ] Grow the manual from observed prompts, outputs and recovery points; keep maintainer preparation separate from user steps.
-- [ ] Run appropriate Node, package, skill, Markdown, link, fixture and citation checks; fresh whole-branch review; inspect public diff for sensitive material.
-- [ ] Prepare exact ZIP/digests and installation handoff; keep PR draft and distinguish candidate readiness, human acceptance, merge and publication.
+- [x] Add the positive CycloneDX workflow recipe addressing the recorded baseline gap; preserve accepted native behavior.
+- [x] Install exact candidate into an isolated host home and verify all distributed bytes.
+- [x] Exercise multi-component research, native save, exchange, correction and fresh-session reopen through the actual installed skill. Independently verify source claims, native/exchange outputs and prior hashes.
+- [x] Run a pinned independent consumer: inventory and concrete dependency lookup; record unsupported meanings and limits.
+- [x] Grow the manual from observed prompts, outputs and recovery points; keep maintainer preparation separate from user steps.
+- [x] Run appropriate Node, package, skill, Markdown, link, fixture and citation checks; fresh whole-branch review; inspect public diff for sensitive material.
+- [x] Prepare exact ZIP/digests and installation handoff; keep PR draft and distinguish candidate readiness, human acceptance, merge and publication.
+
+## Outcome
+
+See [actual verification and human steps](../../n8r-surface/skill-cyclonedx-verification.md).
+The installed candidate completed research and a fresh-session correction; public
+exchange examples remain synthetic. Draft PR #69 is not merged or released.

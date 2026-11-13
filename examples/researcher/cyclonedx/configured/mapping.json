@@ -1,0 +1,323 @@
+{
+  "profile": "n8r.cyclonedx-exchange/1",
+  "standard": "CycloneDX 1.7",
+  "surface": {
+    "id": "urn:demo:relationship-bound",
+    "revision": "r1",
+    "digest": "sha256:21eda5c348102d1ceea09f202c645a3184cba240316344b2a034a681730a636b",
+    "kind": "bound"
+  },
+  "research": {
+    "id": "urn:demo:relationship-research",
+    "revision": "r1",
+    "digest": "sha256:615bc6f8f443b986f78a46414faf97822206bcfcc9781e8d7c03d2dcb83940a0"
+  },
+  "mapping": {
+    "nodes": [
+      {
+        "id": "urn:node:app",
+        "kind": "component",
+        "type": "application",
+        "rationale": "Synthetic consumer rehearsal classification."
+      },
+      {
+        "id": "urn:node:mongodb",
+        "kind": "service",
+        "rationale": "Synthetic consumer rehearsal classification."
+      },
+      {
+        "id": "urn:node:oidc",
+        "kind": "service",
+        "rationale": "Synthetic consumer rehearsal classification."
+      },
+      {
+        "id": "urn:node:saml",
+        "kind": "service",
+        "rationale": "Synthetic consumer rehearsal classification."
+      },
+      {
+        "id": "urn:node:inference",
+        "kind": "service",
+        "rationale": "Synthetic consumer rehearsal classification."
+      },
+      {
+        "id": "urn:target:atlas",
+        "kind": "service",
+        "rationale": "Synthetic consumer rehearsal classification."
+      },
+      {
+        "id": "urn:target:oidc",
+        "kind": "service",
+        "rationale": "Synthetic consumer rehearsal classification."
+      },
+      {
+        "id": "urn:target:saml",
+        "kind": "service",
+        "rationale": "Synthetic consumer rehearsal classification."
+      }
+    ],
+    "dependencies": [
+      "urn:cap:database"
+    ]
+  },
+  "relationships": [
+    {
+      "id": "urn:cap:database",
+      "projected": true,
+      "reason": "Explicit configured dependency projection; detailed semantics retained in native snapshot.",
+      "relationship": {
+        "id": "urn:cap:database",
+        "from": "urn:node:app",
+        "to": "urn:node:mongodb",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "persists-data"
+        },
+        "basis": [
+          {
+            "record": "urn:demo:relationship-research",
+            "revision": "r1",
+            "items": [
+              "urn:f:database"
+            ]
+          }
+        ],
+        "conditions": [],
+        "note": "Supported possibility, not a selected composition",
+        "purpose": {
+          "state": "known",
+          "claims": [
+            {
+              "value": "Persist conversation history and user profiles.",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:database-purpose"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        },
+        "integration": {
+          "state": "known",
+          "claims": [
+            {
+              "value": "MongoDB client driver using the MongoDB wire protocol.",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:database-integration"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        },
+        "configuration": {
+          "state": "known",
+          "claims": [
+            {
+              "value": [
+                {
+                  "owner": "urn:node:app",
+                  "mechanism": "environment-variable",
+                  "key": "CHAT_STORE_URI",
+                  "location": "config/assistant.env.example"
+                }
+              ],
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:database-configuration"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        },
+        "binding": {
+          "state": "configured",
+          "claims": [
+            {
+              "target": "urn:target:atlas",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:database-bound"
+                  ]
+                }
+              ]
+            }
+          ],
+          "decisions": [],
+          "note": "Configuration sufficient; runtime unverified"
+        }
+      }
+    },
+    {
+      "id": "urn:cap:oidc",
+      "projected": false,
+      "reason": "Not projected as a dependency; see native relationship and evidence.",
+      "relationship": {
+        "id": "urn:cap:oidc",
+        "from": "urn:node:app",
+        "to": "urn:node:oidc",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "authenticates-via"
+        },
+        "basis": [
+          {
+            "record": "urn:demo:relationship-research",
+            "revision": "r1",
+            "items": [
+              "urn:f:oidc"
+            ]
+          }
+        ],
+        "conditions": [
+          "OIDC and SAML are alternatives"
+        ],
+        "note": "Supported possibility, not a selected composition",
+        "purpose": {
+          "state": "known",
+          "claims": [
+            {
+              "value": "Authenticate users through an identity service.",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:oidc-purpose"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        },
+        "integration": {
+          "state": "known",
+          "claims": [
+            {
+              "value": "OpenID Connect",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:oidc-integration"
+                  ]
+                }
+              ]
+            }
+          ],
+          "note": "Supported by synthetic source pack."
+        },
+        "configuration": {
+          "state": "unknown",
+          "claims": [],
+          "note": "Not researched; no absence assertion."
+        },
+        "binding": {
+          "state": "conflicting",
+          "claims": [
+            {
+              "target": "urn:target:oidc",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:identity"
+                  ]
+                }
+              ]
+            },
+            {
+              "target": "urn:target:saml",
+              "basis": [
+                {
+                  "record": "urn:demo:relationship-research",
+                  "revision": "r1",
+                  "items": [
+                    "urn:f:identity"
+                  ]
+                }
+              ]
+            }
+          ],
+          "decisions": [
+            {
+              "record": "urn:demo:relationship-research",
+              "revision": "r1",
+              "items": [
+                "urn:decision:oidc"
+              ]
+            }
+          ],
+          "note": "Preference retained separately; configuration sources disagree"
+        }
+      }
+    },
+    {
+      "id": "urn:cap:inference",
+      "projected": false,
+      "reason": "Not projected as a dependency; see native relationship and evidence.",
+      "relationship": {
+        "id": "urn:cap:inference",
+        "from": "urn:node:app",
+        "to": "urn:node:inference",
+        "type": {
+          "vocabulary": "urn:v:demo",
+          "term": "uses"
+        },
+        "basis": [],
+        "conditions": [],
+        "note": "Unknown support",
+        "purpose": {
+          "state": "unknown",
+          "claims": [],
+          "note": "Not researched; no absence assertion."
+        },
+        "integration": {
+          "state": "unknown",
+          "claims": [],
+          "note": "Not researched; no absence assertion."
+        },
+        "configuration": {
+          "state": "unknown",
+          "claims": [],
+          "note": "Not researched; no absence assertion."
+        },
+        "binding": {
+          "state": "unknown",
+          "claims": [],
+          "decisions": [],
+          "note": "Missing evidence is not unbound"
+        }
+      }
+    }
+  ],
+  "losses": [
+    "Dependency projection does not encode purpose, integration mechanism, configuration evidence, binding states, alternatives or decisions; retained in surface-records.json and relationship report.",
+    "Node versions, package identifiers, upstream SBOM contents and transitive dependency completeness are not inferred from labels.",
+    "No runtime, control conformance, complete inventory or round-trip compatibility claim. Native records remain authoritative."
+  ],
+  "gaps": [
+    "Authentication conflict; inference unknown; runtime unverified"
+  ]
+}

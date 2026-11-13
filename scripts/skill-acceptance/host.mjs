@@ -23,7 +23,7 @@ export function verifyInstallation(root, revision) {
   if (!paths.length || !paths[0].startsWith(prefix)) throw new Blocked('Pinned plugin source is unavailable');
   const files=paths.map(path=>{
     const relative=path.slice(prefix.length);
-    const source=execFileSync('git',['show',`${revision}:${path}`]);
+    const source=execFileSync('git',['show',`${revision}:${path}`],{maxBuffer:16*1024*1024});
     const bytes=readFileSync(join(root,relative));
     assert(bytes.equals(source),`Installed bytes differ: ${relative}`);
     return {path:relative,sha256:createHash('sha256').update(bytes).digest('hex')};
