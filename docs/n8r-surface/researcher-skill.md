@@ -1,5 +1,9 @@
 # n8r-surface Researcher: start an investigation
 
+For the current 0.1.13 candidate, use the [tester guide](tester-candidate.md):
+pinned installation, host boundaries and a short trial. Installation versions and
+branch references below describe historical rehearsals, not the current candidate.
+
 **Historical first increment:** an experimental Researcher, packaged for
 ChatGPT desktop / Work and Codex. It researches supplied sources with the existing
 harness and saves working notes. It does not add a CLI runner, Lab connection or

@@ -1,5 +1,7 @@
 # Researcher skill: working user manual
 
+For installation and a short first trial, use the [tester guide](tester-candidate.md).
+
 Candidate 0.1.13 saves the Surface with a brief, visual map and investigation
 journal. This manual develops through actual use; the
 [verification record](skill-bom-verification.md) distinguishes exercised behavior
