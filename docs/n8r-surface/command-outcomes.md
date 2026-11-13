@@ -652,3 +652,32 @@ Earlier bytes remain unchanged. View edits require explicit reconciliation.
 See the [human tasks and evidence](skill-bom-verification.md) and
 [working manual](skill-manual.md). Automated profile checks do not establish
 research accuracy or human acceptance.
+
+## SKILL-OVERVIEW-01: understand a supplied application
+
+Given the identified 0.1.14 candidate, readable source and a new output folder,
+when the user asks for an initial architecture/security overview and saves it,
+the brief explains application meaning, major areas, evidence-backed implications,
+coverage gaps and next decisions. The HTML shows connected nodes once, before
+relationship/evidence detail. Intended choices remain separate from configuration
+and dated observations. Existing revisions stay unchanged.
+
+Specified in [the first-use verification](first-use-overview.md); renderer and
+research guidance implemented. Installed rehearsal and human acceptance status
+are recorded there. Automated structure checks alone do not verify this outcome.
+
+### SKILL-OVERVIEW-02: continue a source-only investigation
+
+Given a saved source investigation with historical runtime blockers and completed
+work, say: “It is just a source checkout. Record that in the Surface, keep
+deployment settings unverified, and show the most useful source-level investigation
+next. Save a successor.” Expect a short current scope, reconciled findings/gaps,
+one recommended source action, and unchanged predecessor bytes. Obsolete blockers
+and actions remain history, not current requirements. No runtime inventory or
+service startup is needed. The brief discloses omitted list items and links full
+detail; it retains limitations beside displayed findings.
+
+For separately requested inspection of an identified runtime target, emit only
+that target's relevant safe fields. A broad response must be filtered inside the
+collecting process before output; saved redaction alone is insufficient.
+See [rehearsal evidence and human checks](first-use-overview.md#follow-up-rehearsal).

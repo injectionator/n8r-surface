@@ -107,6 +107,32 @@ Retain ordering, deferred reasons and access needs. Decisions reference user-bas
 evidence. Preserve earlier decisions verbatim; a later decision can supersede one,
 changing only the earlier status to `superseded` and retaining its provenance.
 
+## Overview presentation hints
+
+For an initial overview, use [first-use guidance](first-use-overview.md). Optional
+node properties on a component or service can guide grouping without changing
+relationship semantics or CycloneDX Surface profile 1. Use at most one property
+named `n8r:surface:presentation` per node, with a JSON-text value:
+
+```json
+{"boundary":"internal","area":"Conversation and orchestration","focus":true,"evidence":["finding-architecture"]}
+```
+
+`boundary` is `internal`, `external` or `unknown`, relative to the focus application.
+`area` is a short meaningful functional group. `focus` is optional boolean, true
+on at most one node; give that node a standard `description` explaining the app.
+`evidence` contains existing evidence IDs whose annotations include this node in
+`subjects`. Internal/external placement requires at least one evidence reference.
+Do not classify by CycloneDX component/service type alone. Grouping records placement; its evidence basis distinguishes source support,
+human intent, configuration and dated observation. It does not establish a
+deployed trust boundary.
+
+The property is optional and additive: old profile-1 readers may ignore it; the
+0.1.14 reader checks its shape and references. Old saves without hints remain
+readable with Unclassified placement and the research objective as their opening.
+No source re-investigation or boundary inference happens inside the renderer.
+Record a corrected grouping only in an authorized successor with its evidence.
+
 ## Check, save, read back
 
 Resolve helper paths relative to this installed skill. Show the destination and
@@ -127,6 +153,12 @@ Source validity/privacy checks are bounded; they cannot establish truth or detec
 all secrets. Keep sensitive data out before staging; no raw source snapshots.
 
 ## Continue and reconcile
+
+Before generating a successor, follow the [current-state and concise-brief
+procedure](first-use-overview.md#keep-the-successor-current-and-the-brief-short).
+The renderer omits superseded entries and entries named by a `supersedes` link
+from current findings/actions, retaining them in the journey. It cannot detect
+obsolete prose in scope or gap strings: reconcile those explicitly from evidence.
 
 A supplied BOM alone suffices. Read it with the helper; re-establish source access
 and disclose unavailable sources. Keep IDs, decisions, uncertainty, dated observations and evidence. Correct an
