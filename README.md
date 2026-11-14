@@ -8,7 +8,7 @@ detail available or useful. This repository also develops the experimental
 > [!NOTE]
 > **Early draft; experimental tooling.** The model concepts and illustrative
 > fields remain provisional. The library and command are available as the
-> experimental [`@n8r/surface` package](https://www.npmjs.com/package/@n8r/surface/v/0.1.0-experimental.2);
+> experimental [`@n8r/surface` package](https://www.npmjs.com/package/@n8r/surface/v/0.1.0-experimental.5);
 > there is no universal schema, exporter or deployment engine yet. The Researcher
 > skill supports working research through the host. The standalone command now
 > supports bounded Codex research with numbered Markdown saves and fresh-session reopening.
