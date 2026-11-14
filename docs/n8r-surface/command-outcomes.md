@@ -681,3 +681,19 @@ For separately requested inspection of an identified runtime target, emit only
 that target's relevant safe fields. A broad response must be filtered inside the
 collecting process before output; saved redaction alone is insufficient.
 See [rehearsal evidence and human checks](first-use-overview.md#follow-up-rehearsal).
+
+## SKILL-INSTANCE-01: understand and revisit a running composition
+
+Candidate 0.1.15 adds research guidance; no product CLI command or access adapter.
+Given an identified target, permitted host access to sources/instance evidence and
+a private destination, ask: “Understand this running system, show what is
+configured, observed and untested, and save the Surface.” Expect source identity,
+scoped observations, a useful composition beyond a single repository, explicit
+access gaps and saved BOM/brief/map/journal readback. No probes or service changes.
+
+Continue from that BOM with current permitted evidence. Expect unchanged stable
+identities and predecessor bytes, with actual target changes distinguished from
+newly learned facts, unchanged checked facts, lost coverage and conflicts. A host
+without required access or saving tools must report the blocked portion without
+fabricating results. Source-only requests need no runtime inventory.
+See the [human tasks and bounded verification](instance-first-research.md).

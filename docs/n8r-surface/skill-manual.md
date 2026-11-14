@@ -24,6 +24,23 @@ vault research automatically. If the host supplies recognizable historical conte
 it should disclose that context; ask it to exclude it when inappropriate. This
 is not a promise that the host has no memory.
 
+## Start with an existing system
+
+If your question concerns a running composition, identify the instance and the
+read-only access you permit. Supply relevant remote repositories, documents or
+URLs through tools available in your Codex/ChatGPT host. A URL alone does not
+provide private access, and a local checkout may describe only one component.
+Candidate 0.1.15 follows this [instance-first workflow](instance-first-research.md).
+
+> Understand this running system using the host access I have provided. Explain
+> its components and connections, what is configured, what has been observed and
+> what remains untested. Keep inspection read-only and save the Surface here.
+
+Expect partial progress when an integration cannot be inspected. Researcher does
+not start a service, sign in for you or send a test prompt to complete the graph.
+On a later visit, it distinguishes actual target changes from newly learned facts
+and missing access. The existing source-only workflow remains available.
+
 ## Inspect the developing Surface
 
 Open the latest brief for the current explanation, the HTML map for paths and

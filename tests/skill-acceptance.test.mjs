@@ -124,7 +124,7 @@ test('installed byte verification supports the self-contained schema helper abov
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'skill-installation-'));
  try{
   const plugin=path.join(root,'plugins/n8r-surface');fs.mkdirSync(plugin,{recursive:true});
-  fs.writeFileSync(path.join(plugin,'plugin.json'),JSON.stringify({version:'0.1.12'}));
+  fs.writeFileSync(path.join(plugin,'plugin.json'),JSON.stringify({version:'0.1.15'}));
   fs.writeFileSync(path.join(plugin,'helper.mjs'),'//'+'.'.repeat(1200000));
   const git=args=>execFileSync('git',args,{cwd:root,stdio:'pipe'}).toString().trim();
   git(['init','-q']);git(['add','plugins']);

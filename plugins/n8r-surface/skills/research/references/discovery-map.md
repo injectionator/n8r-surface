@@ -112,6 +112,9 @@ not modify deployments.
 
 ## Inspect live connections with the human
 
+For a running composition, use [instance-first research](instance-first.md) to
+connect host access, deployment identity and evidence across multiple sources.
+
 Identify the user's target before listing runtime resources. For source-only
 research, continue source analysis without runtime inventory. If inspection is
 requested but the target is unknown, ask for its identity or location while

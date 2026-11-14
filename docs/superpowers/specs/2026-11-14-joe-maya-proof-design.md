@@ -6,6 +6,10 @@ The maintainer selected recovery of the existing LibreChat lab. This document
 proposes the bounded implementation; it does not claim acceptance, tool execution,
 a reproduced vulnerability or an implemented evaluator. No release is promised.
 
+Current work follows the approved [instance-first Researcher increment](2026-11-14-instance-first-research-design.md).
+Labs integration is paused; the broader integrated sequence below remains a
+proposal, not the active implementation task.
+
 ## Intent and standalone value
 
 n8r-surface helps a user understand an AI system from its components, source,

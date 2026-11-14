@@ -405,9 +405,11 @@ and actual registry/provenance verification distinct from local checks.
 
 ## Standalone skill artifact helper
 
-Candidate skill 0.1.14 bundles a self-contained CycloneDX Surface helper and
+Candidate skill 0.1.15 bundles a self-contained CycloneDX Surface helper and
 retains legacy Capability/Bound and exchange readers for deliberately supplied old saves.
 New Surface saves use the BOM authority with generated brief, map and journal.
+The [instance-first workflow](docs/n8r-surface/instance-first-research.md) uses the
+host harness for permitted access; it adds no collector or runtime authority.
 Run `npm run build:skill` after helper/library changes; `npm run check:skill`
 checks exact bundle bytes and is included in `npm test`. The focused check is
 `node --test tests/skill-artifacts.test.mjs tests/skill-cyclonedx.test.mjs tests/surface-bom.test.mjs` after
