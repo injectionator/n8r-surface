@@ -36,11 +36,11 @@ No new collector or artifact representation.
 **Consumes:** Approved design and private installed baseline.
 **Produces:** Self-contained candidate 0.1.15 with unchanged profile/helper.
 
-- [ ] Evaluate current guidance on a synthetic mixed-source/revisit case; retain
+- [x] Evaluate current guidance on a synthetic mixed-source/revisit case; retain
   actual behavior, including successes, without inventing a failing baseline.
-- [ ] Add the focused reference and routing; preserve source-only behavior.
-- [ ] Clarify exact-byte versus projection identity and installed candidate version.
-- [ ] Repeat behavioral evaluation with candidate and compare actual results.
+- [x] Add the focused reference and routing; preserve source-only behavior.
+- [x] Clarify exact-byte versus projection identity and installed candidate version.
+- [x] Repeat behavioral evaluation with candidate and compare actual results.
 
 ## Task 2: Rehearsal and delivery
 
@@ -50,11 +50,20 @@ No new collector or artifact representation.
 **Consumes:** Candidate instructions and existing helper.
 **Produces:** Human task list and bounded, accurately attributed verification record.
 
-- [ ] Install candidate separately; record host/version and installed file hashes.
-- [ ] Invoke installed candidate for permitted live research and saved continuation;
+- [x] Install candidate separately; record host/version and installed file hashes.
+- [x] Invoke installed candidate for permitted live research and saved continuation;
   independently check evidence, views and predecessor bytes.
-- [ ] Add short human task list and mixed-source/revisit scenarios; distinguish
+- [x] Add short human task list and mixed-source/revisit scenarios; distinguish
   agent outcomes, missing prerequisites and pending human acceptance.
-- [ ] Run Markdown, links, fixture checks, skill validation, npm tests/package check.
-- [ ] Review diff and sensitive-material boundary; commit, push and update existing
+- [x] Run Markdown, links, fixture checks, skill validation, npm tests/package check.
+- [x] Review diff and sensitive-material boundary; commit, push and update existing
   draft PR. Keep issue WIP and PR draft; no merge or release.
+
+## Completion evidence
+
+Implementation: `7be51fb2b58e38aa252a4b9717781f28c065439c`; exact installed plugin
+bytes verified against that commit. See the [rehearsal record](../../n8r-surface/instance-first-research.md#verification-record).
+The live revisit exposed incomplete evidence links in a consolidated summary;
+the focused instruction refinement and fresh-context successor corrected them.
+Current profile/helper and target unchanged. Human acceptance remains pending;
+this increment does not complete all of issue #76.

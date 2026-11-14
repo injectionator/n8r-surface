@@ -171,6 +171,29 @@ original evidence IDs into consolidated summaries and opening those links during
 readback. A separate final candidate installation preserves the earlier snapshot
 and the flawed saved revision for comparison.
 
+A new fresh-context agent used that final installed guidance with only the saved
+successor and retained evidence. It independently found the incomplete summary
+association, saved revision 004 with original configuration/source citations and
+both runtime captures for comparison, and preserved all 30 preexisting files,
+eight original annotations and six relationships/observations. Independent readback
+verified five evidence hashes, generated views and the predecessor digest; the
+claim-to-evidence assertion now passes. No new live observations were invented.
+Check/save/read exited 0 after rephrasing another standalone clock-time privacy
+false positive. No validator was bypassed. The final brief is 830 words, above the
+editorial target; shortening and human readability remain limitations.
+
+The final installed plugin's 26 files match implementation commit
+`7be51fb2b58e38aa252a4b9717781f28c065439c` exactly using the installed-byte verifier.
+On Node 22.23.2, 24.22.2 and 26.13.0, all 241 tests and the offline installed
+package/terminal checks passed. Initial version-guard failures were resolved by
+updating the canonical candidate version, instruction digest and acceptance
+allowlist, with failing-then-passing checks. No CLI tool policy changed.
+Markdown lint 0.24.0, local links/fragments with lychee 0.24.2, cffconvert 2.0.0,
+24 Python repository checks, skill frontmatter validation and whitespace checks
+passed. An independent review found no actionable scope, evidence-boundary or
+package-coupling defects; the later summary correction was separately verified
+against its observed failure.
+
 Exact installed `SKILL.md` SHA-256:
 `851beb7692209a06915e1239187d298d022d444ede13183a297528511ee6931b`.
 Unchanged `surface.mjs` SHA-256:
