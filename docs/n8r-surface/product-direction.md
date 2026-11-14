@@ -7,6 +7,10 @@ This records the user-established direction and a proposed smallest demonstratio
 The demonstration scope below is a recommendation for review, not authorization
 to implement, deploy or test a system. No demonstration results are claimed here.
 
+The next proposed increment is the [Joe/Maya design and delivery sequence](../superpowers/specs/2026-11-14-joe-maya-proof-design.md):
+recover the existing lab, revisit the same evolving target, and connect a bounded
+policy/evaluation/observation proof to retained Surface history.
+
 ## Strategic context
 
 The agreed destination is a practical [AI Surface security assurance framework](security-assurance-strategy.md)

@@ -43,3 +43,20 @@ tracked separately in the [critical path](n8r-surface/critical-path.md) and stra
 
 Related: [draft concepts](../spec/README.md),
 [interoperability](interoperability.md), [contributing](../CONTRIBUTING.md).
+
+## Evolving-target Joe/Maya proof
+
+The [proposed design and delivery sequence](superpowers/specs/2026-11-14-joe-maya-proof-design.md)
+prioritizes repeat investigation of the existing lab: baseline, minor configuration
+change, HR integration, scoped failure, defensive change and fresh-chat readback.
+[Issue #76](https://github.com/injectionator/n8r-surface/issues/76) retains the
+Surface continuation work. Follow-on tracks preserve scope without committing to
+a new platform now:
+
+- [Evaluation helper and eventual extraction](https://github.com/injectionator/n8r-surface/issues/79).
+- [Correlated observation handoff and later live view](https://github.com/injectionator/n8r-surface/issues/80).
+- [Policy evidence generalization after a bounded Cedar decision](https://github.com/injectionator/n8r-surface/issues/81).
+
+Runtime integration and enforcement belong to the target owner; Lab collection
+and presentation remain a separate consumer boundary. These are proposed delivery
+gates and backlog items, not implemented or verified capabilities.
