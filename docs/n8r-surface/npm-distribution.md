@@ -1,11 +1,11 @@
 # npm distribution and retained candidates
 
-The published package is **`@n8r/surface@0.1.0-experimental.2`**, exposing the
+The published package is **`@n8r/surface@0.1.0-experimental.5`**, exposing the
 `n8r-surface` executable. The maintainer selected scoped-only publication under
 [issue #27](https://github.com/injectionator/n8r-surface/issues/27).
 Unscoped publication and name reservation have been removed from the plan.
 Historical unscoped archives are retained evidence, not a supported registry route.
-See the [verified release record](npm-release.md#verified-scoped-release).
+See the [verified release record](npm-release.md#verified-experimental5-release).
 
 The tooling below generates and tests only the scoped candidate.
 Source and default generated manifests retain `private: true`; explicit
@@ -90,12 +90,12 @@ Codex sign-in or existing vault is needed for this distribution check.
 ## Verified scoped registry route
 
 ```sh
-npm install --global @n8r/surface@0.1.0-experimental.2
-npm exec --yes --package=@n8r/surface@0.1.0-experimental.2 -- n8r-surface --version
+npm install --global @n8r/surface@0.1.0-experimental.5
+npm exec --yes --package=@n8r/surface@0.1.0-experimental.5 -- n8r-surface --version
 ```
 
 Library users install the scoped exact version locally and import from
-`@n8r/surface`. The [release record](npm-release.md#verified-scoped-release)
+`@n8r/surface`. The [release record](npm-release.md#verified-experimental5-release)
 contains independent bytes, installation and signed-provenance verification.
 Use the exact version or `experimental`; `latest` was not promoted.
 

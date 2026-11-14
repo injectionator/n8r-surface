@@ -1,4 +1,31 @@
-# First public npm release
+# npm release records
+
+## Verified experimental.5 release
+
+Published on 14 November 2026:
+**[`@n8r/surface@0.1.0-experimental.5`](https://www.npmjs.com/package/@n8r/surface/v/0.1.0-experimental.5)**,
+bundling Researcher skill **0.1.16**, from commit
+`b787d091db1c5dcd21f77c97518f05cca08cc665` and permanent annotated tag
+`v0.1.0-experimental.5`. The
+[GitHub prerelease](https://github.com/injectionator/n8r-surface/releases/tag/v0.1.0-experimental.5)
+is finalized and independently read back as `immutable: true`.
+
+The existing stage-only credential submitted the retained scoped archive;
+the maintainer approved it with npm 2FA. Registry bytes match retained SHA-256
+`289db285717580ddfc7ff6b9543198c073f7509ff14e78eb03ae97368793516a`.
+Registry signatures and the package's own signed provenance verified against the
+exact workflow/tag identity, source commit and subject digest. Installed exports,
+assets, skill instruction digest, CLI identity and isolated closed-input startup
+passed on Node 22.23.2, 24.22.2 and 26.13.0. Fresh-cache npm-exec returned the
+exact release version. See the attached
+[registry verification](https://github.com/injectionator/n8r-surface/releases/download/v0.1.0-experimental.5/scoped-registry-verification.json)
+and [workflow readback](https://github.com/injectionator/n8r-surface/actions/runs/43591235030).
+
+Use the exact version or `experimental`; `latest` remains `0.0.0-stage`.
+No unscoped package was published. Trusted publishing remains unexercised.
+The CLI and skill retain distinct save formats. Release checks are agent
+rehearsals, not new human research acceptance; the
+[first-use web delivery limits](first-use-access.md) remain explicit.
 
 ## Verified scoped release
 
@@ -124,8 +151,9 @@ Codex sign-in or research vault changes are needed.
   output. Missing archive/authentication is Blocked; any unexpected behavior is
   Fail. Keep evidence, leave the consumer and remove only these temporary files.
 
-Agent rehearsal and human acceptance are separate. Build/registry evidence will
-be attached to the release; this preparation document does not assert publication.
+Agent rehearsal and human acceptance are separate. Build/registry evidence is
+attached to the release; see the verified record above. These steps describe the
+completed preparation and must not rebuild or restage its permanent version.
 
 ## Retained preparation procedure
 
