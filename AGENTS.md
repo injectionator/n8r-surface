@@ -301,7 +301,7 @@ references, revision checks, HTML/data conflicts and synthetic fixtures. The
 package check builds, packs and installs in a temporary directory using the local
 npm cache with scripts disabled, then exercises built exports and bundled assets.
 It removes its temporary directory. Candidate generation requires Git and POSIX
-`tar`; `npm run pack:candidates -- NEW_DIRECTORY` retains both tarballs and a
+`tar`; `npm run pack:candidates -- NEW_DIRECTORY` retains the scoped tarball and a
 revision/digest report without publishing. See the
 [distribution procedure](docs/n8r-surface/npm-distribution.md). Repeat against each supported Node major for
 distribution changes; see [contributor commands](CONTRIBUTING.md#researcher-contract-library).
@@ -379,7 +379,7 @@ raw results. See the [human review procedure](docs/n8r-surface/skill-workspace-a
 `npm run check:version` validates the authoritative package version and lockfile;
 it also runs in `npm test` and before candidate packing. From a clean tagged
 checkout, `npm run check:release -- CANDIDATE_DIRECTORY` reads GitHub to verify
-release metadata, tag/commit identity and both retained archive hashes. It needs
+release metadata, tag/commit identity and retained archive hashes. It needs
 GitHub CLI read access and never publishes. An optional second argument supplies
 an offline release JSON response and explicitly limits the result to rehearsal.
 See [version policy, prerequisites and human verification](docs/n8r-surface/versioning.md).
@@ -387,20 +387,19 @@ See [version policy, prerequisites and human verification](docs/n8r-surface/vers
 ## Scoped-only release scope
 
 Publish only `@n8r/surface`; the executable remains `n8r-surface`. Unscoped
-publication and name reservation are not planned. Remove dual-package behavior
-from release tooling before another release, preserving existing tagged artifacts.
-The commands below describe the historical first-release tooling, not permission
-to rerun it for an already released version.
+publication and name reservation are not planned. Current packing and publication
+produce only the scoped package. Historical
+`.1`/`.2` dual-archive verification and existing tagged artifacts remain preserved.
+Never rerun publication for an already released version.
 
-## First npm release preparation
+## Scoped npm release preparation
 
-Default candidates remain private. For the approved `0.1.0-experimental.2`
-release, `npm run pack:candidates -- NEW_DIRECTORY --publishable` builds fresh
-publishable archives without registry writes. The manual GitHub Actions workflow
-prepares retained assets, stages those exact bytes for maintainer 2FA approval,
-and independently compares published bytes. Follow the
-[first-release procedure](docs/n8r-surface/npm-release.md), including account
-prerequisites, human checks and partial-stage recovery. Keep merge, acceptance
+Default candidates remain private. For `0.1.0-experimental.5`,
+`npm run pack:candidates -- NEW_DIRECTORY --publishable` builds a fresh scoped
+archive without registry writes. The manual GitHub Actions workflow retains the
+archive, stages those exact bytes for maintainer 2FA approval, and independently
+compares published bytes. Follow the [current release procedure](docs/n8r-surface/npm-release.md#experimental5-release),
+including account prerequisites and partial-stage recovery. Keep merge, acceptance
 and actual registry/provenance verification distinct from local checks.
 
 ## Standalone skill artifact helper
