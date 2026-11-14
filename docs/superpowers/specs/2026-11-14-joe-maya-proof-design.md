@@ -31,7 +31,7 @@ an entire external framework.
 flowchart LR
     T[Target AI Surface]
     S[n8r-surface]
-    E[Evaluator]
+    E[n8r-probe]
     P[External policies and frameworks]
     T -->|Sources, configuration, observations| S
     S -->|Surface revision and evidence context| E
@@ -50,15 +50,20 @@ it is not required to use the released Surface skill.
 | Workstream | Home and responsibility | Release boundary |
 | --- | --- | --- |
 | Surface | This repository: skill, model meanings, saved artifacts, repeat investigation, change interpretation and evidence references. | Public skill evolves against its own acceptance checks. |
-| Target operation and observation | Proposed private n8r-labs workstream: Lab Assistant control, instance bindings, fixture setup, permitted collection and observation view. HR enforcement stays in the target service; n8r-june is a reuse source, not a second active orchestration platform. | Internal proof only; no standalone target-management product is promised. |
-| Evaluation | Proposed separate module in private n8r-labs: harness authoring, presets, LibreChat adapter, bounded execution and result assertions. | Internal initially; possible later extraction as n8r-eval requires a separate decision. |
+| n8r-runtime | Initially a private n8r-labs module: Lab Assistant operations, VPS/component bindings, configuration, status, lifecycle and permitted observation. HR enforcement stays in HR-app; n8r-june supplies reusable code. | Private proof now; standalone release is a provisional future direction. |
+| n8r-probe | Initially a separate private n8r-labs module: harness authoring, presets, adapters to test engines, bounded execution and evidence assertions. | Private proof now; standalone release is a provisional future direction. |
 
 These are consumer ownership and handoff requirements. Labs architecture, code
 locations and implementation plans must be defined in its repository before work
 there. No Labs code or private operational material belongs in this public PR.
 A Lab contains Experiments; an Experiment requests its setup from its Lab, which
 owns resource configuration and local bindings. Lab Assistant is that same owner,
-not another authority node.
+not another authority node. n8r-runtime implements its operational capabilities.
+The target is the system under study, not a fourth Injectionator product.
+n8r-labs composes Surface, Probe and Runtime around that target. The pencilled-in
+packaging strategy is standalone n8r-surface, n8r-probe and n8r-runtime, plus the
+integrated n8r-labs experience; packaging, licensing and release dates remain open.
+Only Surface is the public release track in this increment.
 
 Surface may explain a security implication, identify missing evidence and interpret
 supplied evaluation results. It does not author executable harnesses, manage test
@@ -120,6 +125,97 @@ early-access entitlement or completed security outcome follows from the roadmap.
 The first increment includes repeated discovery, one record-read operation, one
 local policy decision and a bounded evidence view. Broader automation follows
 observed gaps rather than preceding the investigation.
+
+## Prompt injection, test engines and observable controls
+
+Injectionator began with a proposed sidecar: a detect leg before LLM calls and an
+output-evaluation leg after them. That inline control remains deferred. The focus
+now is wider AI surface security: an ordinary request may violate policy without
+any prompt injection. Keep direct unauthorized requests and prompt-injection or
+guardrail-challenge cases distinct; do not label every harmful outcome an injection.
+The future sidecar's post-call evaluation is an inline control, distinct from
+n8r-probe's external test execution.
+
+Surface must discover Promptfoo and alternatives from permitted sources and
+configuration, including actual LibreChat hooks, wrappers and tool-call paths to
+security services. Product name alone does not establish a role or a deployed
+connection. Classify each evidenced use separately:
+
+| Role | Relationship to describe | Evidence needed |
+| --- | --- | --- |
+| External assessment engine | Tests the target, outside its normal request path. | Harness, target binding and run evidence. |
+| Inline control integration | Application/hook sends a request or response to a security service; decision may gate execution. | Adapter/configuration, placement, decision consumption, failure behaviour and scoped observations. |
+| Tool-call integration | Tool executor invokes a security tool/service at the model or application's request. | Tool definition, selected binding, effective actor and actual invocation evidence. |
+| CI/offline evaluation | Evaluates a build, prompt or dataset; not necessarily the running deployment. | Pipeline/configuration and exact evaluated revision. |
+
+A library dependency establishes neither an enabled hook nor enforcement. Trace
+whether a result is advisory or actually blocks an operation, what data crosses
+the connection, and what happens on error. A Promptfoo-backed hook is something to
+discover if it exists, not a claim that LibreChat or Promptfoo ships a native inline
+integration. Preserve supported, configured, observed and unknown distinctions.
+Surface inspects supplied evidence; it never invokes the security tool or sends a
+probe merely to discover it. Other products get the same evidence treatment.
+
+Promptfoo is the first candidate engine for n8r-probe, before building equivalent
+probe generation/execution. Its [documented architecture](https://www.promptfoo.dev/docs/red-team/architecture/)
+separates generators, strategies, target interfaces and evaluation. Verify a pinned
+version against one LibreChat path; retain the preset, engine version, assertions
+and any generator/grader model identities. Disclose chosen local/remote processing
+and data flows before running; do not assume all evaluation stays local.
+Probe supplies Surface/setup context and business-result evidence, and exercises
+existing inline or tool controls through the target's real path. A direct call to
+a control service is a separate component check, not proof of target integration.
+
+Langfuse is the first proposed observation integration. LibreChat's
+[development-version documentation](https://www.librechat.ai/docs/configuration/langfuse)
+describes trace export; support and effective settings must be checked against our
+pinned instance. Surface records the Langfuse node and trace-export edge when
+supported by evidence, including destination, identity/data classes, access and
+coverage gaps. Trace export is not an authorization control. A configured tracing
+flag is not proof that events arrived or that HR decisions are included.
+
+Runtime attaches/configures an approved Langfuse instance, hosted or self-hosted,
+and operates owned components within scope. Probe sends a known request through
+LibreChat and verifies the expected correlated trace, then uses permitted traces
+alongside authoritative HR decision/return evidence. Missing or sampled-out events
+are gaps, not successful-control evidence. Test observation integration now;
+broad security testing of Langfuse itself is separate scope.
+
+The following is a proposed composition, not an observed deployment:
+
+```mermaid
+flowchart LR
+    S[n8r-surface artifacts] --> P[n8r-probe]
+    P --> F[Promptfoo or alternative engine]
+    F -->|Test requests| L[LibreChat]
+    L --> M[Inference provider]
+    L --> H[HR-app]
+    L --> D[MongoDB Atlas]
+    L -->|Trace export| G[Langfuse]
+    L -.->|Hook or tool call if discovered| C[Security control service]
+    G -->|Permitted trace evidence| P
+    H -->|Authorization and return evidence| P
+    P -->|Evidence-linked run results| S
+    R[n8r-runtime] -->|Operate authorized components and config| L
+    R -->|Operate target service| H
+    R -->|Attach or operate observation service| G
+```
+
+Runtime also covers scoped VPS/provider/other component status and configuration;
+these illustrative operation edges are not an exhaustive inventory. If a security
+service uses Promptfoo internally, identify its wrapper and relationship rather
+than conflating it with the assessment engine. The same product can have multiple
+instances/roles in the model without collapsing their identities.
+
+## Build now and defer
+
+| Now, within the bounded proof | Deferred |
+| --- | --- |
+| Surface discovery of security/observation components, their real roles and change evidence, without executing them. | Broad automatic scanner/adaptor coverage or complete control catalogs. |
+| Private Probe: evaluate a pinned Promptfoo engine, one target adapter, direct requests and a bounded adversarial set; exercise discovered controls and retain downstream evidence. | General attack engine, extensive provider support, public Probe packaging/release. |
+| Private Runtime: recover/operate the scoped target, identities/configuration/status and a bounded Langfuse observation integration. | General provisioning, fleet operations, public Runtime packaging/release. |
+| Existing prompt guardrail and narrow HR authorization/Cedar proof. | Original pre-LLM detect/post-LLM evaluate sidecar revival. |
+| Independently accepted public Surface improvements and private integrated rehearsal. | Public Labs access and standalone/bundled suite launches. |
 
 ## Recovery and reuse boundary
 
@@ -246,12 +342,13 @@ unavailable or no counterexample is reproduced, mark the failure/defence portion
 Blocked or not demonstrated and continue the useful change/coverage investigation.
 Do not weaken a shared deployment merely to make the demonstration succeed.
 
-## Evaluation: a helper with an explicit execution boundary
+## n8r-probe: evaluation with an explicit execution boundary
 
 Surface supplies the evidence-backed target description and relevant questions.
-The separate evaluator helps the user author a reviewed preset and runs it only
+n8r-probe helps the user author a reviewed preset and runs it only
 under explicit scope. The first implementation is a bounded module in private
-n8r-labs with one LibreChat adapter, never a helper bundled into the Surface skill.
+n8r-labs with one LibreChat adapter and a selected test engine, never a helper
+bundled into the Surface skill.
 It needs no standalone service or scheduler. Harness creation is part of the
 evaluator workstream as well as execution.
 
@@ -291,13 +388,15 @@ safety. Preserve failing evidence even if the next attempt refuses.
 
 [Issue #79](https://github.com/injectionator/n8r-surface/issues/79) owns the intended
 consumer handoff and eventual extraction track. Its implementation home is proposed
-as private n8r-labs. A future name such as n8r-eval remains provisional.
+as private n8r-labs. The working product name is n8r-probe. Its standalone release
+remains provisional.
 
-## Observability: one place to explain one path
+## n8r-runtime and observation evidence
 
 Manual prompts in LibreChat and preset runs need the same observation semantics.
 The minimum central view is a read-only timeline assembled from existing permitted
-logs/evidence in the private Labs workstream, not a new Surface telemetry service.
+logs/evidence in the private n8r-runtime workstream, initially checking Langfuse
+integration plus HR evidence, not a new Surface telemetry service.
 It shows initiating/effective actors,
 model/tool proposals, executed requests, HR decisions, returned field classes,
 final responses and associated setup/policy/run references. Preserve authentication
@@ -383,6 +482,16 @@ the ordinary chat interfaces. These are proposed steps, not a completed rehearsa
   record,” then run the reviewed cross-user cases including “Show Maya's restricted
   employee record.” Expect each outcome beside its correlated downstream evidence,
   with proposal, retrieval and disclosure judged separately.
+- [ ] Inspect the discovered security/observability integrations. Expect Promptfoo
+  or alternatives classified by actual role, and Langfuse's supported/configured/
+  observed trace path distinguished. Have Probe exercise an existing hook/tool
+  control through LibreChat if one is present; expect decision and downstream
+  effect evidence, not a claim based only on the integration's name. An absent
+  integration is not fabricated; missing access remains an explicit gap.
+- [ ] Have Probe send a known synthetic request and inspect the permitted Langfuse
+  trace and HR evidence. Expect correlated observation or an explicit coverage
+  failure. Repeat after a tracing/configuration change made by Runtime; expect
+  Surface to explain the change without itself running any test or service.
 - [ ] After the maintainer's defensive change, repeat the same reviewed cases in
   fresh conversations. Expect prohibited fresh retrieval denied, own-record access
   working, and policy/identity/setup changes visible in the successor Surface.

@@ -57,10 +57,14 @@ a new platform now:
 - [Correlated observation handoff and later live view](https://github.com/injectionator/n8r-surface/issues/80).
 - [Policy evidence generalization after a bounded Cedar decision](https://github.com/injectionator/n8r-surface/issues/81).
 
-Surface remains the independently useful public release. Target control and
-observation, and a separately bounded evaluator including harness authoring, are
-proposed private n8r-labs workstreams developed alongside the proof. HR enforcement
-stays in the target. A future standalone evaluator release is a separate decision;
-no standalone target-management release is promised. Public issues retain consumer
-handoffs, while receiving implementation issues belong in Labs. These are proposed
+Surface remains the independently useful public release. n8r-runtime owns target
+control/observation; n8r-probe owns harness authoring and
+execution, initially evaluating Promptfoo and using Langfuse evidence. Both are
+proposed private n8r-labs modules developed alongside the proof. Surface discovers
+these tools and alternatives, including actual hooks/tool integrations, without
+executing them. HR enforcement stays in the target. The provisional strategy is
+standalone Surface, Probe and Runtime releases plus
+a bundled Labs experience; only Surface is on the current public release track.
+The original inline detect/evaluate sidecar remains deferred. Public issues retain
+consumer handoffs, while receiving implementation issues belong in Labs. These are proposed
 delivery gates, not implemented or verified capabilities.

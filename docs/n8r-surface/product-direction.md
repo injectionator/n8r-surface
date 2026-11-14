@@ -11,7 +11,10 @@ The next proposed increment is the [Joe/Maya design and delivery sequence](../su
 recover the existing lab, revisit the same evolving target, and connect a bounded
 policy/evaluation/observation proof to retained Surface history. Surface is the
 independently useful public node; target operations and harness authoring/execution
-are separate proposed private Labs workstreams. Developing the integrated proof
+belong to n8r-runtime and n8r-probe respectively, initially private Labs modules.
+Surface discovers Promptfoo, alternatives and Langfuse integrations without
+operating them. Prompt injection remains a test family within wider AI surface
+security; the original inline sidecar is deferred. Developing the integrated proof
 does not make Labs a prerequisite or release its private components.
 
 ## Strategic context
