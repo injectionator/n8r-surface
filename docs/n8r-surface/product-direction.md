@@ -7,6 +7,16 @@ This records the user-established direction and a proposed smallest demonstratio
 The demonstration scope below is a recommendation for review, not authorization
 to implement, deploy or test a system. No demonstration results are claimed here.
 
+The next proposed increment is the [Joe/Maya design and delivery sequence](../superpowers/specs/2026-11-14-joe-maya-proof-design.md):
+recover the existing lab, revisit the same evolving target, and connect a bounded
+policy/evaluation/observation proof to retained Surface history. Surface is the
+independently useful public node; target operations and harness authoring/execution
+belong to n8r-runtime and n8r-probe respectively, initially private Labs modules.
+Surface discovers Promptfoo, alternatives and Langfuse integrations without
+operating them. Prompt injection remains a test family within wider AI surface
+security; the original inline sidecar is deferred. Developing the integrated proof
+does not make Labs a prerequisite or release its private components.
+
 ## Strategic context
 
 The agreed destination is a practical [AI Surface security assurance framework](security-assurance-strategy.md)

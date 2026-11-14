@@ -43,3 +43,28 @@ tracked separately in the [critical path](n8r-surface/critical-path.md) and stra
 
 Related: [draft concepts](../spec/README.md),
 [interoperability](interoperability.md), [contributing](../CONTRIBUTING.md).
+
+## Evolving-target Joe/Maya proof
+
+The [proposed design and delivery sequence](superpowers/specs/2026-11-14-joe-maya-proof-design.md)
+prioritizes repeat investigation of the existing lab: baseline, minor configuration
+change, HR integration, scoped failure, defensive change and fresh-chat readback.
+[Issue #76](https://github.com/injectionator/n8r-surface/issues/76) retains the
+Surface continuation work. Follow-on tracks preserve scope without committing to
+a new platform now:
+
+- [Evaluation helper and eventual extraction](https://github.com/injectionator/n8r-surface/issues/79).
+- [Correlated observation handoff and later live view](https://github.com/injectionator/n8r-surface/issues/80).
+- [Policy evidence generalization after a bounded Cedar decision](https://github.com/injectionator/n8r-surface/issues/81).
+
+Surface remains the independently useful public release. n8r-runtime owns target
+control/observation; n8r-probe owns harness authoring and
+execution, initially evaluating Promptfoo and using Langfuse evidence. Both are
+proposed private n8r-labs modules developed alongside the proof. Surface discovers
+these tools and alternatives, including actual hooks/tool integrations, without
+executing them. HR enforcement stays in the target. The provisional strategy is
+standalone Surface, Probe and Runtime releases plus
+a bundled Labs experience; only Surface is on the current public release track.
+The original inline detect/evaluate sidecar remains deferred. Public issues retain
+consumer handoffs, while receiving implementation issues belong in Labs. These are proposed
+delivery gates, not implemented or verified capabilities.

@@ -152,6 +152,25 @@ Link the folder and each human-readable file. There is no native sibling authori
 Source validity/privacy checks are bounded; they cannot establish truth or detect
 all secrets. Keep sensitive data out before staging; no raw source snapshots.
 
+## Evidence identity and readback
+
+A source hash identifies the exact bytes inspected; a safe projection hash
+identifies only the retained projection. Label that distinction in the external
+reference comment and evidence applicability. A repository commit or document
+version is useful even when a connector cannot supply original bytes. Omit an
+unavailable optional hash and record the limitation; never substitute a fabricated
+one. Use source capture times for observations, not the later BOM save time.
+Without a trustworthy observation time, retain the supplied report and its time
+uncertainty as evidence text rather than inventing a dated observation record.
+
+The BOM carries findings and provenance, not an automatic archive of remote
+sources. Retain authorized, sanitized evidence separately when needed for later
+readback; use portable locators and hashes over those actual bytes. Resolve
+relative locators from the saved BOM's directory. The helper checks its generated
+views, not the continued availability or truth of external evidence. Independently
+open retained sources and verify their hashes when supplied. Missing evidence on
+reopen limits re-verification; it does not erase the historical claim.
+
 ## Continue and reconcile
 
 Before generating a successor, follow the [current-state and concise-brief
