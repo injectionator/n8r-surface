@@ -78,9 +78,15 @@ stopped before file selection because the ChatGPT Chrome extension's local-file
 permission was disabled. No web installation or invocation is claimed. The fresh
 web task list remains pending that prerequisite. No setting was silently changed.
 
-On Node 26.13.0 all 241 tests and the offline installed-package/terminal rehearsal
-passed. Markdown lint 0.24.0, offline links/fragments (lychee 0.24.2), cffconvert
-2.0.0, skill validation and whitespace checks passed. An independent review found
+Implementation commit `791aee4b4976142cbdd1d602c270043245c9ee13` identifies
+candidate 0.1.16. All 27 plugin archive and isolated CLI-installed files match its
+committed bytes. The ordinary desktop CLI installation was not replaced by this
+isolated check. The reviewed instruction digest is
+`sha256:03fa10cd2c2423563c3e82f86c0324acff6b71906780b191e33a80cf143942f7`.
+
+On Node 22.23.2, 24.22.2 and 26.13.0 all 241 tests and the offline
+installed-package/terminal rehearsals passed. Markdown lint 0.24.0, offline links/fragments (lychee 0.24.2), cffconvert
+2.0.0, skill validation, 24 Python checks and whitespace checks passed. An independent review found
 no actionable guidance or scope defects. These checks do not establish web
 availability, runtime access, saved-output delivery or human acceptance.
 

@@ -28,9 +28,9 @@ Use fresh bounded scenarios; textual guards alone cannot prove these behaviors.
 - [x] Clarify workspace prerequisites and cloud/download save boundaries without changing helpers.
 - [x] Bump plugin candidate to 0.1.16; include reference in instruction digest and update existing version guards.
 - [x] Run fresh candidate scenarios and review observed responses against the design.
-- [ ] Run repository checks, inspect final diff and create a reviewable commit.
+- [x] Run repository checks, inspect final diff and create a reviewable commit.
 - [ ] Install the exact archived candidate in ChatGPT web and start a fresh synthetic trial; record any concrete blocker.
-- [ ] Record web results, runnable human steps and limitations; update draft PR and push.
+- [x] Record the web blocker, runnable human steps and limitations; update draft PR and push.
 
 ## Execution notes
 
