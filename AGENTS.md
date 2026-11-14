@@ -405,7 +405,7 @@ and actual registry/provenance verification distinct from local checks.
 
 ## Standalone skill artifact helper
 
-Candidate skill 0.1.15 bundles a self-contained CycloneDX Surface helper and
+Candidate skill 0.1.16 bundles a self-contained CycloneDX Surface helper and
 retains legacy Capability/Bound and exchange readers for deliberately supplied old saves.
 New Surface saves use the BOM authority with generated brief, map and journal.
 The [instance-first workflow](docs/n8r-surface/instance-first-research.md) uses the

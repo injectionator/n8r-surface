@@ -9,6 +9,15 @@ from pending human acceptance. The earlier [0.1.12 rehearsal](skill-cyclonedx-ve
 used historical material and a different save format; it was not a neutral fresh
 assessment.
 
+## Start with what you have
+
+Candidate 0.1.16 can begin with a short description or deployment document.
+Researcher should show a provisional map, then help you provide one useful next
+source. You do not need to prepare a Lab, repository or SSH connection first.
+See [first-use examples and checks](first-use-access.md). A web Project can hold
+uploaded sources; it does not automatically connect a laptop folder. Saving and
+live access depend on the tools available in the current chat.
+
 ## Start with your question and sources
 
 Open a fresh chat with the Researcher and explicitly supply a checkout, source

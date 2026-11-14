@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "n8r-surface",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "Discover and reconcile AI-relevant components and connections using source evidence and permitted live settings. Experimental working notes; no deployment or compatibility claims.",
   "author": {"name": "AI Surface Model contributors", "url": "https://github.com/injectionator/n8r-surface"},
   "homepage": "https://github.com/injectionator/n8r-surface",

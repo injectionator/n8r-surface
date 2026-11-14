@@ -6,6 +6,10 @@ A source checkout can describe one component without describing the whole system
 Keep source-only work on its existing path when no instance investigation is asked
 for. This guide adds no access adapter, credential store or runtime dependency.
 
+For a newcomer or an inaccessible source, use [first-use access](first-use-access.md)
+to help establish one useful source at a time. A short reported system description
+is enough to begin; a complete access setup is not an entry requirement.
+
 ## Use the host harness
 
 Codex/ChatGPT supplies the tools and access; the skill supplies the investigation

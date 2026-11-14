@@ -93,14 +93,14 @@ export class CodexRpc {
 export function researcherInstructions() {
   const root = fileURLToPath(new URL('../plugins/n8r-surface/', import.meta.url));
   const manifest = JSON.parse(readBytes(join(root, 'plugin.json'), 32 * 1024).toString('utf8'));
-  const paths = ['skills/research/SKILL.md', ...['discovery-map', 'working-notes', 'model-meanings', 'skeleton-surface', 'workspace', 'artifacts', 'first-use-overview', 'instance-first'].map(name => `skills/research/references/${name}.md`)];
+  const paths = ['skills/research/SKILL.md', ...['discovery-map', 'working-notes', 'model-meanings', 'skeleton-surface', 'workspace', 'artifacts', 'first-use-overview', 'instance-first', 'first-use-access'].map(name => `skills/research/references/${name}.md`)];
   const hash = createHash('sha256');
   const sections = paths.map(path => {
     const bytes = readBytes(join(root, path), 128 * 1024);
     hash.update(path).update('\0').update(bytes).update('\0');
     return `\n--- Bundled instruction: ${path} ---\n${bytes.toString('utf8')}`;
   });
-  if (manifest.version !== '0.1.15') throw new InspectionError('Unsupported bundled Researcher revision');
+  if (manifest.version !== '0.1.16') throw new InspectionError('Unsupported bundled Researcher revision');
   return {version: manifest.version as string, digest: `sha256:${hash.digest('hex')}`, text: sections.join('\n')};
 }
 

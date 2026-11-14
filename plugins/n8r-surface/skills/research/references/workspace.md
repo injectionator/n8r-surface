@@ -4,6 +4,12 @@ Use this mode for setup, repeated setup, readiness and fresh-chat recognition.
 A workspace is a user-owned folder, independent of a vault, source checkout,
 Lab or app project. The only initial file is `.n8r/workspace.json`.
 
+If the user means starting research in a web Project rather than creating a local
+folder, use [first-use access](first-use-access.md) and begin from supplied sources.
+If explicit local setup is requested but the host cannot access a persistent local
+filesystem or supported Node runtime, report that operation blocked. Keep useful
+source research available; do not ask for a laptop path the host cannot access.
+
 ## Run the shared helper
 
 Requires a local persistent filesystem and Node.js 22, 24 or 26 on macOS/Linux.

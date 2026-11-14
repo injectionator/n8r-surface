@@ -108,6 +108,7 @@ Current progress, with evidence defining the verified scope and revision:
 | Read saved research and selected definitions through the library, retaining identities, findings and references. | Implemented and verified for the experimental library profile; no command claim. | [CONTRACT-01 and repeatable fixture/package checks](verification.md#contract-01-retain-useful-attributable-research-and-selected-definitions). |
 | Run `n8r-surface` alone and see settings, saved artefacts and known process status. | Specified, implemented and verified for the read-only overview and guidance question; setup/conversation unavailable. | [STARTUP-01 installed evidence at `b90358a`](startup-verification.md). Historical read-only baseline; setup supersedes its guidance and exit behavior. |
 | Choose a local vault once and reuse it from another source directory. | Setup-only implementation; installed rehearsal and human acceptance tracked separately. | [SETUP-01 evidence and tasks](vault-setup-verification.md). Research and continuation remain pending. |
+| Begin with a description and establish source access progressively. | Candidate 0.1.16 guidance; baseline rehearsal recorded, web acceptance tracked separately. No new CLI command or access adapter. | [First-use tasks and evidence](first-use-access.md). |
 | Research supplied sources through the installed skill and save working notes. | Implemented; bounded Lumen and LibreChat agent rehearsals have saved/read back notes. Actual human input survived fresh-agent continuation; Work UI acceptance remains pending. | [RESEARCH-01 evidence and limits](researcher-skill-verification.md). No structured-output or standalone-runner claim. |
 | Offer to retain an initial partial graph when saving is undecided. | Implemented in skill 0.1.7; acceptance and evidence are tracked separately. | [Optional save offer](researcher-skill-verification.md#optional-save-offer-017). |
 | Resume from saved recommendations and retain useful next investigations. | Implemented in skill 0.1.6; installed fresh-agent save/continue and independent readback passed. Human acceptance remains pending. | [Recommendations evidence](researcher-skill-verification.md#saved-recommendations-016) and [prepared interaction](researcher-prepared-check.md). |
@@ -697,3 +698,14 @@ newly learned facts, unchanged checked facts, lost coverage and conflicts. A hos
 without required access or saving tools must report the blocked portion without
 fabricating results. Source-only requests need no runtime inventory.
 See the [human tasks and bounded verification](instance-first-research.md).
+
+## SKILL-ACCESS-01: begin without prepared connections
+
+Given a fresh session and a description/document, with laptop source and VPS
+access only mentioned, ask Researcher to understand the system and help provide
+sources. Expect a provisional map, one useful next source and host-appropriate
+access guidance. A project upload is not a live folder; SSH details are not access.
+Supply another source and expect progress rather than repeated intake. Saving
+requires observed helper/runtime/delivery capabilities; otherwise retain copyable
+findings and name the blocked step. No credentials in chat or target mutations.
+See [exact interactions, readback and verification status](first-use-access.md).
