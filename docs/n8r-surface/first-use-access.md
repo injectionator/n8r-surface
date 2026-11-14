@@ -72,11 +72,46 @@ a live laptop folder, declined the private key, used the new Compose clue and
 offered a scoped excerpt while preserving the user's choice to stay in the chat.
 These were capability-constrained simulations, not ChatGPT web or real SSH tests.
 
-The actual signed-in ChatGPT web UI exposed Plugins → Add → Upload plugin archive,
-accepting ZIP/TGZ archives. A 27-file candidate archive was prepared. Browser upload
-stopped before file selection because the ChatGPT Chrome extension's local-file
-permission was disabled. No web installation or invocation is claimed. The fresh
-web task list remains pending that prerequisite. No setting was silently changed.
+The actual signed-in ChatGPT web UI exposed Plugins → Add → Upload plugin archive.
+After the user enabled the browser extension's file-URL permission, the exact
+27-file ZIP uploaded and installed as version 0.1.16. “Try in chat” selected the
+plugin in a new chat outside existing projects. Only the synthetic prompts above
+were supplied; no local repository, target details or previous research was
+attached. This used an existing signed-in account, not a clean account with
+account memory and other connected sources proven absent.
+
+The two-turn browser rehearsal passed the source-guidance checks: it qualified
+reported connections, listed unknowns, requested README/top-level structure, then
+used the new directory/Compose clues to ask for `compose.yaml`. It distinguished
+uploaded snapshots from live folder access, declined the offered private key and
+made no claim to have read the laptop, GitHub mirror or VPS. It did accept the
+prompt's “this web Project” wording even though the test was outside a Project;
+project membership was not established. The plugin page and response identified
+0.1.16; the UI did not expose a complete loaded-file digest.
+
+File delivery did not pass the initial check. The first response claimed a saved
+portable draft (explicitly not a validated Surface BOM or a laptop/VPS save), but
+clicking its download control produced no file in the browser rehearsal. Response
+loading also intermittently required the UI's reload control. A follow-up asked
+the web assistant to verify the files and supply a copyable fallback. These are
+observed delivery/verification gaps, not proof that no cloud file was created.
+
+On recovery, the assistant reported that the first archive held a combined README
+and Mermaid source, then created a second draft with separate SVG map, brief and
+journal plus a copyable continuation record. The SVG, brief and journal opened in the
+web viewer and were independently read: connections remained user-reported,
+provider/database unknown, and source/runtime inspection explicitly absent.
+The brief explicitly says no validated CycloneDX Surface BOM was generated.
+Archive and viewer-download attempts still produced no local file through the
+browser harness, so downloaded bytes and local persistence are unverified.
+The cause of the download failure is not established. This is a useful cloud
+draft and fallback, not a verified bundled-helper Surface save or end-to-end pass.
+
+Remaining acceptance: diagnose portable delivery and helper availability in the
+actual web host; repeat save/download/readback; obtain human acceptance. No real
+SSH or private-repository authentication was exercised. Raw chat evidence and
+screenshots remain private. Disable temporary browser file-URL permission after
+the trial.
 
 Implementation commit `791aee4b4976142cbdd1d602c270043245c9ee13` identifies
 candidate 0.1.16. All 27 plugin archive and isolated CLI-installed files match its
@@ -87,8 +122,8 @@ isolated check. The reviewed instruction digest is
 On Node 22.23.2, 24.22.2 and 26.13.0 all 241 tests and the offline
 installed-package/terminal rehearsals passed. Markdown lint 0.24.0, offline links/fragments (lychee 0.24.2), cffconvert
 2.0.0, skill validation, 24 Python checks and whitespace checks passed. An independent review found
-no actionable guidance or scope defects. These checks do not establish web
-availability, runtime access, saved-output delivery or human acceptance.
+no actionable guidance or scope defects. These automated checks do not establish runtime access, saved-output delivery
+or human acceptance. The browser rehearsal above is separate evidence.
 
 ## Host facts and limits
 

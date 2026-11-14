@@ -29,7 +29,7 @@ Use fresh bounded scenarios; textual guards alone cannot prove these behaviors.
 - [x] Bump plugin candidate to 0.1.16; include reference in instruction digest and update existing version guards.
 - [x] Run fresh candidate scenarios and review observed responses against the design.
 - [x] Run repository checks, inspect final diff and create a reviewable commit.
-- [ ] Install the exact archived candidate in ChatGPT web and start a fresh synthetic trial; record any concrete blocker.
+- [x] Install the exact archived candidate in ChatGPT web and start a fresh synthetic trial; record any concrete blocker.
 - [x] Record the web blocker, runnable human steps and limitations; update draft PR and push.
 
 ## Execution notes
@@ -39,7 +39,8 @@ increment makes access guidance explicit rather than claiming a regression fix.
 Two-turn baseline/candidate simulations were manually reviewed. No statistical
 wording benchmark is claimed. Independent final review found no actionable issues.
 
-Actual web upload reached the archive dialog, then browser file selection was
-blocked by the extension's disabled local-file permission. Keep web installation
-and fresh invocation pending until that prerequisite is resolved; do not replace
-the requested trial with a local simulation.
+Actual web installation and the two-turn synthetic invocation completed after the
+user enabled browser file-URL access. Progressive source guidance passed the
+bounded agent rehearsal. Initial draft download delivery did not pass; record
+recovery and output readback separately in the first-use evidence. This is not
+human acceptance or a real repository/SSH test.
