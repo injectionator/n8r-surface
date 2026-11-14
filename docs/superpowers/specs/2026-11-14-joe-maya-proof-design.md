@@ -6,23 +6,105 @@ The maintainer selected recovery of the existing LibreChat lab. This document
 proposes the bounded implementation; it does not claim acceptance, tool execution,
 a reproduced vulnerability or an implemented evaluator. No release is promised.
 
-## Intent and value
+## Intent and standalone value
 
-Help an owner understand an evolving AI system, see consequential changes and
-verify whether its controls protect an explicit business rule. The first rule is:
-Joe may read his own restricted employee record, but not Maya's. Use synthetic
-records and real application requests, preserving legitimate use after a defence.
+n8r-surface helps a user understand an AI system from its components, source,
+configuration and permitted observations. Its independent outcome is a readable,
+evidence-backed account: what exists, how it connects, where authority and data
+cross boundaries, what changed and what remains unknown. Users can save, inspect
+and revisit that account without a Labs account or evaluator.
 
-The durable product loop is: investigate, save, revisit, compare, select a question,
-exercise it through an identified execution owner, incorporate evidence and revisit
-after change. A saved Surface is working memory with provenance, not a substitute
-for fresh inspection. The resulting explanation must answer what changed, why it
-matters, what remains unknown and what should be checked next.
+The integrated proof uses that account to investigate one business rule: Joe may
+read his own restricted employee record, but not Maya's. It combines investigation,
+target operation and evaluation across separately owned components. A saved Surface
+is working memory with provenance, not a substitute for fresh inspection.
 
 This realizes the [security assurance strategy](../../n8r-surface/security-assurance-strategy.md)
 and narrows the [product direction](../../n8r-surface/product-direction.md).
-It does not turn n8r-surface into a deployment, policy administration or attack
-platform. The AI Surface Model remains independently usable.
+The AI Surface Model supplies the semantics; CycloneDX is the current exchange
+foundation. Linking a requirement to evidence does not establish compliance with
+an entire external framework.
+
+## Product triangle and repository boundaries
+
+```mermaid
+flowchart LR
+    T[Target AI Surface]
+    S[n8r-surface]
+    E[Evaluator]
+    P[External policies and frameworks]
+    T -->|Sources, configuration, observations| S
+    S -->|Surface revision and evidence context| E
+    E -->|Authorized test inputs| T
+    T -->|Responses and execution evidence| E
+    E -->|Run results and evidence references| S
+    P -->|Requirements and assessment criteria| S
+```
+
+Surface produces an evidence-backed account, distinguishing direct observations,
+reported evidence and inference. The evaluator uses it to help a user author and
+run a harness. Target operations configure the system and make permitted evidence
+available. Labs is the proposed consumer that coordinates these responsibilities;
+it is not required to use the released Surface skill.
+
+| Workstream | Home and responsibility | Release boundary |
+| --- | --- | --- |
+| Surface | This repository: skill, model meanings, saved artifacts, repeat investigation, change interpretation and evidence references. | Public skill evolves against its own acceptance checks. |
+| Target operation and observation | Proposed private n8r-labs workstream: Lab Assistant control, instance bindings, fixture setup, permitted collection and observation view. HR enforcement stays in the target service; n8r-june is a reuse source, not a second active orchestration platform. | Internal proof only; no standalone target-management product is promised. |
+| Evaluation | Proposed separate module in private n8r-labs: harness authoring, presets, LibreChat adapter, bounded execution and result assertions. | Internal initially; possible later extraction as n8r-eval requires a separate decision. |
+
+These are consumer ownership and handoff requirements. Labs architecture, code
+locations and implementation plans must be defined in its repository before work
+there. No Labs code or private operational material belongs in this public PR.
+A Lab contains Experiments; an Experiment requests its setup from its Lab, which
+owns resource configuration and local bindings. Lab Assistant is that same owner,
+not another authority node.
+
+Surface may explain a security implication, identify missing evidence and interpret
+supplied evaluation results. It does not author executable harnesses, manage test
+identities, schedule/run probes, configure controls or operate targets. Harness
+authoring and execution both belong to the evaluator. Surface artifacts remain
+usable and understandable independently of Labs or any particular evaluator.
+
+## Shared proof and independent release gates
+
+Develop the three bounded workstreams together against one Joe/Maya acceptance
+story. Work can overlap once the target/setup identities and initial file handoffs
+are agreed; the end-to-end proof still follows the ordered gates below. Separate
+repository issues, branches and PRs retain their own owners and acceptance checks.
+A session can coordinate them without merging responsibilities or release decisions.
+
+Start with versioned file handoffs, avoiding a service dependency:
+
+- Surface to evaluator: exact artifact revision/digest, stable target and path
+  identities, relevant policy references, known facts, gaps and evidence locations.
+- Lab/target to evaluator: authorized target binding, trusted test identities,
+  effective setup reference and permitted observation access. Credentials stay in
+  private bindings; a BOM or user-supplied source never grants execution authority.
+- Evaluator to Surface: exact setup and harness revisions, run/case identifiers,
+  observations, assertion outcomes, evidence references and coverage limits.
+
+Policy authority comes from the owner or identified external source. The evaluator
+must reject or explicitly rebind a stale/mismatched setup before execution. Surface
+must preserve old run applicability rather than silently applying it to a new
+setup. Missing evidence makes a conclusion inconclusive; it does not become a
+passing assertion. These are minimum semantic requirements, not a new published
+schema. Specify concrete file shapes in the receiving implementation plans.
+
+The public Surface gate is independent: a new user installs the skill, extracts
+useful information from permitted inputs, saves, reopens and detects a material
+change without private Labs services. Test with the distributed skill, not hidden
+helpers or prepared findings. Improve only demonstrated gaps in that experience.
+
+The internal integrated gate adds actual control execution, correlated evidence
+and a before/after result with legitimate access preserved. A private demonstration
+does not release Labs or the evaluator. Possible evaluator extraction later needs
+its own installability, authorization, documentation and support acceptance.
+
+For prospect demonstrations, show the standalone Surface workflow first. Label
+private integration footage as an internal prototype and distinguish current
+capabilities from proposed access. Labs is not publicly available; no release date,
+early-access entitlement or completed security outcome follows from the roadmap.
 
 ## Approaches and choice
 
@@ -166,11 +248,12 @@ Do not weaken a shared deployment merely to make the demonstration succeed.
 
 ## Evaluation: a helper with an explicit execution boundary
 
-Surface explains the target, identifies policy questions and helps the user draft
-a reviewed preset. A separately invoked execution owner runs it. The first proof
-can use a small local helper with one LibreChat adapter; it does not require a
-service, scheduler, general probe engine or changes to the read-only skill's
-execution authority. Do not silently run generated attacks during discovery.
+Surface supplies the evidence-backed target description and relevant questions.
+The separate evaluator helps the user author a reviewed preset and runs it only
+under explicit scope. The first implementation is a bounded module in private
+n8r-labs with one LibreChat adapter, never a helper bundled into the Surface skill.
+It needs no standalone service or scheduler. Harness creation is part of the
+evaluator workstream as well as execution.
 
 A preset must identify its version, target and setup, policy, authenticated actor,
 record references, exact prompts, expected business outcomes, observation points,
@@ -207,13 +290,15 @@ refutes the scoped protection claim; passing finite samples do not prove univers
 safety. Preserve failing evidence even if the next attempt refuses.
 
 [Issue #79](https://github.com/injectionator/n8r-surface/issues/79) owns the intended
-helper/extraction path. A future name such as n8r-eval remains provisional.
+consumer handoff and eventual extraction track. Its implementation home is proposed
+as private n8r-labs. A future name such as n8r-eval remains provisional.
 
 ## Observability: one place to explain one path
 
 Manual prompts in LibreChat and preset runs need the same observation semantics.
 The minimum central view is a read-only timeline assembled from existing permitted
-logs/evidence, not a new telemetry service. It shows initiating/effective actors,
+logs/evidence in the private Labs workstream, not a new Surface telemetry service.
+It shows initiating/effective actors,
 model/tool proposals, executed requests, HR decisions, returned field classes,
 final responses and associated setup/policy/run references. Preserve authentication
 boundaries and the distinction between actual events and inferred links.
@@ -252,13 +337,30 @@ The current profile may carry readable linked evidence without a new structured
 Observed Surface contract. Any schema, option or conversational behaviour change
 requires a bounded proposal and updated intent/verification in the same increment.
 
-This design does not specify Lab architecture or modify n8r-labs/n8r-june. Before
-implementation there, identify the receiving repository/issue, owner and authorized
-scope. Track the next increment under #76; keep evaluator, observability and policy
-follow-ons linked, transferring issues only when ownership is settled. Backlog
-labels do not authorize implementation. Standalone CLI parity follows skill proof.
+The proposed implementation home for target operations and evaluation is private
+n8r-labs. This document defines only their consumer boundary; it neither specifies
+Lab architecture nor modifies n8r-labs/n8r-june. Before implementation, establish
+receiving Labs issues and owners, with a shared proof tracker linking the Surface,
+target and evaluator increments. Public #79 and #80 remain handoff pointers, not
+permission to implement those components in n8r-surface or publish private work.
+Keep #76 scoped to Surface continuation. Backlog labels do not authorize execution.
+Standalone CLI parity follows skill proof; Labs availability is a separate decision.
 
-## Human proof task list
+## Standalone Surface acceptance
+
+Before integrated acceptance, test the distributed skill in a workspace with no
+Labs/evaluator access. Supply permitted source, configuration and previous
+artifacts; repeat after an independently recorded change. Expect useful component,
+relationship and authority information, evidence links, explicit gaps, saved
+history and a correct account of the inspected change. The tester must be able to
+explain a consequential fact without running a harness or configuring the target.
+
+Record the tester's explanation and evidence, corrections needed, continuation
+success and any dependency on private services. An unavailable live target limits
+coverage but must not erase useful source-only results. Unsupported security
+claims, required private helpers or unusable saved artifacts fail this gate.
+
+## Integrated human proof task list
 
 Prerequisites: maintainer supplies the recovered isolated target, synthetic Joe/Maya
 accounts and records, installed skill version, saved baseline, allowed source/config
@@ -311,8 +413,9 @@ permission for arbitrary infrastructure. Fix versioned interfaces in each owning
 implementation plan after the corresponding recovery check. Service extraction,
 live dashboards and generalized control catalogs are not prerequisites.
 
-The first prospect demonstration should show the saved baseline, a meaningful
-change discovered on revisit, an evidence-linked authority finding, a defensive
-change and a fresh explanation of the result. Label proposed future capabilities
+The integrated prospect demonstration should follow the standalone Surface demo
+with a meaningful change discovered on revisit, an evidence-linked authority
+finding, a defensive change and a fresh explanation of the result. Label proposed
+future capabilities
 visibly; do not present health checks, scripted findings or planned telemetry as
 completed security assurance.

@@ -9,7 +9,10 @@ to implement, deploy or test a system. No demonstration results are claimed here
 
 The next proposed increment is the [Joe/Maya design and delivery sequence](../superpowers/specs/2026-11-14-joe-maya-proof-design.md):
 recover the existing lab, revisit the same evolving target, and connect a bounded
-policy/evaluation/observation proof to retained Surface history.
+policy/evaluation/observation proof to retained Surface history. Surface is the
+independently useful public node; target operations and harness authoring/execution
+are separate proposed private Labs workstreams. Developing the integrated proof
+does not make Labs a prerequisite or release its private components.
 
 ## Strategic context
 

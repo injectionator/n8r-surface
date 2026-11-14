@@ -57,6 +57,10 @@ a new platform now:
 - [Correlated observation handoff and later live view](https://github.com/injectionator/n8r-surface/issues/80).
 - [Policy evidence generalization after a bounded Cedar decision](https://github.com/injectionator/n8r-surface/issues/81).
 
-Runtime integration and enforcement belong to the target owner; Lab collection
-and presentation remain a separate consumer boundary. These are proposed delivery
-gates and backlog items, not implemented or verified capabilities.
+Surface remains the independently useful public release. Target control and
+observation, and a separately bounded evaluator including harness authoring, are
+proposed private n8r-labs workstreams developed alongside the proof. HR enforcement
+stays in the target. A future standalone evaluator release is a separate decision;
+no standalone target-management release is promised. Public issues retain consumer
+handoffs, while receiving implementation issues belong in Labs. These are proposed
+delivery gates, not implemented or verified capabilities.
