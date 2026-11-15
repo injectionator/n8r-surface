@@ -160,10 +160,10 @@ var require_code = __commonJS({
     function interpolate(x) {
       return typeof x == "number" || typeof x == "boolean" || x === null ? x : safeStringify(Array.isArray(x) ? x.join(",") : x);
     }
-    function stringify2(x) {
+    function stringify(x) {
       return new _Code(safeStringify(x));
     }
-    exports.stringify = stringify2;
+    exports.stringify = stringify;
     function safeStringify(x) {
       return JSON.stringify(x).replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
     }
@@ -239,8 +239,8 @@ var require_scope = __commonJS({
         super(nameStr);
         this.prefix = prefix2;
       }
-      setValue(value2, { property, itemIndex }) {
-        this.value = value2;
+      setValue(value, { property, itemIndex }) {
+        this.value = value;
         this.scopePath = (0, code_1._)`.${new code_1.Name(property)}[${itemIndex}]`;
       }
     };
@@ -259,13 +259,13 @@ var require_scope = __commonJS({
       name(prefix2) {
         return new ValueScopeName(prefix2, this._newName(prefix2));
       }
-      value(nameOrPrefix, value2) {
+      value(nameOrPrefix, value) {
         var _a;
-        if (value2.ref === void 0)
+        if (value.ref === void 0)
           throw new Error("CodeGen: ref must be passed in value");
         const name = this.toName(nameOrPrefix);
         const { prefix: prefix2 } = name;
-        const valueKey = (_a = value2.key) !== null && _a !== void 0 ? _a : value2.ref;
+        const valueKey = (_a = value.key) !== null && _a !== void 0 ? _a : value.ref;
         let vs = this._values[prefix2];
         if (vs) {
           const _name = vs.get(valueKey);
@@ -277,8 +277,8 @@ var require_scope = __commonJS({
         vs.set(valueKey, name);
         const s = this._scope[prefix2] || (this._scope[prefix2] = []);
         const itemIndex = s.length;
-        s[itemIndex] = value2.ref;
-        name.setValue(value2, { property: prefix2, itemIndex });
+        s[itemIndex] = value.ref;
+        name.setValue(value, { property: prefix2, itemIndex });
         return name;
       }
       getValue(prefix2, keyOrRef) {
@@ -748,8 +748,8 @@ var require_codegen = __commonJS({
         return this._extScope.name(prefix2);
       }
       // reserves unique name in the external scope and assigns value to it
-      scopeValue(prefixOrName, value2) {
-        const name = this._extScope.value(prefixOrName, value2);
+      scopeValue(prefixOrName, value) {
+        const name = this._extScope.value(prefixOrName, value);
         const vs = this._values[name.prefix] || (this._values[name.prefix] = /* @__PURE__ */ new Set());
         vs.add(name);
         return name;
@@ -803,13 +803,13 @@ var require_codegen = __commonJS({
       // returns code for object literal for the passed argument list of key-value pairs
       object(...keyValues) {
         const code = ["{"];
-        for (const [key, value2] of keyValues) {
+        for (const [key, value] of keyValues) {
           if (code.length > 1)
             code.push(",");
           code.push(key);
-          if (key !== value2 || this.opts.es5) {
+          if (key !== value || this.opts.es5) {
             code.push(":");
-            (0, code_1.addCodeArg)(code, value2);
+            (0, code_1.addCodeArg)(code, value);
           }
         }
         code.push("}");
@@ -888,10 +888,10 @@ var require_codegen = __commonJS({
         return this._leafNode(new Break(label));
       }
       // `return` statement
-      return(value2) {
+      return(value) {
         const node = new Return();
         this._blockNode(node);
-        this.code(value2);
+        this.code(value);
         if (node.nodes.length !== 1)
           throw new Error('CodeGen: "return" should have one node');
         return this._endBlockNode(Return);
@@ -1060,10 +1060,10 @@ var require_util = __commonJS({
     var codegen_1 = require_codegen();
     var code_1 = require_code();
     function toHash(arr) {
-      const hash2 = {};
+      const hash = {};
       for (const item of arr)
-        hash2[item] = true;
-      return hash2;
+        hash[item] = true;
+      return hash;
     }
     exports.toHash = toHash;
     function alwaysValidSchema(it, schema) {
@@ -2234,10 +2234,10 @@ var require_resolve = __commonJS({
       }
       return count;
     }
-    function getFullPath(resolver, id2 = "", normalize) {
+    function getFullPath(resolver, id = "", normalize) {
       if (normalize !== false)
-        id2 = normalizeId(id2);
-      const p = resolver.parse(id2);
+        id = normalizeId(id);
+      const p = resolver.parse(id);
       return _getFullPath(resolver, p);
     }
     exports.getFullPath = getFullPath;
@@ -2247,13 +2247,13 @@ var require_resolve = __commonJS({
     }
     exports._getFullPath = _getFullPath;
     var TRAILING_SLASH_HASH = /#\/?$/;
-    function normalizeId(id2) {
-      return id2 ? id2.replace(TRAILING_SLASH_HASH, "") : "";
+    function normalizeId(id) {
+      return id ? id.replace(TRAILING_SLASH_HASH, "") : "";
     }
     exports.normalizeId = normalizeId;
-    function resolveUrl(resolver, baseId, id2) {
-      id2 = normalizeId(id2);
-      return resolver.resolve(baseId, id2);
+    function resolveUrl(resolver, baseId, id) {
+      id = normalizeId(id);
+      return resolver.resolve(baseId, id);
     }
     exports.resolveUrl = resolveUrl;
     var ANCHOR = /^[a-z_][-a-z0-9._]*$/i;
@@ -2276,26 +2276,26 @@ var require_resolve = __commonJS({
         addAnchor.call(this, sch.$anchor);
         addAnchor.call(this, sch.$dynamicAnchor);
         baseIds[jsonPtr] = innerBaseId;
-        function addRef(ref2) {
+        function addRef(ref) {
           const _resolve = this.opts.uriResolver.resolve;
-          ref2 = normalizeId(innerBaseId ? _resolve(innerBaseId, ref2) : ref2);
-          if (schemaRefs.has(ref2))
-            throw ambiguos(ref2);
-          schemaRefs.add(ref2);
-          let schOrRef = this.refs[ref2];
+          ref = normalizeId(innerBaseId ? _resolve(innerBaseId, ref) : ref);
+          if (schemaRefs.has(ref))
+            throw ambiguos(ref);
+          schemaRefs.add(ref);
+          let schOrRef = this.refs[ref];
           if (typeof schOrRef == "string")
             schOrRef = this.refs[schOrRef];
           if (typeof schOrRef == "object") {
-            checkAmbiguosRef(sch, schOrRef.schema, ref2);
-          } else if (ref2 !== normalizeId(fullPath)) {
-            if (ref2[0] === "#") {
-              checkAmbiguosRef(sch, localRefs[ref2], ref2);
-              localRefs[ref2] = sch;
+            checkAmbiguosRef(sch, schOrRef.schema, ref);
+          } else if (ref !== normalizeId(fullPath)) {
+            if (ref[0] === "#") {
+              checkAmbiguosRef(sch, localRefs[ref], ref);
+              localRefs[ref] = sch;
             } else {
-              this.refs[ref2] = fullPath;
+              this.refs[ref] = fullPath;
             }
           }
-          return ref2;
+          return ref;
         }
         function addAnchor(anchor) {
           if (typeof anchor == "string") {
@@ -2306,12 +2306,12 @@ var require_resolve = __commonJS({
         }
       });
       return localRefs;
-      function checkAmbiguosRef(sch1, sch2, ref2) {
+      function checkAmbiguosRef(sch1, sch2, ref) {
         if (sch2 !== void 0 && !equal(sch1, sch2))
-          throw ambiguos(ref2);
+          throw ambiguos(ref);
       }
-      function ambiguos(ref2) {
-        return new Error(`reference "${ref2}" resolves to more than one schema`);
+      function ambiguos(ref) {
+        return new Error(`reference "${ref}" resolves to more than one schema`);
       }
     }
     exports.getSchemaRefs = getSchemaRefs;
@@ -2849,9 +2849,9 @@ var require_ref_error = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     var resolve_1 = require_resolve();
     var MissingRefError = class extends Error {
-      constructor(resolver, baseId, ref2, msg) {
-        super(msg || `can't resolve reference ${ref2} from id ${baseId}`);
-        this.missingRef = (0, resolve_1.resolveUrl)(resolver, baseId, ref2);
+      constructor(resolver, baseId, ref, msg) {
+        super(msg || `can't resolve reference ${ref} from id ${baseId}`);
+        this.missingRef = (0, resolve_1.resolveUrl)(resolver, baseId, ref);
         this.missingSchema = (0, resolve_1.normalizeId)((0, resolve_1.getFullPath)(resolver, this.missingRef));
       }
     };
@@ -2977,22 +2977,22 @@ var require_compile = __commonJS({
       }
     }
     exports.compileSchema = compileSchema;
-    function resolveRef(root, baseId, ref2) {
+    function resolveRef(root, baseId, ref) {
       var _a;
-      ref2 = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, ref2);
-      const schOrFunc = root.refs[ref2];
+      ref = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, ref);
+      const schOrFunc = root.refs[ref];
       if (schOrFunc)
         return schOrFunc;
-      let _sch = resolve3.call(this, root, ref2);
+      let _sch = resolve3.call(this, root, ref);
       if (_sch === void 0) {
-        const schema = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref2];
+        const schema = (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
         const { schemaId } = this.opts;
         if (schema)
           _sch = new SchemaEnv({ schema, schemaId, root, baseId });
       }
       if (_sch === void 0)
         return;
-      return root.refs[ref2] = inlineOrCompile.call(this, _sch);
+      return root.refs[ref] = inlineOrCompile.call(this, _sch);
     }
     exports.resolveRef = resolveRef;
     function inlineOrCompile(sch) {
@@ -3010,21 +3010,21 @@ var require_compile = __commonJS({
     function sameSchemaEnv(s1, s2) {
       return s1.schema === s2.schema && s1.root === s2.root && s1.baseId === s2.baseId;
     }
-    function resolve3(root, ref2) {
+    function resolve3(root, ref) {
       let sch;
-      while (typeof (sch = this.refs[ref2]) == "string")
-        ref2 = sch;
-      return sch || this.schemas[ref2] || resolveSchema.call(this, root, ref2);
+      while (typeof (sch = this.refs[ref]) == "string")
+        ref = sch;
+      return sch || this.schemas[ref] || resolveSchema.call(this, root, ref);
     }
-    function resolveSchema(root, ref2) {
-      const p = this.opts.uriResolver.parse(ref2);
+    function resolveSchema(root, ref) {
+      const p = this.opts.uriResolver.parse(ref);
       const refPath = (0, resolve_1._getFullPath)(this.opts.uriResolver, p);
       let baseId = (0, resolve_1.getFullPath)(this.opts.uriResolver, root.baseId, void 0);
       if (Object.keys(root.schema).length > 0 && refPath === baseId) {
         return getJsonPointer.call(this, p, root);
       }
-      const id2 = (0, resolve_1.normalizeId)(refPath);
-      const schOrRef = this.refs[id2] || this.schemas[id2];
+      const id = (0, resolve_1.normalizeId)(refPath);
+      const schOrRef = this.refs[id] || this.schemas[id];
       if (typeof schOrRef == "string") {
         const sch = resolveSchema.call(this, root, schOrRef);
         if (typeof (sch === null || sch === void 0 ? void 0 : sch.schema) !== "object")
@@ -3035,7 +3035,7 @@ var require_compile = __commonJS({
         return;
       if (!schOrRef.validate)
         compileSchema.call(this, schOrRef);
-      if (id2 === (0, resolve_1.normalizeId)(ref2)) {
+      if (id === (0, resolve_1.normalizeId)(ref)) {
         const { schema } = schOrRef;
         const { schemaId } = this.opts;
         const schId = schema[schemaId];
@@ -3254,10 +3254,10 @@ var require_utils = __commonJS({
         isIPV6: true
       };
     }
-    function findToken(str, token2) {
+    function findToken(str, token) {
       let ind = 0;
       for (let i = 0; i < str.length; i++) {
-        if (str[i] === token2) ind++;
+        if (str[i] === token) ind++;
       }
       return ind;
     }
@@ -4253,13 +4253,13 @@ var require_fast_uri = __commonJS({
       if (typeof uri !== "string" && typeof uri !== "object") {
         return void 0;
       }
-      let value2;
+      let value;
       try {
-        value2 = typeof uri === "string" ? uri : serialize(uri, opts);
+        value = typeof uri === "string" ? uri : serialize(uri, opts);
       } catch {
         return void 0;
       }
-      const { normalized, malformedAuthorityOrPort, malformedPercentEncoding, malformedSchemeSpecific, malformedHost, malformedScheme } = normalizeStringWithStatus(value2, opts);
+      const { normalized, malformedAuthorityOrPort, malformedPercentEncoding, malformedSchemeSpecific, malformedHost, malformedScheme } = normalizeStringWithStatus(value, opts);
       return malformedAuthorityOrPort || malformedPercentEncoding || malformedSchemeSpecific || malformedHost || malformedScheme ? void 0 : normalized;
     }
     var fastUri = {
@@ -4488,26 +4488,26 @@ var require_core = __commonJS({
             return _compileAsync.call(this, sch);
           }
         }
-        function checkLoaded({ missingSchema: ref2, missingRef }) {
-          if (this.refs[ref2]) {
-            throw new Error(`AnySchema ${ref2} is loaded but ${missingRef} cannot be resolved`);
+        function checkLoaded({ missingSchema: ref, missingRef }) {
+          if (this.refs[ref]) {
+            throw new Error(`AnySchema ${ref} is loaded but ${missingRef} cannot be resolved`);
           }
         }
-        async function loadMissingSchema(ref2) {
-          const _schema = await _loadSchema.call(this, ref2);
-          if (!this.refs[ref2])
+        async function loadMissingSchema(ref) {
+          const _schema = await _loadSchema.call(this, ref);
+          if (!this.refs[ref])
             await loadMetaSchema.call(this, _schema.$schema);
-          if (!this.refs[ref2])
-            this.addSchema(_schema, ref2, meta);
+          if (!this.refs[ref])
+            this.addSchema(_schema, ref, meta);
         }
-        async function _loadSchema(ref2) {
-          const p = this._loading[ref2];
+        async function _loadSchema(ref) {
+          const p = this._loading[ref];
           if (p)
             return p;
           try {
-            return await (this._loading[ref2] = loadSchema(ref2));
+            return await (this._loading[ref] = loadSchema(ref));
           } finally {
-            delete this._loading[ref2];
+            delete this._loading[ref];
           }
         }
       }
@@ -4518,15 +4518,15 @@ var require_core = __commonJS({
             this.addSchema(sch, void 0, _meta, _validateSchema);
           return this;
         }
-        let id2;
+        let id;
         if (typeof schema === "object") {
           const { schemaId } = this.opts;
-          id2 = schema[schemaId];
-          if (id2 !== void 0 && typeof id2 != "string") {
+          id = schema[schemaId];
+          if (id !== void 0 && typeof id != "string") {
             throw new Error(`schema ${schemaId} must be string`);
           }
         }
-        key = (0, resolve_1.normalizeId)(key || id2);
+        key = (0, resolve_1.normalizeId)(key || id);
         this._checkUnique(key);
         this.schemas[key] = this._addSchema(schema, _meta, key, _validateSchema, true);
         return this;
@@ -4605,11 +4605,11 @@ var require_core = __commonJS({
           case "object": {
             const cacheKey = schemaKeyRef;
             this._cache.delete(cacheKey);
-            let id2 = schemaKeyRef[this.opts.schemaId];
-            if (id2) {
-              id2 = (0, resolve_1.normalizeId)(id2);
-              delete this.schemas[id2];
-              delete this.refs[id2];
+            let id = schemaKeyRef[this.opts.schemaId];
+            if (id) {
+              id = (0, resolve_1.normalizeId)(id);
+              delete this.schemas[id];
+              delete this.refs[id];
             }
             return this;
           }
@@ -4680,7 +4680,7 @@ var require_core = __commonJS({
       errorsText(errors = this.errors, { separator = ", ", dataVar = "data" } = {}) {
         if (!errors || errors.length === 0)
           return "No errors";
-        return errors.map((e) => `${dataVar}${e.instancePath} ${e.message}`).reduce((text2, msg) => text2 + separator + msg);
+        return errors.map((e) => `${dataVar}${e.instancePath} ${e.message}`).reduce((text, msg) => text + separator + msg);
       }
       $dataMetaSchema(metaSchema, keywordsJsonPointers) {
         const rules = this.RULES.all;
@@ -4716,10 +4716,10 @@ var require_core = __commonJS({
         }
       }
       _addSchema(schema, meta, baseId, validateSchema = this.opts.validateSchema, addSchema = this.opts.addUsedSchema) {
-        let id2;
+        let id;
         const { schemaId } = this.opts;
         if (typeof schema == "object") {
-          id2 = schema[schemaId];
+          id = schema[schemaId];
         } else {
           if (this.opts.jtd)
             throw new Error("schema must be object");
@@ -4729,7 +4729,7 @@ var require_core = __commonJS({
         let sch = this._cache.get(schema);
         if (sch !== void 0)
           return sch;
-        baseId = (0, resolve_1.normalizeId)(id2 || baseId);
+        baseId = (0, resolve_1.normalizeId)(id || baseId);
         const localRefs = resolve_1.getSchemaRefs.call(this, schema, baseId);
         sch = new compile_1.SchemaEnv({ schema, schemaId, meta, baseId, localRefs });
         this._cache.set(sch.schema, sch);
@@ -4742,9 +4742,9 @@ var require_core = __commonJS({
           this.validateSchema(schema, true);
         return sch;
       }
-      _checkUnique(id2) {
-        if (this.schemas[id2] || this.refs[id2]) {
-          throw new Error(`schema with key or id "${id2}" already exists`);
+      _checkUnique(id) {
+        if (this.schemas[id] || this.refs[id]) {
+          throw new Error(`schema with key or id "${id}" already exists`);
         }
       }
       _compileSchemaEnv(sch) {
@@ -5126,13 +5126,13 @@ var require_ucs2length = __commonJS({
       const len = str.length;
       let length = 0;
       let pos = 0;
-      let value2;
+      let value;
       while (pos < len) {
         length++;
-        value2 = str.charCodeAt(pos++);
-        if (value2 >= 55296 && value2 <= 56319 && pos < len) {
-          value2 = str.charCodeAt(pos);
-          if ((value2 & 64512) === 56320)
+        value = str.charCodeAt(pos++);
+        if (value >= 55296 && value <= 56319 && pos < len) {
+          value = str.charCodeAt(pos);
+          if ((value & 64512) === 56320)
             pos++;
         }
       }
@@ -6626,7 +6626,7 @@ var require_discriminator = __commonJS({
       error,
       code(cxt) {
         const { gen, data, schema, parentSchema, it } = cxt;
-        const { oneOf: oneOf2 } = parentSchema;
+        const { oneOf } = parentSchema;
         if (!it.opts.discriminator) {
           throw new Error("discriminator: requires discriminator option");
         }
@@ -6635,7 +6635,7 @@ var require_discriminator = __commonJS({
           throw new Error("discriminator: requires propertyName");
         if (schema.mapping)
           throw new Error("discriminator: mapping is not supported");
-        if (!oneOf2)
+        if (!oneOf)
           throw new Error("discriminator: requires oneOf keyword");
         const valid = gen.let("valid", false);
         const tag = gen.const("tag", (0, codegen_1._)`${data}${(0, codegen_1.getProperty)(tagName)}`);
@@ -6663,15 +6663,15 @@ var require_discriminator = __commonJS({
           const oneOfMapping = {};
           const topRequired = hasRequired(parentSchema);
           let tagRequired = true;
-          for (let i = 0; i < oneOf2.length; i++) {
-            let sch = oneOf2[i];
+          for (let i = 0; i < oneOf.length; i++) {
+            let sch = oneOf[i];
             if ((sch === null || sch === void 0 ? void 0 : sch.$ref) && !(0, util_1.schemaHasRulesButRef)(sch, it.self.RULES)) {
-              const ref2 = sch.$ref;
-              sch = compile_1.resolveRef.call(it.self, it.schemaEnv.root, it.baseId, ref2);
+              const ref = sch.$ref;
+              sch = compile_1.resolveRef.call(it.self, it.schemaEnv.root, it.baseId, ref);
               if (sch instanceof compile_1.SchemaEnv)
                 sch = sch.schema;
               if (sch === void 0)
-                throw new ref_error_1.default(it.opts.uriResolver, it.baseId, ref2);
+                throw new ref_error_1.default(it.opts.uriResolver, it.baseId, ref);
             }
             const propSch = (_a = sch === null || sch === void 0 ? void 0 : sch.properties) === null || _a === void 0 ? void 0 : _a[tagName];
             if (typeof propSch != "object") {
@@ -7034,7 +7034,7 @@ var require_formats = __commonJS({
     }
     var TIME = /^(\d\d):(\d\d):(\d\d(?:\.\d+)?)(z|([+-])(\d\d)(?::?(\d\d))?)?$/i;
     function getTime(strictTimeZone) {
-      return function time2(str) {
+      return function time(str) {
         const matches = TIME.exec(str);
         if (!matches)
           return false;
@@ -7080,10 +7080,10 @@ var require_formats = __commonJS({
     }
     var DATE_TIME_SEPARATOR = /t|\s/i;
     function getDateTime(strictTimeZone) {
-      const time2 = getTime(strictTimeZone);
+      const time = getTime(strictTimeZone);
       return function date_time(str) {
         const dateTime = str.split(DATE_TIME_SEPARATOR);
-        return dateTime.length === 2 && date2(dateTime[0]) && time2(dateTime[1]);
+        return dateTime.length === 2 && date2(dateTime[0]) && time(dateTime[1]);
       };
     }
     function compareDateTime(dt1, dt2) {
@@ -7117,11 +7117,11 @@ var require_formats = __commonJS({
     }
     var MIN_INT32 = -(2 ** 31);
     var MAX_INT32 = 2 ** 31 - 1;
-    function validateInt32(value2) {
-      return Number.isInteger(value2) && value2 <= MAX_INT32 && value2 >= MIN_INT32;
+    function validateInt32(value) {
+      return Number.isInteger(value) && value <= MAX_INT32 && value >= MIN_INT32;
     }
-    function validateInt64(value2) {
-      return Number.isInteger(value2);
+    function validateInt64(value) {
+      return Number.isInteger(value);
     }
     function validateNumber() {
       return true;
@@ -7384,11 +7384,11 @@ var require_uri_all = __commonJS({
       function error$1(type) {
         throw new RangeError(errors[type]);
       }
-      function map(array2, fn) {
+      function map(array, fn) {
         var result = [];
-        var length = array2.length;
+        var length = array.length;
         while (length--) {
-          result[length] = fn(array2[length]);
+          result[length] = fn(array[length]);
         }
         return result;
       }
@@ -7409,23 +7409,23 @@ var require_uri_all = __commonJS({
         var counter = 0;
         var length = string.length;
         while (counter < length) {
-          var value2 = string.charCodeAt(counter++);
-          if (value2 >= 55296 && value2 <= 56319 && counter < length) {
+          var value = string.charCodeAt(counter++);
+          if (value >= 55296 && value <= 56319 && counter < length) {
             var extra = string.charCodeAt(counter++);
             if ((extra & 64512) == 56320) {
-              output.push(((value2 & 1023) << 10) + (extra & 1023) + 65536);
+              output.push(((value & 1023) << 10) + (extra & 1023) + 65536);
             } else {
-              output.push(value2);
+              output.push(value);
               counter--;
             }
           } else {
-            output.push(value2);
+            output.push(value);
           }
         }
         return output;
       }
-      var ucs2encode = function ucs2encode2(array2) {
-        return String.fromCodePoint.apply(String, toConsumableArray(array2));
+      var ucs2encode = function ucs2encode2(array) {
+        return String.fromCodePoint.apply(String, toConsumableArray(array));
       };
       var basicToDigit = function basicToDigit2(codePoint) {
         if (codePoint - 48 < 10) {
@@ -7456,7 +7456,7 @@ var require_uri_all = __commonJS({
         }
         return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
       };
-      var decode2 = function decode3(input) {
+      var decode = function decode2(input) {
         var output = [];
         var inputLength = input.length;
         var i = 0;
@@ -7509,7 +7509,7 @@ var require_uri_all = __commonJS({
         }
         return String.fromCodePoint.apply(String, output);
       };
-      var encode2 = function encode3(input) {
+      var encode = function encode2(input) {
         var output = [];
         input = ucs2decode(input);
         var inputLength = input.length;
@@ -7630,12 +7630,12 @@ var require_uri_all = __commonJS({
       };
       var toUnicode = function toUnicode2(input) {
         return mapDomain(input, function(string) {
-          return regexPunycode.test(string) ? decode2(string.slice(4).toLowerCase()) : string;
+          return regexPunycode.test(string) ? decode(string.slice(4).toLowerCase()) : string;
         });
       };
       var toASCII = function toASCII2(input) {
         return mapDomain(input, function(string) {
-          return regexNonASCII.test(string) ? "xn--" + encode2(string) : string;
+          return regexNonASCII.test(string) ? "xn--" + encode(string) : string;
         });
       };
       var punycode = {
@@ -7656,8 +7656,8 @@ var require_uri_all = __commonJS({
           "decode": ucs2decode,
           "encode": ucs2encode
         },
-        "decode": decode2,
-        "encode": encode2,
+        "decode": decode,
+        "encode": encode,
         "toASCII": toASCII,
         "toUnicode": toUnicode
       };
@@ -8306,14 +8306,14 @@ var require_nearley = __commonJS({
         return "{" + this.rule.toString(this.dot) + "}, from: " + (this.reference || 0);
       };
       State.prototype.nextState = function(child) {
-        var state2 = new State(this.rule, this.dot + 1, this.reference, this.wantedBy);
-        state2.left = this;
-        state2.right = child;
-        if (state2.isComplete) {
-          state2.data = state2.build();
-          state2.right = void 0;
+        var state = new State(this.rule, this.dot + 1, this.reference, this.wantedBy);
+        state.left = this;
+        state.right = child;
+        if (state.isComplete) {
+          state.data = state.build();
+          state.right = void 0;
         }
-        return state2;
+        return state;
       };
       State.prototype.build = function() {
         var children = [];
@@ -8343,37 +8343,37 @@ var require_nearley = __commonJS({
         var wants = this.wants;
         var completed = this.completed;
         for (var w = 0; w < states.length; w++) {
-          var state2 = states[w];
-          if (state2.isComplete) {
-            state2.finish();
-            if (state2.data !== Parser.fail) {
-              var wantedBy = state2.wantedBy;
+          var state = states[w];
+          if (state.isComplete) {
+            state.finish();
+            if (state.data !== Parser.fail) {
+              var wantedBy = state.wantedBy;
               for (var i = wantedBy.length; i--; ) {
                 var left = wantedBy[i];
-                this.complete(left, state2);
+                this.complete(left, state);
               }
-              if (state2.reference === this.index) {
-                var exp = state2.rule.name;
-                (this.completed[exp] = this.completed[exp] || []).push(state2);
+              if (state.reference === this.index) {
+                var exp = state.rule.name;
+                (this.completed[exp] = this.completed[exp] || []).push(state);
               }
             }
           } else {
-            var exp = state2.rule.symbols[state2.dot];
+            var exp = state.rule.symbols[state.dot];
             if (typeof exp !== "string") {
-              this.scannable.push(state2);
+              this.scannable.push(state);
               continue;
             }
             if (wants[exp]) {
-              wants[exp].push(state2);
+              wants[exp].push(state);
               if (completed.hasOwnProperty(exp)) {
                 var nulls = completed[exp];
                 for (var i = 0; i < nulls.length; i++) {
                   var right = nulls[i];
-                  this.complete(state2, right);
+                  this.complete(state, right);
                 }
               }
             } else {
-              wants[exp] = [state2];
+              wants[exp] = [state];
               this.predict(exp);
             }
           }
@@ -8419,11 +8419,11 @@ var require_nearley = __commonJS({
       function StreamLexer() {
         this.reset("");
       }
-      StreamLexer.prototype.reset = function(data, state2) {
+      StreamLexer.prototype.reset = function(data, state) {
         this.buffer = data;
         this.index = 0;
-        this.line = state2 ? state2.line : 1;
-        this.lastLineBreak = state2 ? -state2.col : 0;
+        this.line = state ? state.line : 1;
+        this.lastLineBreak = state ? -state.col : 0;
       };
       StreamLexer.prototype.next = function() {
         if (this.index < this.buffer.length) {
@@ -8441,7 +8441,7 @@ var require_nearley = __commonJS({
           col: this.index - this.lastLineBreak
         };
       };
-      StreamLexer.prototype.formatError = function(token2, message) {
+      StreamLexer.prototype.formatError = function(token, message) {
         var buffer = this.buffer;
         if (typeof buffer === "string") {
           var lines = buffer.split("\n").slice(
@@ -8494,11 +8494,11 @@ var require_nearley = __commonJS({
       Parser.prototype.feed = function(chunk) {
         var lexer = this.lexer;
         lexer.reset(chunk, this.lexerState);
-        var token2;
+        var token;
         while (true) {
           try {
-            token2 = lexer.next();
-            if (!token2) {
+            token = lexer.next();
+            if (!token) {
               break;
             }
           } catch (e) {
@@ -8516,22 +8516,22 @@ var require_nearley = __commonJS({
           var n = this.current + 1;
           var nextColumn = new Column(this.grammar, n);
           this.table.push(nextColumn);
-          var literal = token2.text !== void 0 ? token2.text : token2.value;
-          var value2 = lexer.constructor === StreamLexer ? token2.value : token2;
+          var literal = token.text !== void 0 ? token.text : token.value;
+          var value = lexer.constructor === StreamLexer ? token.value : token;
           var scannable = column.scannable;
           for (var w = scannable.length; w--; ) {
-            var state2 = scannable[w];
-            var expect = state2.rule.symbols[state2.dot];
-            if (expect.test ? expect.test(value2) : expect.type ? expect.type === token2.type : expect.literal === literal) {
-              var next = state2.nextState({ data: value2, token: token2, isToken: true, reference: n - 1 });
+            var state = scannable[w];
+            var expect = state.rule.symbols[state.dot];
+            if (expect.test ? expect.test(value) : expect.type ? expect.type === token.type : expect.literal === literal) {
+              var next = state.nextState({ data: value, token, isToken: true, reference: n - 1 });
               nextColumn.states.push(next);
             }
           }
           nextColumn.process();
           if (nextColumn.states.length === 0) {
-            var err = new Error(this.reportError(token2));
+            var err = new Error(this.reportError(token));
             err.offset = this.current;
-            err.token = token2;
+            err.token = token;
             throw err;
           }
           if (this.options.keepHistory) {
@@ -8547,19 +8547,19 @@ var require_nearley = __commonJS({
       };
       Parser.prototype.reportLexerError = function(lexerError) {
         var tokenDisplay, lexerMessage;
-        var token2 = lexerError.token;
-        if (token2) {
-          tokenDisplay = "input " + JSON.stringify(token2.text[0]) + " (lexer error)";
-          lexerMessage = this.lexer.formatError(token2, "Syntax error");
+        var token = lexerError.token;
+        if (token) {
+          tokenDisplay = "input " + JSON.stringify(token.text[0]) + " (lexer error)";
+          lexerMessage = this.lexer.formatError(token, "Syntax error");
         } else {
           tokenDisplay = "input (lexer error)";
           lexerMessage = lexerError.message;
         }
         return this.reportErrorCommon(lexerMessage, tokenDisplay);
       };
-      Parser.prototype.reportError = function(token2) {
-        var tokenDisplay = (token2.type ? token2.type + " token: " : "") + JSON.stringify(token2.value !== void 0 ? token2.value : token2);
-        var lexerMessage = this.lexer.formatError(token2, "Syntax error");
+      Parser.prototype.reportError = function(token) {
+        var tokenDisplay = (token.type ? token.type + " token: " : "") + JSON.stringify(token.value !== void 0 ? token.value : token);
+        var lexerMessage = this.lexer.formatError(token, "Syntax error");
         return this.reportErrorCommon(lexerMessage, tokenDisplay);
       };
       Parser.prototype.reportErrorCommon = function(lexerMessage, tokenDisplay) {
@@ -8567,8 +8567,8 @@ var require_nearley = __commonJS({
         lines.push(lexerMessage);
         var lastColumnIndex = this.table.length - 2;
         var lastColumn = this.table[lastColumnIndex];
-        var expectantStates = lastColumn.states.filter(function(state2) {
-          var nextSymbol = state2.rule.symbols[state2.dot];
+        var expectantStates = lastColumn.states.filter(function(state) {
+          var nextSymbol = state.rule.symbols[state.dot];
           return nextSymbol && typeof nextSymbol !== "string";
         });
         if (expectantStates.length === 0) {
@@ -8576,12 +8576,12 @@ var require_nearley = __commonJS({
           this.displayStateStack(lastColumn.states, lines);
         } else {
           lines.push("Unexpected " + tokenDisplay + ". Instead, I was expecting to see one of the following:\n");
-          var stateStacks = expectantStates.map(function(state2) {
-            return this.buildFirstStateStack(state2, []) || [state2];
+          var stateStacks = expectantStates.map(function(state) {
+            return this.buildFirstStateStack(state, []) || [state];
           }, this);
           stateStacks.forEach(function(stateStack) {
-            var state2 = stateStack[0];
-            var nextSymbol = state2.rule.symbols[state2.dot];
+            var state = stateStack[0];
+            var nextSymbol = state.rule.symbols[state.dot];
             var symbolDisplay = this.getSymbolDisplay(nextSymbol);
             lines.push("A " + symbolDisplay + " based on:");
             this.displayStateStack(stateStack, lines);
@@ -8594,8 +8594,8 @@ var require_nearley = __commonJS({
         var lastDisplay;
         var sameDisplayCount = 0;
         for (var j = 0; j < stateStack.length; j++) {
-          var state2 = stateStack[j];
-          var display = state2.rule.toString(state2.dot);
+          var state = stateStack[j];
+          var display = state.rule.toString(state.dot);
           if (display === lastDisplay) {
             sameDisplayCount++;
           } else {
@@ -8611,20 +8611,20 @@ var require_nearley = __commonJS({
       Parser.prototype.getSymbolDisplay = function(symbol) {
         return getSymbolLongDisplay(symbol);
       };
-      Parser.prototype.buildFirstStateStack = function(state2, visited) {
-        if (visited.indexOf(state2) !== -1) {
+      Parser.prototype.buildFirstStateStack = function(state, visited) {
+        if (visited.indexOf(state) !== -1) {
           return null;
         }
-        if (state2.wantedBy.length === 0) {
-          return [state2];
+        if (state.wantedBy.length === 0) {
+          return [state];
         }
-        var prevState = state2.wantedBy[0];
-        var childVisited = [state2].concat(visited);
+        var prevState = state.wantedBy[0];
+        var childVisited = [state].concat(visited);
         var childResult = this.buildFirstStateStack(prevState, childVisited);
         if (childResult === null) {
           return null;
         }
-        return [state2].concat(childResult);
+        return [state].concat(childResult);
       };
       Parser.prototype.save = function() {
         var column = this.table[this.current];
@@ -8708,7 +8708,7 @@ var require_grammar = __commonJS({
   "node_modules/smtp-address-parser/dist/lib/grammar.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    function id2(d) {
+    function id(d) {
       return d[0];
     }
     var deepFlatten = (arr) => [].concat(...arr.map((v) => Array.isArray(v) ? deepFlatten(v) : v));
@@ -8737,7 +8737,7 @@ var require_grammar = __commonJS({
         { "name": "Forward_path", "symbols": ["Forward_path$subexpression$2"] },
         { "name": "Forward_path", "symbols": ["Path"] },
         { "name": "Path$ebnf$1$subexpression$1", "symbols": ["A_d_l", { "literal": ":" }] },
-        { "name": "Path$ebnf$1", "symbols": ["Path$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "Path$ebnf$1", "symbols": ["Path$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "Path$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "Path", "symbols": [{ "literal": "<" }, "Path$ebnf$1", "Mailbox", { "literal": ">" }] },
         { "name": "A_d_l$ebnf$1", "symbols": [] },
@@ -8750,15 +8750,15 @@ var require_grammar = __commonJS({
         { "name": "Domain$ebnf$1", "symbols": ["Domain$ebnf$1", "Domain$ebnf$1$subexpression$1"], "postprocess": (d) => d[0].concat([d[1]]) },
         { "name": "Domain", "symbols": ["sub_domain", "Domain$ebnf$1"] },
         { "name": "sub_domain", "symbols": ["U_label"] },
-        { "name": "Let_dig", "symbols": ["ALPHA_DIGIT"], "postprocess": id2 },
+        { "name": "Let_dig", "symbols": ["ALPHA_DIGIT"], "postprocess": id },
         { "name": "Ldh_str$ebnf$1", "symbols": [] },
         { "name": "Ldh_str$ebnf$1", "symbols": ["Ldh_str$ebnf$1", "ALPHA_DIG_DASH"], "postprocess": (d) => d[0].concat([d[1]]) },
         { "name": "Ldh_str", "symbols": ["Ldh_str$ebnf$1", "Let_dig"] },
-        { "name": "U_Let_dig", "symbols": ["ALPHA_DIGIT_U"], "postprocess": id2 },
+        { "name": "U_Let_dig", "symbols": ["ALPHA_DIGIT_U"], "postprocess": id },
         { "name": "U_Ldh_str$ebnf$1", "symbols": [] },
         { "name": "U_Ldh_str$ebnf$1", "symbols": ["U_Ldh_str$ebnf$1", "ALPHA_DIG_DASH_U"], "postprocess": (d) => d[0].concat([d[1]]) },
         { "name": "U_Ldh_str", "symbols": ["U_Ldh_str$ebnf$1", "U_Let_dig"] },
-        { "name": "U_label$ebnf$1", "symbols": ["U_Ldh_str"], "postprocess": id2 },
+        { "name": "U_label$ebnf$1", "symbols": ["U_Ldh_str"], "postprocess": id },
         { "name": "U_label$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "U_label", "symbols": ["U_Let_dig", "U_label$ebnf$1"] },
         { "name": "address_literal$subexpression$1", "symbols": ["IPv4_address_literal"] },
@@ -8812,7 +8812,7 @@ var require_grammar = __commonJS({
         { "name": "QcontentSMTP", "symbols": ["qtextSMTP"] },
         { "name": "QcontentSMTP", "symbols": ["quoted_pairSMTP"] },
         { "name": "quoted_pairSMTP", "symbols": [{ "literal": "\\" }, /[\x20-\x7e]/] },
-        { "name": "qtextSMTP", "symbols": [/[\x20-\x21\x23-\x5b\x5d-\x7e\u0080-\uFFFF]/], "postprocess": id2 },
+        { "name": "qtextSMTP", "symbols": [/[\x20-\x21\x23-\x5b\x5d-\x7e\u0080-\uFFFF]/], "postprocess": id },
         { "name": "IPv4_address_literal$macrocall$2", "symbols": [{ "literal": "." }, "Snum"] },
         { "name": "IPv4_address_literal$macrocall$1", "symbols": ["IPv4_address_literal$macrocall$2", "IPv4_address_literal$macrocall$2", "IPv4_address_literal$macrocall$2"] },
         { "name": "IPv4_address_literal", "symbols": ["Snum", "IPv4_address_literal$macrocall$1"] },
@@ -8824,7 +8824,7 @@ var require_grammar = __commonJS({
         { "name": "General_address_literal$ebnf$1", "symbols": ["General_address_literal$ebnf$1", "dcontent"], "postprocess": (d) => d[0].concat([d[1]]) },
         { "name": "General_address_literal", "symbols": ["Standardized_tag", { "literal": ":" }, "General_address_literal$ebnf$1"] },
         { "name": "Standardized_tag", "symbols": ["Ldh_str"] },
-        { "name": "dcontent", "symbols": [/[\x21-\x5a\x5e-\x7e]/], "postprocess": id2 },
+        { "name": "dcontent", "symbols": [/[\x21-\x5a\x5e-\x7e]/], "postprocess": id },
         { "name": "Snum", "symbols": ["DIGIT"] },
         { "name": "Snum$subexpression$1", "symbols": [/[1-9]/, "DIGIT"] },
         { "name": "Snum", "symbols": ["Snum$subexpression$1"] },
@@ -8842,112 +8842,112 @@ var require_grammar = __commonJS({
         { "name": "IPv6_addr$macrocall$3", "symbols": ["IPv6_addr$macrocall$4", "IPv6_addr$macrocall$4", "IPv6_addr$macrocall$4", "IPv6_addr$macrocall$4", "IPv6_addr$macrocall$4"] },
         { "name": "IPv6_addr", "symbols": ["IPv6_addr$string$1", "IPv6_addr$macrocall$3", "ls32"] },
         { "name": "IPv6_addr$ebnf$1$subexpression$1", "symbols": ["h16"] },
-        { "name": "IPv6_addr$ebnf$1", "symbols": ["IPv6_addr$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$1", "symbols": ["IPv6_addr$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$string$2", "symbols": [{ "literal": ":" }, { "literal": ":" }], "postprocess": (d) => d.join("") },
         { "name": "IPv6_addr$macrocall$6", "symbols": ["h16", { "literal": ":" }] },
         { "name": "IPv6_addr$macrocall$5", "symbols": ["IPv6_addr$macrocall$6", "IPv6_addr$macrocall$6", "IPv6_addr$macrocall$6", "IPv6_addr$macrocall$6"] },
         { "name": "IPv6_addr", "symbols": ["IPv6_addr$ebnf$1", "IPv6_addr$string$2", "IPv6_addr$macrocall$5", "ls32"] },
         { "name": "IPv6_addr$ebnf$2$subexpression$1$macrocall$2", "symbols": ["h16", { "literal": ":" }] },
-        { "name": "IPv6_addr$ebnf$2$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$2$subexpression$1$macrocall$2"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$2$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$2$subexpression$1$macrocall$2"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$2$subexpression$1$macrocall$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$2$subexpression$1$macrocall$1", "symbols": ["IPv6_addr$ebnf$2$subexpression$1$macrocall$1$ebnf$1"] },
         { "name": "IPv6_addr$ebnf$2$subexpression$1", "symbols": ["IPv6_addr$ebnf$2$subexpression$1$macrocall$1", "h16"] },
-        { "name": "IPv6_addr$ebnf$2", "symbols": ["IPv6_addr$ebnf$2$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$2", "symbols": ["IPv6_addr$ebnf$2$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$2", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$string$3", "symbols": [{ "literal": ":" }, { "literal": ":" }], "postprocess": (d) => d.join("") },
         { "name": "IPv6_addr$macrocall$8", "symbols": ["h16", { "literal": ":" }] },
         { "name": "IPv6_addr$macrocall$7", "symbols": ["IPv6_addr$macrocall$8", "IPv6_addr$macrocall$8", "IPv6_addr$macrocall$8"] },
         { "name": "IPv6_addr", "symbols": ["IPv6_addr$ebnf$2", "IPv6_addr$string$3", "IPv6_addr$macrocall$7", "ls32"] },
         { "name": "IPv6_addr$ebnf$3$subexpression$1$macrocall$2", "symbols": ["h16", { "literal": ":" }] },
-        { "name": "IPv6_addr$ebnf$3$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$3$subexpression$1$macrocall$2"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$3$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$3$subexpression$1$macrocall$2"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$3$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$3$subexpression$1$macrocall$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$3$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$3$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$3$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$3$subexpression$1$macrocall$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$3$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$3$subexpression$1$macrocall$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$3$subexpression$1$macrocall$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$3$subexpression$1$macrocall$1", "symbols": ["IPv6_addr$ebnf$3$subexpression$1$macrocall$1$ebnf$1"] },
         { "name": "IPv6_addr$ebnf$3$subexpression$1", "symbols": ["IPv6_addr$ebnf$3$subexpression$1$macrocall$1", "h16"] },
-        { "name": "IPv6_addr$ebnf$3", "symbols": ["IPv6_addr$ebnf$3$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$3", "symbols": ["IPv6_addr$ebnf$3$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$3", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$string$4", "symbols": [{ "literal": ":" }, { "literal": ":" }], "postprocess": (d) => d.join("") },
         { "name": "IPv6_addr$macrocall$10", "symbols": ["h16", { "literal": ":" }] },
         { "name": "IPv6_addr$macrocall$9", "symbols": ["IPv6_addr$macrocall$10", "IPv6_addr$macrocall$10"] },
         { "name": "IPv6_addr", "symbols": ["IPv6_addr$ebnf$3", "IPv6_addr$string$4", "IPv6_addr$macrocall$9", "ls32"] },
         { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$2", "symbols": ["h16", { "literal": ":" }] },
-        { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$4$subexpression$1$macrocall$2"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$4$subexpression$1$macrocall$2"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$4$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$4$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$4$subexpression$1$macrocall$1", "symbols": ["IPv6_addr$ebnf$4$subexpression$1$macrocall$1$ebnf$1"] },
         { "name": "IPv6_addr$ebnf$4$subexpression$1", "symbols": ["IPv6_addr$ebnf$4$subexpression$1$macrocall$1", "h16"] },
-        { "name": "IPv6_addr$ebnf$4", "symbols": ["IPv6_addr$ebnf$4$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$4", "symbols": ["IPv6_addr$ebnf$4$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$4", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$string$5", "symbols": [{ "literal": ":" }, { "literal": ":" }], "postprocess": (d) => d.join("") },
         { "name": "IPv6_addr", "symbols": ["IPv6_addr$ebnf$4", "IPv6_addr$string$5", "h16", { "literal": ":" }, "ls32"] },
         { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$2", "symbols": ["h16", { "literal": ":" }] },
-        { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$2"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$2"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$5$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$5$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$5$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$5$subexpression$1$macrocall$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$1$ebnf$1"] },
         { "name": "IPv6_addr$ebnf$5$subexpression$1", "symbols": ["IPv6_addr$ebnf$5$subexpression$1$macrocall$1", "h16"] },
-        { "name": "IPv6_addr$ebnf$5", "symbols": ["IPv6_addr$ebnf$5$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$5", "symbols": ["IPv6_addr$ebnf$5$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$5", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$string$6", "symbols": [{ "literal": ":" }, { "literal": ":" }], "postprocess": (d) => d.join("") },
         { "name": "IPv6_addr", "symbols": ["IPv6_addr$ebnf$5", "IPv6_addr$string$6", "ls32"] },
         { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$2", "symbols": ["h16", { "literal": ":" }] },
-        { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$2"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$2"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$6$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$6$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$6$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$6$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$6$subexpression$1$macrocall$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1$ebnf$1"] },
         { "name": "IPv6_addr$ebnf$6$subexpression$1", "symbols": ["IPv6_addr$ebnf$6$subexpression$1$macrocall$1", "h16"] },
-        { "name": "IPv6_addr$ebnf$6", "symbols": ["IPv6_addr$ebnf$6$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$6", "symbols": ["IPv6_addr$ebnf$6$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$6", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$string$7", "symbols": [{ "literal": ":" }, { "literal": ":" }], "postprocess": (d) => d.join("") },
         { "name": "IPv6_addr", "symbols": ["IPv6_addr$ebnf$6", "IPv6_addr$string$7", "h16"] },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$2", "symbols": ["h16", { "literal": ":" }] },
-        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$2"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$2"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$7$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$7$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$7$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$7$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1$ebnf$1", "IPv6_addr$ebnf$7$subexpression$1$macrocall$2"] },
-        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$ebnf$7$subexpression$1$macrocall$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1$ebnf$1"] },
         { "name": "IPv6_addr$ebnf$7$subexpression$1", "symbols": ["IPv6_addr$ebnf$7$subexpression$1$macrocall$1", "h16"] },
-        { "name": "IPv6_addr$ebnf$7", "symbols": ["IPv6_addr$ebnf$7$subexpression$1"], "postprocess": id2 },
+        { "name": "IPv6_addr$ebnf$7", "symbols": ["IPv6_addr$ebnf$7$subexpression$1"], "postprocess": id },
         { "name": "IPv6_addr$ebnf$7", "symbols": [], "postprocess": () => null },
         { "name": "IPv6_addr$string$8", "symbols": [{ "literal": ":" }, { "literal": ":" }], "postprocess": (d) => d.join("") },
         { "name": "IPv6_addr", "symbols": ["IPv6_addr$ebnf$7", "IPv6_addr$string$8"] },
@@ -8964,13 +8964,13 @@ var require_grammar = __commonJS({
         { "name": "h16$macrocall$5", "symbols": ["h16$macrocall$6", "h16$macrocall$6"] },
         { "name": "h16", "symbols": ["h16$macrocall$5"] },
         { "name": "h16", "symbols": ["HEXDIG"] },
-        { "name": "DIGIT", "symbols": [/[0-9]/], "postprocess": id2 },
-        { "name": "ALPHA_DIGIT_U", "symbols": [/[0-9A-Za-z\u0080-\uFFFF]/], "postprocess": id2 },
-        { "name": "ALPHA_DIGIT", "symbols": [/[0-9A-Za-z]/], "postprocess": id2 },
-        { "name": "ALPHA_DIG_DASH", "symbols": [/[-0-9A-Za-z]/], "postprocess": id2 },
-        { "name": "ALPHA_DIG_DASH_U", "symbols": [/[-0-9A-Za-z\u0080-\uFFFF]/], "postprocess": id2 },
-        { "name": "HEXDIG", "symbols": [/[0-9A-Fa-f]/], "postprocess": id2 },
-        { "name": "DQUOTE", "symbols": [{ "literal": '"' }], "postprocess": id2 }
+        { "name": "DIGIT", "symbols": [/[0-9]/], "postprocess": id },
+        { "name": "ALPHA_DIGIT_U", "symbols": [/[0-9A-Za-z\u0080-\uFFFF]/], "postprocess": id },
+        { "name": "ALPHA_DIGIT", "symbols": [/[0-9A-Za-z]/], "postprocess": id },
+        { "name": "ALPHA_DIG_DASH", "symbols": [/[-0-9A-Za-z]/], "postprocess": id },
+        { "name": "ALPHA_DIG_DASH_U", "symbols": [/[-0-9A-Za-z\u0080-\uFFFF]/], "postprocess": id },
+        { "name": "HEXDIG", "symbols": [/[0-9A-Fa-f]/], "postprocess": id },
+        { "name": "DQUOTE", "symbols": [{ "literal": '"' }], "postprocess": id }
       ],
       ParserStart: "Reverse_path"
     };
@@ -11194,8 +11194,8 @@ var require_iri = __commonJS({
         return false;
       }
     }
-    module.exports = (value2) => {
-      const iri = parse(value2);
+    module.exports = (value) => {
+      const iri = parse(value);
       if (iri.scheme === "mailto" && iri.to.every(validate)) {
         return true;
       }
@@ -11218,9 +11218,9 @@ var require_duration = __commonJS({
 var require_idn_email = __commonJS({
   "node_modules/ajv-formats-draft2019/formats/idn-email.js"(exports, module) {
     var { parse } = require_lib();
-    module.exports = (value2) => {
+    module.exports = (value) => {
       try {
-        parse(value2);
+        parse(value);
         return true;
       } catch (err) {
         return false;
@@ -11234,8 +11234,8 @@ var require_idn_hostname = __commonJS({
   "node_modules/ajv-formats-draft2019/formats/idn-hostname.js"(exports, module) {
     var { toASCII } = __require("punycode");
     var hostnameRegex = /^(?=.{1,253}\.?$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[-0-9a-z]{0,61}[0-9a-z])?)*\.?$/i;
-    module.exports = (value2) => {
-      const hostname = toASCII(value2);
+    module.exports = (value) => {
+      const hostname = toASCII(value);
       return hostname.replace(/\.$/, "").length <= 253 && hostnameRegex.test(hostname);
     };
   }
@@ -11255,8 +11255,8 @@ var require_iri_reference = __commonJS({
         return false;
       }
     }
-    module.exports = (value2) => {
-      const iri = parse(value2);
+    module.exports = (value) => {
+      const iri = parse(value);
       if (iri.scheme === "mailto" && iri.to.every(validate)) {
         return true;
       }
@@ -11738,9 +11738,9 @@ var require_anchors = __commonJS({
          */
         setAnchors: () => {
           for (const source of aliasObjects) {
-            const ref2 = sourceObjects.get(source);
-            if (typeof ref2 === "object" && ref2.anchor && (identity.isScalar(ref2.node) || identity.isCollection(ref2.node))) {
-              ref2.node.anchor = ref2.anchor;
+            const ref = sourceObjects.get(source);
+            if (typeof ref === "object" && ref.anchor && (identity.isScalar(ref.node) || identity.isCollection(ref.node))) {
+              ref.node.anchor = ref.anchor;
             } else {
               const error = new Error("Failed to resolve repeated object (this should not happen)");
               error.source = source;
@@ -11813,26 +11813,26 @@ var require_toJS = __commonJS({
   "node_modules/yaml/dist/nodes/toJS.js"(exports) {
     "use strict";
     var identity = require_identity();
-    function toJS(value2, arg, ctx) {
-      if (Array.isArray(value2))
-        return value2.map((v, i) => toJS(v, String(i), ctx));
-      if (value2 && typeof value2.toJSON === "function") {
-        if (!ctx || !identity.hasAnchor(value2))
-          return value2.toJSON(arg, ctx);
+    function toJS(value, arg, ctx) {
+      if (Array.isArray(value))
+        return value.map((v, i) => toJS(v, String(i), ctx));
+      if (value && typeof value.toJSON === "function") {
+        if (!ctx || !identity.hasAnchor(value))
+          return value.toJSON(arg, ctx);
         const data = { aliasCount: 0, count: 1, res: void 0 };
-        ctx.anchors.set(value2, data);
+        ctx.anchors.set(value, data);
         ctx.onCreate = (res2) => {
           data.res = res2;
           delete ctx.onCreate;
         };
-        const res = value2.toJSON(arg, ctx);
+        const res = value.toJSON(arg, ctx);
         if (ctx.onCreate)
           ctx.onCreate(res);
         return res;
       }
-      if (typeof value2 === "bigint" && !ctx?.keep)
-        return Number(value2);
-      return value2;
+      if (typeof value === "bigint" && !ctx?.keep)
+        return Number(value);
+      return value;
     }
     exports.toJS = toJS;
   }
@@ -12004,11 +12004,11 @@ var require_Scalar = __commonJS({
     var identity = require_identity();
     var Node = require_Node();
     var toJS = require_toJS();
-    var isScalarValue = (value2) => !value2 || typeof value2 !== "function" && typeof value2 !== "object";
+    var isScalarValue = (value) => !value || typeof value !== "function" && typeof value !== "object";
     var Scalar = class extends Node.NodeBase {
-      constructor(value2) {
+      constructor(value) {
         super(identity.SCALAR);
-        this.value = value2;
+        this.value = value;
       }
       toJSON(arg, ctx) {
         return ctx?.keep ? this.value : toJS.toJS(this.value, arg, ctx);
@@ -12035,67 +12035,67 @@ var require_createNode = __commonJS({
     var identity = require_identity();
     var Scalar = require_Scalar();
     var defaultTagPrefix = "tag:yaml.org,2002:";
-    function findTagObject(value2, tagName, tags) {
+    function findTagObject(value, tagName, tags) {
       if (tagName) {
-        const match2 = tags.filter((t) => t.tag === tagName);
-        const tagObj = match2.find((t) => !t.format) ?? match2[0];
+        const match = tags.filter((t) => t.tag === tagName);
+        const tagObj = match.find((t) => !t.format) ?? match[0];
         if (!tagObj)
           throw new Error(`Tag ${tagName} not found`);
         return tagObj;
       }
-      return tags.find((t) => t.identify?.(value2) && !t.format);
+      return tags.find((t) => t.identify?.(value) && !t.format);
     }
-    function createNode(value2, tagName, ctx) {
-      if (identity.isDocument(value2))
-        value2 = value2.contents;
-      if (identity.isNode(value2))
-        return value2;
-      if (identity.isPair(value2)) {
+    function createNode(value, tagName, ctx) {
+      if (identity.isDocument(value))
+        value = value.contents;
+      if (identity.isNode(value))
+        return value;
+      if (identity.isPair(value)) {
         const map = ctx.schema[identity.MAP].createNode?.(ctx.schema, null, ctx);
-        map.items.push(value2);
+        map.items.push(value);
         return map;
       }
-      if (value2 instanceof String || value2 instanceof Number || value2 instanceof Boolean || typeof BigInt !== "undefined" && value2 instanceof BigInt) {
-        value2 = value2.valueOf();
+      if (value instanceof String || value instanceof Number || value instanceof Boolean || typeof BigInt !== "undefined" && value instanceof BigInt) {
+        value = value.valueOf();
       }
       const { aliasDuplicateObjects, onAnchor, onTagObj, schema, sourceObjects } = ctx;
-      let ref2 = void 0;
-      if (aliasDuplicateObjects && value2 && typeof value2 === "object") {
-        ref2 = sourceObjects.get(value2);
-        if (ref2) {
-          ref2.anchor ?? (ref2.anchor = onAnchor(value2));
-          return new Alias.Alias(ref2.anchor);
+      let ref = void 0;
+      if (aliasDuplicateObjects && value && typeof value === "object") {
+        ref = sourceObjects.get(value);
+        if (ref) {
+          ref.anchor ?? (ref.anchor = onAnchor(value));
+          return new Alias.Alias(ref.anchor);
         } else {
-          ref2 = { anchor: null, node: null };
-          sourceObjects.set(value2, ref2);
+          ref = { anchor: null, node: null };
+          sourceObjects.set(value, ref);
         }
       }
       if (tagName?.startsWith("!!"))
         tagName = defaultTagPrefix + tagName.slice(2);
-      let tagObj = findTagObject(value2, tagName, schema.tags);
+      let tagObj = findTagObject(value, tagName, schema.tags);
       if (!tagObj) {
-        if (value2 && typeof value2.toJSON === "function") {
-          value2 = value2.toJSON();
+        if (value && typeof value.toJSON === "function") {
+          value = value.toJSON();
         }
-        if (!value2 || typeof value2 !== "object") {
-          const node2 = new Scalar.Scalar(value2);
-          if (ref2)
-            ref2.node = node2;
+        if (!value || typeof value !== "object") {
+          const node2 = new Scalar.Scalar(value);
+          if (ref)
+            ref.node = node2;
           return node2;
         }
-        tagObj = value2 instanceof Map ? schema[identity.MAP] : Symbol.iterator in Object(value2) ? schema[identity.SEQ] : schema[identity.MAP];
+        tagObj = value instanceof Map ? schema[identity.MAP] : Symbol.iterator in Object(value) ? schema[identity.SEQ] : schema[identity.MAP];
       }
       if (onTagObj) {
         onTagObj(tagObj);
         delete ctx.onTagObj;
       }
-      const node = tagObj?.createNode ? tagObj.createNode(ctx.schema, value2, ctx) : typeof tagObj?.nodeClass?.from === "function" ? tagObj.nodeClass.from(ctx.schema, value2, ctx) : new Scalar.Scalar(value2);
+      const node = tagObj?.createNode ? tagObj.createNode(ctx.schema, value, ctx) : typeof tagObj?.nodeClass?.from === "function" ? tagObj.nodeClass.from(ctx.schema, value, ctx) : new Scalar.Scalar(value);
       if (tagName)
         node.tag = tagName;
       else if (!tagObj.default)
         node.tag = tagObj.tag;
-      if (ref2)
-        ref2.node = node;
+      if (ref)
+        ref.node = node;
       return node;
     }
     exports.createNode = createNode;
@@ -12109,8 +12109,8 @@ var require_Collection = __commonJS({
     var createNode = require_createNode();
     var identity = require_identity();
     var Node = require_Node();
-    function collectionFromPath(schema, path, value2) {
-      let v = value2;
+    function collectionFromPath(schema, path, value) {
+      let v = value;
       for (let i = path.length - 1; i >= 0; --i) {
         const k = path[i];
         if (typeof k === "number" && Number.isInteger(k) && k >= 0) {
@@ -12161,16 +12161,16 @@ var require_Collection = __commonJS({
        * be a Pair instance or a `{ key, value }` object, which may not have a key
        * that already exists in the map.
        */
-      addIn(path, value2) {
+      addIn(path, value) {
         if (isEmptyPath(path))
-          this.add(value2);
+          this.add(value);
         else {
           const [key, ...rest] = path;
           const node = this.get(key, true);
           if (identity.isCollection(node))
-            node.addIn(rest, value2);
+            node.addIn(rest, value);
           else if (node === void 0 && this.schema)
-            this.set(key, collectionFromPath(this.schema, rest, value2));
+            this.set(key, collectionFromPath(this.schema, rest, value));
           else
             throw new Error(`Expected YAML collection at ${key}. Remaining path: ${rest}`);
         }
@@ -12224,16 +12224,16 @@ var require_Collection = __commonJS({
        * Sets a value in this collection. For `!!set`, `value` needs to be a
        * boolean to add/remove the item from the set.
        */
-      setIn(path, value2) {
+      setIn(path, value) {
         const [key, ...rest] = path;
         if (rest.length === 0) {
-          this.set(key, value2);
+          this.set(key, value);
         } else {
           const node = this.get(key, true);
           if (identity.isCollection(node))
-            node.setIn(rest, value2);
+            node.setIn(rest, value);
           else if (node === void 0 && this.schema)
-            this.set(key, collectionFromPath(this.schema, rest, value2));
+            this.set(key, collectionFromPath(this.schema, rest, value));
           else
             throw new Error(`Expected YAML collection at ${key}. Remaining path: ${rest}`);
         }
@@ -12269,14 +12269,14 @@ var require_foldFlowLines = __commonJS({
     var FOLD_FLOW = "flow";
     var FOLD_BLOCK = "block";
     var FOLD_QUOTED = "quoted";
-    function foldFlowLines(text2, indent, mode = "flow", { indentAtStart, lineWidth = 80, minContentWidth = 20, onFold, onOverflow } = {}) {
+    function foldFlowLines(text, indent, mode = "flow", { indentAtStart, lineWidth = 80, minContentWidth = 20, onFold, onOverflow } = {}) {
       if (!lineWidth || lineWidth < 0)
-        return text2;
+        return text;
       if (lineWidth < minContentWidth)
         minContentWidth = 0;
       const endStep = Math.max(1 + minContentWidth, 1 + lineWidth - indent.length);
-      if (text2.length <= endStep)
-        return text2;
+      if (text.length <= endStep)
+        return text;
       const folds = [];
       const escapedFolds = {};
       let end = lineWidth - indent.length;
@@ -12293,14 +12293,14 @@ var require_foldFlowLines = __commonJS({
       let escStart = -1;
       let escEnd = -1;
       if (mode === FOLD_BLOCK) {
-        i = consumeMoreIndentedLines(text2, i, indent.length);
+        i = consumeMoreIndentedLines(text, i, indent.length);
         if (i !== -1)
           end = i + endStep;
       }
-      for (let ch; ch = text2[i += 1]; ) {
+      for (let ch; ch = text[i += 1]; ) {
         if (mode === FOLD_QUOTED && ch === "\\") {
           escStart = i;
-          switch (text2[i + 1]) {
+          switch (text[i + 1]) {
             case "x":
               i += 3;
               break;
@@ -12317,12 +12317,12 @@ var require_foldFlowLines = __commonJS({
         }
         if (ch === "\n") {
           if (mode === FOLD_BLOCK)
-            i = consumeMoreIndentedLines(text2, i, indent.length);
+            i = consumeMoreIndentedLines(text, i, indent.length);
           end = i + indent.length + endStep;
           split = void 0;
         } else {
           if (ch === " " && prev && prev !== " " && prev !== "\n" && prev !== "	") {
-            const next = text2[i + 1];
+            const next = text[i + 1];
             if (next && next !== " " && next !== "\n" && next !== "	")
               split = i;
           }
@@ -12334,12 +12334,12 @@ var require_foldFlowLines = __commonJS({
             } else if (mode === FOLD_QUOTED) {
               while (prev === " " || prev === "	") {
                 prev = ch;
-                ch = text2[i += 1];
+                ch = text[i += 1];
                 overflow = true;
               }
               const j = i > escEnd + 1 ? i - 2 : escStart - 1;
               if (escapedFolds[j])
-                return text2;
+                return text;
               folds.push(j);
               escapedFolds[j] = true;
               end = j + endStep;
@@ -12354,39 +12354,39 @@ var require_foldFlowLines = __commonJS({
       if (overflow && onOverflow)
         onOverflow();
       if (folds.length === 0)
-        return text2;
+        return text;
       if (onFold)
         onFold();
-      let res = text2.slice(0, folds[0]);
+      let res = text.slice(0, folds[0]);
       for (let i2 = 0; i2 < folds.length; ++i2) {
         const fold = folds[i2];
-        const end2 = folds[i2 + 1] || text2.length;
+        const end2 = folds[i2 + 1] || text.length;
         if (fold === 0)
           res = `
-${indent}${text2.slice(0, end2)}`;
+${indent}${text.slice(0, end2)}`;
         else {
           if (mode === FOLD_QUOTED && escapedFolds[fold])
-            res += `${text2[fold]}\\`;
+            res += `${text[fold]}\\`;
           res += `
-${indent}${text2.slice(fold + 1, end2)}`;
+${indent}${text.slice(fold + 1, end2)}`;
         }
       }
       return res;
     }
-    function consumeMoreIndentedLines(text2, i, indent) {
+    function consumeMoreIndentedLines(text, i, indent) {
       let end = i;
       let start = i + 1;
-      let ch = text2[start];
+      let ch = text[start];
       while (ch === " " || ch === "	") {
         if (i < start + indent) {
-          ch = text2[++i];
+          ch = text[++i];
         } else {
           do {
-            ch = text2[++i];
+            ch = text[++i];
           } while (ch && ch !== "\n");
           end = i;
           start = i + 1;
-          ch = text2[start];
+          ch = text[start];
         }
       }
       return end;
@@ -12428,13 +12428,13 @@ var require_stringifyString = __commonJS({
       }
       return true;
     }
-    function doubleQuotedString(value2, ctx) {
-      const json = JSON.stringify(value2);
+    function doubleQuotedString(value, ctx) {
+      const json = JSON.stringify(value);
       if (ctx.options.doubleQuotedAsJSON)
         return json;
       const { implicitKey } = ctx;
       const minMultiLineLength = ctx.options.doubleQuotedMinMultiLineLength;
-      const indent = ctx.indent || (containsDocumentMarker(value2) ? "  " : "");
+      const indent = ctx.indent || (containsDocumentMarker(value) ? "  " : "");
       let str = "";
       let start = 0;
       for (let i = 0, ch = json[i]; ch; ch = json[++i]) {
@@ -12508,22 +12508,22 @@ var require_stringifyString = __commonJS({
       str = start ? str + json.slice(start) : json;
       return implicitKey ? str : foldFlowLines.foldFlowLines(str, indent, foldFlowLines.FOLD_QUOTED, getFoldOptions(ctx, false));
     }
-    function singleQuotedString(value2, ctx) {
-      if (ctx.options.singleQuote === false || ctx.implicitKey && value2.includes("\n") || /[ \t]\n|\n[ \t]/.test(value2))
-        return doubleQuotedString(value2, ctx);
-      const indent = ctx.indent || (containsDocumentMarker(value2) ? "  " : "");
-      const res = "'" + value2.replace(/'/g, "''").replace(/\n+/g, `$&
+    function singleQuotedString(value, ctx) {
+      if (ctx.options.singleQuote === false || ctx.implicitKey && value.includes("\n") || /[ \t]\n|\n[ \t]/.test(value))
+        return doubleQuotedString(value, ctx);
+      const indent = ctx.indent || (containsDocumentMarker(value) ? "  " : "");
+      const res = "'" + value.replace(/'/g, "''").replace(/\n+/g, `$&
 ${indent}`) + "'";
       return ctx.implicitKey ? res : foldFlowLines.foldFlowLines(res, indent, foldFlowLines.FOLD_FLOW, getFoldOptions(ctx, false));
     }
-    function quotedString(value2, ctx) {
+    function quotedString(value, ctx) {
       const { singleQuote } = ctx.options;
       let qs;
       if (singleQuote === false)
         qs = doubleQuotedString;
       else {
-        const hasDouble = value2.includes('"');
-        const hasSingle = value2.includes("'");
+        const hasDouble = value.includes('"');
+        const hasSingle = value.includes("'");
         if (hasDouble && !hasSingle)
           qs = singleQuotedString;
         else if (hasSingle && !hasDouble)
@@ -12531,7 +12531,7 @@ ${indent}`) + "'";
         else
           qs = singleQuote ? singleQuotedString : doubleQuotedString;
       }
-      return qs(value2, ctx);
+      return qs(value, ctx);
     }
     var blockEndNewlines;
     try {
@@ -12539,27 +12539,27 @@ ${indent}`) + "'";
     } catch {
       blockEndNewlines = /\n+(?!\n|$)/g;
     }
-    function blockString({ comment, type, value: value2 }, ctx, onComment, onChompKeep) {
+    function blockString({ comment, type, value }, ctx, onComment, onChompKeep) {
       const { blockQuote, commentString, lineWidth } = ctx.options;
-      if (!blockQuote || /\n[\t ]+$/.test(value2)) {
-        return quotedString(value2, ctx);
+      if (!blockQuote || /\n[\t ]+$/.test(value)) {
+        return quotedString(value, ctx);
       }
-      const indent = ctx.indent || (ctx.forceBlockIndent || containsDocumentMarker(value2) ? "  " : "");
-      const literal = blockQuote === "literal" ? true : blockQuote === "folded" || type === Scalar.Scalar.BLOCK_FOLDED ? false : type === Scalar.Scalar.BLOCK_LITERAL ? true : !lineLengthOverLimit(value2, lineWidth, indent.length);
-      if (!value2)
+      const indent = ctx.indent || (ctx.forceBlockIndent || containsDocumentMarker(value) ? "  " : "");
+      const literal = blockQuote === "literal" ? true : blockQuote === "folded" || type === Scalar.Scalar.BLOCK_FOLDED ? false : type === Scalar.Scalar.BLOCK_LITERAL ? true : !lineLengthOverLimit(value, lineWidth, indent.length);
+      if (!value)
         return literal ? "|\n" : ">\n";
       let chomp;
       let endStart;
-      for (endStart = value2.length; endStart > 0; --endStart) {
-        const ch = value2[endStart - 1];
+      for (endStart = value.length; endStart > 0; --endStart) {
+        const ch = value[endStart - 1];
         if (ch !== "\n" && ch !== "	" && ch !== " ")
           break;
       }
-      let end = value2.substring(endStart);
+      let end = value.substring(endStart);
       const endNlPos = end.indexOf("\n");
       if (endNlPos === -1) {
         chomp = "-";
-      } else if (value2 === end || endNlPos !== end.length - 1) {
+      } else if (value === end || endNlPos !== end.length - 1) {
         chomp = "+";
         if (onChompKeep)
           onChompKeep();
@@ -12567,7 +12567,7 @@ ${indent}`) + "'";
         chomp = "";
       }
       if (end) {
-        value2 = value2.slice(0, -end.length);
+        value = value.slice(0, -end.length);
         if (end[end.length - 1] === "\n")
           end = end.slice(0, -1);
         end = end.replace(blockEndNewlines, `$&${indent}`);
@@ -12575,8 +12575,8 @@ ${indent}`) + "'";
       let startWithSpace = false;
       let startEnd;
       let startNlPos = -1;
-      for (startEnd = 0; startEnd < value2.length; ++startEnd) {
-        const ch = value2[startEnd];
+      for (startEnd = 0; startEnd < value.length; ++startEnd) {
+        const ch = value[startEnd];
         if (ch === " ")
           startWithSpace = true;
         else if (ch === "\n")
@@ -12584,9 +12584,9 @@ ${indent}`) + "'";
         else
           break;
       }
-      let start = value2.substring(0, startNlPos < startEnd ? startNlPos + 1 : startEnd);
+      let start = value.substring(0, startNlPos < startEnd ? startNlPos + 1 : startEnd);
       if (start) {
-        value2 = value2.substring(start.length);
+        value = value.substring(start.length);
         start = start.replace(/\n+/g, `$&${indent}`);
       }
       const indentSize = indent ? "2" : "1";
@@ -12597,7 +12597,7 @@ ${indent}`) + "'";
           onComment();
       }
       if (!literal) {
-        const foldedValue = value2.replace(/\n+/g, "\n$&").replace(/(?:^|\n)([\t ].*)(?:([\n\t ]*)\n(?![\n\t ]))?/g, "$1$2").replace(/\n+/g, `$&${indent}`);
+        const foldedValue = value.replace(/\n+/g, "\n$&").replace(/(?:^|\n)([\t ].*)(?:([\n\t ]*)\n(?![\n\t ]))?/g, "$1$2").replace(/\n+/g, `$&${indent}`);
         let literalFallback = false;
         const foldOptions = getFoldOptions(ctx, true);
         if (blockQuote !== "folded" && type !== Scalar.Scalar.BLOCK_FOLDED) {
@@ -12610,37 +12610,37 @@ ${indent}`) + "'";
           return `>${header}
 ${indent}${body}`;
       }
-      value2 = value2.replace(/\n+/g, `$&${indent}`);
+      value = value.replace(/\n+/g, `$&${indent}`);
       return `|${header}
-${indent}${start}${value2}${end}`;
+${indent}${start}${value}${end}`;
     }
     function plainString(item, ctx, onComment, onChompKeep) {
-      const { type, value: value2 } = item;
+      const { type, value } = item;
       const { actualString, implicitKey, indent, indentStep, inFlow } = ctx;
-      if (implicitKey && value2.includes("\n") || inFlow && /[[\]{},]/.test(value2)) {
-        return quotedString(value2, ctx);
+      if (implicitKey && value.includes("\n") || inFlow && /[[\]{},]/.test(value)) {
+        return quotedString(value, ctx);
       }
-      if (/^[\n\t ,[\]{}#&*!|>'"%@`]|^[?-]$|^[?-][ \t]|[\n:][ \t]|[ \t]\n|[\n\t ]#|[\n\t :]$/.test(value2)) {
-        return implicitKey || inFlow || !value2.includes("\n") ? quotedString(value2, ctx) : blockString(item, ctx, onComment, onChompKeep);
+      if (/^[\n\t ,[\]{}#&*!|>'"%@`]|^[?-]$|^[?-][ \t]|[\n:][ \t]|[ \t]\n|[\n\t ]#|[\n\t :]$/.test(value)) {
+        return implicitKey || inFlow || !value.includes("\n") ? quotedString(value, ctx) : blockString(item, ctx, onComment, onChompKeep);
       }
-      if (!implicitKey && !inFlow && type !== Scalar.Scalar.PLAIN && value2.includes("\n")) {
+      if (!implicitKey && !inFlow && type !== Scalar.Scalar.PLAIN && value.includes("\n")) {
         return blockString(item, ctx, onComment, onChompKeep);
       }
-      if (containsDocumentMarker(value2)) {
+      if (containsDocumentMarker(value)) {
         if (indent === "") {
           ctx.forceBlockIndent = true;
           return blockString(item, ctx, onComment, onChompKeep);
         } else if (implicitKey && indent === indentStep) {
-          return quotedString(value2, ctx);
+          return quotedString(value, ctx);
         }
       }
-      const str = value2.replace(/\n+/g, `$&
+      const str = value.replace(/\n+/g, `$&
 ${indent}`);
       if (actualString) {
         const test = (tag) => tag.default && tag.tag !== "tag:yaml.org,2002:str" && tag.test?.test(str);
         const { compat, tags } = ctx.doc.schema;
         if (tags.some(test) || compat?.some(test))
-          return quotedString(value2, ctx);
+          return quotedString(value, ctx);
       }
       return implicitKey ? str : foldFlowLines.foldFlowLines(str, indent, foldFlowLines.FOLD_FLOW, getFoldOptions(ctx, false));
     }
@@ -12733,21 +12733,21 @@ var require_stringify = __commonJS({
     }
     function getTagObject(tags, item) {
       if (item.tag) {
-        const match2 = tags.filter((t) => t.tag === item.tag);
-        if (match2.length > 0)
-          return match2.find((t) => t.format === item.format) ?? match2[0];
+        const match = tags.filter((t) => t.tag === item.tag);
+        if (match.length > 0)
+          return match.find((t) => t.format === item.format) ?? match[0];
       }
       let tagObj = void 0;
       let obj;
       if (identity.isScalar(item)) {
         obj = item.value;
-        let match2 = tags.filter((t) => t.identify?.(obj));
-        if (match2.length > 1) {
-          const testMatch = match2.filter((t) => t.test);
+        let match = tags.filter((t) => t.identify?.(obj));
+        if (match.length > 1) {
+          const testMatch = match.filter((t) => t.test);
           if (testMatch.length > 0)
-            match2 = testMatch;
+            match = testMatch;
         }
-        tagObj = match2.find((t) => t.format === item.format) ?? match2.find((t) => !t.format);
+        tagObj = match.find((t) => t.format === item.format) ?? match.find((t) => !t.format);
       } else {
         obj = item;
         tagObj = tags.find((t) => t.nodeClass && obj instanceof t.nodeClass);
@@ -12772,7 +12772,7 @@ var require_stringify = __commonJS({
         props.push(doc.directives.tagString(tag));
       return props.join(" ");
     }
-    function stringify2(item, ctx, onComment, onChompKeep) {
+    function stringify(item, ctx, onComment, onChompKeep) {
       if (identity.isPair(item))
         return item.toString(ctx, onComment, onChompKeep);
       if (identity.isAlias(item)) {
@@ -12801,7 +12801,7 @@ var require_stringify = __commonJS({
 ${ctx.indent}${str}`;
     }
     exports.createStringifyContext = createStringifyContext;
-    exports.stringify = stringify2;
+    exports.stringify = stringify;
   }
 });
 
@@ -12811,9 +12811,9 @@ var require_stringifyPair = __commonJS({
     "use strict";
     var identity = require_identity();
     var Scalar = require_Scalar();
-    var stringify2 = require_stringify();
+    var stringify = require_stringify();
     var stringifyComment = require_stringifyComment();
-    function stringifyPair({ key, value: value2 }, ctx, onComment, onChompKeep) {
+    function stringifyPair({ key, value }, ctx, onComment, onChompKeep) {
       const { allNullValues, doc, indent, indentStep, options: { commentString, indentSeq, simpleKeys } } = ctx;
       let keyComment = identity.isNode(key) && key.comment || null;
       if (simpleKeys) {
@@ -12825,7 +12825,7 @@ var require_stringifyPair = __commonJS({
           throw new Error(msg);
         }
       }
-      let explicitKey = !simpleKeys && (!key || keyComment && value2 == null && !ctx.inFlow || identity.isCollection(key) || (identity.isScalar(key) ? key.type === Scalar.Scalar.BLOCK_FOLDED || key.type === Scalar.Scalar.BLOCK_LITERAL : typeof key === "object"));
+      let explicitKey = !simpleKeys && (!key || keyComment && value == null && !ctx.inFlow || identity.isCollection(key) || (identity.isScalar(key) ? key.type === Scalar.Scalar.BLOCK_FOLDED || key.type === Scalar.Scalar.BLOCK_LITERAL : typeof key === "object"));
       ctx = Object.assign({}, ctx, {
         allNullValues: false,
         implicitKey: !explicitKey && (simpleKeys || !allNullValues),
@@ -12833,19 +12833,19 @@ var require_stringifyPair = __commonJS({
       });
       let keyCommentDone = false;
       let chompKeep = false;
-      let str = stringify2.stringify(key, ctx, () => keyCommentDone = true, () => chompKeep = true);
+      let str = stringify.stringify(key, ctx, () => keyCommentDone = true, () => chompKeep = true);
       if (!explicitKey && !ctx.inFlow && str.length > 1024) {
         if (simpleKeys)
           throw new Error("With simple keys, single line scalar must not span more than 1024 characters");
         explicitKey = true;
       }
       if (ctx.inFlow) {
-        if (allNullValues || value2 == null) {
+        if (allNullValues || value == null) {
           if (keyCommentDone && onComment)
             onComment();
           return str === "" ? "?" : explicitKey ? `? ${str}` : str;
         }
-      } else if (allNullValues && !simpleKeys || value2 == null && explicitKey) {
+      } else if (allNullValues && !simpleKeys || value == null && explicitKey) {
         str = `? ${str}`;
         if (keyComment && !keyCommentDone) {
           str += stringifyComment.lineComment(str, ctx.indent, commentString(keyComment));
@@ -12866,26 +12866,26 @@ ${indent}:`;
           str += stringifyComment.lineComment(str, ctx.indent, commentString(keyComment));
       }
       let vsb, vcb, valueComment;
-      if (identity.isNode(value2)) {
-        vsb = !!value2.spaceBefore;
-        vcb = value2.commentBefore;
-        valueComment = value2.comment;
+      if (identity.isNode(value)) {
+        vsb = !!value.spaceBefore;
+        vcb = value.commentBefore;
+        valueComment = value.comment;
       } else {
         vsb = false;
         vcb = null;
         valueComment = null;
-        if (value2 && typeof value2 === "object")
-          value2 = doc.createNode(value2);
+        if (value && typeof value === "object")
+          value = doc.createNode(value);
       }
       ctx.implicitKey = false;
-      if (!explicitKey && !keyComment && identity.isScalar(value2))
+      if (!explicitKey && !keyComment && identity.isScalar(value))
         ctx.indentAtStart = str.length + 1;
       chompKeep = false;
-      if (!indentSeq && indentStep.length >= 2 && !ctx.inFlow && !explicitKey && identity.isSeq(value2) && !value2.flow && !value2.tag && !value2.anchor) {
+      if (!indentSeq && indentStep.length >= 2 && !ctx.inFlow && !explicitKey && identity.isSeq(value) && !value.flow && !value.tag && !value.anchor) {
         ctx.indent = ctx.indent.substring(2);
       }
       let valueCommentDone = false;
-      const valueStr = stringify2.stringify(value2, ctx, () => valueCommentDone = true, () => chompKeep = true);
+      const valueStr = stringify.stringify(value, ctx, () => valueCommentDone = true, () => chompKeep = true);
       let ws = " ";
       if (keyComment || vsb || vcb) {
         ws = vsb ? "\n" : "";
@@ -12901,11 +12901,11 @@ ${stringifyComment.indentComment(cs, ctx.indent)}`;
           ws += `
 ${ctx.indent}`;
         }
-      } else if (!explicitKey && identity.isCollection(value2)) {
+      } else if (!explicitKey && identity.isCollection(value)) {
         const vs0 = valueStr[0];
         const nl0 = valueStr.indexOf("\n");
         const hasNewline = nl0 !== -1;
-        const flow = ctx.inFlow ?? value2.flow ?? value2.items.length === 0;
+        const flow = ctx.inFlow ?? value.flow ?? value.items.length === 0;
         if (hasNewline || !flow) {
           let hasPropsLine = false;
           if (hasNewline && (vs0 === "&" || vs0 === "!")) {
@@ -12968,7 +12968,7 @@ var require_merge = __commonJS({
     var Scalar = require_Scalar();
     var MERGE_KEY = "<<";
     var merge = {
-      identify: (value2) => value2 === MERGE_KEY || typeof value2 === "symbol" && value2.description === MERGE_KEY,
+      identify: (value) => value === MERGE_KEY || typeof value === "symbol" && value.description === MERGE_KEY,
       default: "key",
       tag: "tag:yaml.org,2002:merge",
       test: /^<<$/,
@@ -12978,8 +12978,8 @@ var require_merge = __commonJS({
       stringify: () => MERGE_KEY
     };
     var isMergeKey = (ctx, key) => (merge.identify(key) || identity.isScalar(key) && (!key.type || key.type === Scalar.Scalar.PLAIN) && merge.identify(key.value)) && ctx?.doc.schema.tags.some((tag) => tag.tag === merge.tag && tag.default);
-    function addMergeToJSMap(ctx, map, value2) {
-      const source = resolveAliasValue(ctx, value2);
+    function addMergeToJSMap(ctx, map, value) {
+      const source = resolveAliasValue(ctx, value);
       if (identity.isSeq(source))
         for (const it of source.items)
           mergeValue(ctx, map, it);
@@ -12989,20 +12989,20 @@ var require_merge = __commonJS({
       else
         mergeValue(ctx, map, source);
     }
-    function mergeValue(ctx, map, value2) {
-      const source = resolveAliasValue(ctx, value2);
+    function mergeValue(ctx, map, value) {
+      const source = resolveAliasValue(ctx, value);
       if (!identity.isMap(source))
         throw new Error("Merge sources must be maps or map aliases");
       const srcMap = source.toJSON(null, ctx, Map);
-      for (const [key, value3] of srcMap) {
+      for (const [key, value2] of srcMap) {
         if (map instanceof Map) {
           if (!map.has(key))
-            map.set(key, value3);
+            map.set(key, value2);
         } else if (map instanceof Set) {
           map.add(key);
         } else if (!Object.prototype.hasOwnProperty.call(map, key)) {
           Object.defineProperty(map, key, {
-            value: value3,
+            value: value2,
             writable: true,
             enumerable: true,
             configurable: true
@@ -13011,8 +13011,8 @@ var require_merge = __commonJS({
       }
       return map;
     }
-    function resolveAliasValue(ctx, value2) {
-      return ctx && identity.isAlias(value2) ? value2.resolve(ctx.doc, ctx) : value2;
+    function resolveAliasValue(ctx, value) {
+      return ctx && identity.isAlias(value) ? value.resolve(ctx.doc, ctx) : value;
     }
     exports.addMergeToJSMap = addMergeToJSMap;
     exports.isMergeKey = isMergeKey;
@@ -13026,23 +13026,23 @@ var require_addPairToJSMap = __commonJS({
     "use strict";
     var log = require_log();
     var merge = require_merge();
-    var stringify2 = require_stringify();
+    var stringify = require_stringify();
     var identity = require_identity();
     var toJS = require_toJS();
-    function addPairToJSMap(ctx, map, { key, value: value2 }) {
+    function addPairToJSMap(ctx, map, { key, value }) {
       if (identity.isNode(key) && key.addToJSMap)
-        key.addToJSMap(ctx, map, value2);
+        key.addToJSMap(ctx, map, value);
       else if (merge.isMergeKey(ctx, key))
-        merge.addMergeToJSMap(ctx, map, value2);
+        merge.addMergeToJSMap(ctx, map, value);
       else {
         const jsKey = toJS.toJS(key, "", ctx);
         if (map instanceof Map) {
-          map.set(jsKey, toJS.toJS(value2, jsKey, ctx));
+          map.set(jsKey, toJS.toJS(value, jsKey, ctx));
         } else if (map instanceof Set) {
           map.add(jsKey);
         } else {
           const stringKey = stringifyKey(key, jsKey, ctx);
-          const jsValue = toJS.toJS(value2, stringKey, ctx);
+          const jsValue = toJS.toJS(value, stringKey, ctx);
           if (stringKey in map)
             Object.defineProperty(map, stringKey, {
               value: jsValue,
@@ -13062,7 +13062,7 @@ var require_addPairToJSMap = __commonJS({
       if (typeof jsKey !== "object")
         return String(jsKey);
       if (identity.isNode(key) && ctx?.doc) {
-        const strCtx = stringify2.createStringifyContext(ctx.doc, {});
+        const strCtx = stringify.createStringifyContext(ctx.doc, {});
         strCtx.anchors = /* @__PURE__ */ new Set();
         for (const node of ctx.anchors.keys())
           strCtx.anchors.add(node.anchor);
@@ -13092,24 +13092,24 @@ var require_Pair = __commonJS({
     var stringifyPair = require_stringifyPair();
     var addPairToJSMap = require_addPairToJSMap();
     var identity = require_identity();
-    function createPair(key, value2, ctx) {
+    function createPair(key, value, ctx) {
       const k = createNode.createNode(key, void 0, ctx);
-      const v = createNode.createNode(value2, void 0, ctx);
+      const v = createNode.createNode(value, void 0, ctx);
       return new Pair(k, v);
     }
     var Pair = class _Pair {
-      constructor(key, value2 = null) {
+      constructor(key, value = null) {
         Object.defineProperty(this, identity.NODE_TYPE, { value: identity.PAIR });
         this.key = key;
-        this.value = value2;
+        this.value = value;
       }
       clone(schema) {
-        let { key, value: value2 } = this;
+        let { key, value } = this;
         if (identity.isNode(key))
           key = key.clone(schema);
-        if (identity.isNode(value2))
-          value2 = value2.clone(schema);
-        return new _Pair(key, value2);
+        if (identity.isNode(value))
+          value = value.clone(schema);
+        return new _Pair(key, value);
       }
       toJSON(_, ctx) {
         const pair = ctx?.mapAsMap ? /* @__PURE__ */ new Map() : {};
@@ -13129,12 +13129,12 @@ var require_stringifyCollection = __commonJS({
   "node_modules/yaml/dist/stringify/stringifyCollection.js"(exports) {
     "use strict";
     var identity = require_identity();
-    var stringify2 = require_stringify();
+    var stringify = require_stringify();
     var stringifyComment = require_stringifyComment();
     function stringifyCollection(collection, ctx, options) {
       const flow = ctx.inFlow ?? collection.flow;
-      const stringify3 = flow ? stringifyFlowCollection : stringifyBlockCollection;
-      return stringify3(collection, ctx, options);
+      const stringify2 = flow ? stringifyFlowCollection : stringifyBlockCollection;
+      return stringify2(collection, ctx, options);
     }
     function stringifyBlockCollection({ comment, items }, ctx, { blockItemPrefix, flowChars, itemIndent, onChompKeep, onComment }) {
       const { indent, options: { commentString } } = ctx;
@@ -13159,7 +13159,7 @@ var require_stringifyCollection = __commonJS({
           }
         }
         chompKeep = false;
-        let str2 = stringify2.stringify(item, itemCtx, () => comment2 = null, () => chompKeep = true);
+        let str2 = stringify.stringify(item, itemCtx, () => comment2 = null, () => chompKeep = true);
         if (comment2)
           str2 += stringifyComment.lineComment(str2, itemIndent, commentString(comment2));
         if (chompKeep && comment2)
@@ -13226,7 +13226,7 @@ ${indent}${line}` : "\n";
         }
         if (comment)
           reqNewline = true;
-        let str = stringify2.stringify(item, itemCtx, () => comment = null);
+        let str = stringify.stringify(item, itemCtx, () => comment = null);
         reqNewline || (reqNewline = lines.length > linesAtValue || str.includes("\n"));
         if (i < items.length - 1) {
           str += ",";
@@ -13312,17 +13312,17 @@ var require_YAMLMap = __commonJS({
       static from(schema, obj, ctx) {
         const { keepUndefined, replacer } = ctx;
         const map = new this(schema);
-        const add = (key, value2) => {
+        const add = (key, value) => {
           if (typeof replacer === "function")
-            value2 = replacer.call(obj, key, value2);
+            value = replacer.call(obj, key, value);
           else if (Array.isArray(replacer) && !replacer.includes(key))
             return;
-          if (value2 !== void 0 || keepUndefined)
-            map.items.push(Pair.createPair(key, value2, ctx));
+          if (value !== void 0 || keepUndefined)
+            map.items.push(Pair.createPair(key, value, ctx));
         };
         if (obj instanceof Map) {
-          for (const [key, value2] of obj)
-            add(key, value2);
+          for (const [key, value] of obj)
+            add(key, value);
         } else if (obj && typeof obj === "object") {
           for (const key of Object.keys(obj))
             add(key, obj[key]);
@@ -13380,8 +13380,8 @@ var require_YAMLMap = __commonJS({
       has(key) {
         return !!findPair(this.items, key);
       }
-      set(key, value2) {
-        this.add(new Pair.Pair(key, value2), true);
+      set(key, value) {
+        this.add(new Pair.Pair(key, value), true);
       }
       /**
        * @param ctx - Conversion context, originally set in Document#toJS()
@@ -13459,8 +13459,8 @@ var require_YAMLSeq = __commonJS({
         super(identity.SEQ, schema);
         this.items = [];
       }
-      add(value2) {
-        this.items.push(value2);
+      add(value) {
+        this.items.push(value);
       }
       /**
        * Removes a value from the collection.
@@ -13501,15 +13501,15 @@ var require_YAMLSeq = __commonJS({
        * If `key` does not contain a representation of an integer, this will throw.
        * It may be wrapped in a `Scalar`.
        */
-      set(key, value2) {
+      set(key, value) {
         const idx = asItemIndex(key);
         if (typeof idx !== "number")
           throw new Error(`Expected a valid index, not ${key}.`);
         const prev = this.items[idx];
-        if (identity.isScalar(prev) && Scalar.isScalarValue(value2))
-          prev.value = value2;
+        if (identity.isScalar(prev) && Scalar.isScalarValue(value))
+          prev.value = value;
         else
-          this.items[idx] = value2;
+          this.items[idx] = value;
       }
       toJSON(_, ctx) {
         const seq = [];
@@ -13585,7 +13585,7 @@ var require_string = __commonJS({
     "use strict";
     var stringifyString = require_stringifyString();
     var string = {
-      identify: (value2) => typeof value2 === "string",
+      identify: (value) => typeof value === "string",
       default: true,
       tag: "tag:yaml.org,2002:str",
       resolve: (str) => str,
@@ -13604,7 +13604,7 @@ var require_null = __commonJS({
     "use strict";
     var Scalar = require_Scalar();
     var nullTag = {
-      identify: (value2) => value2 == null,
+      identify: (value) => value == null,
       createNode: () => new Scalar.Scalar(null),
       default: true,
       tag: "tag:yaml.org,2002:null",
@@ -13622,18 +13622,18 @@ var require_bool = __commonJS({
     "use strict";
     var Scalar = require_Scalar();
     var boolTag = {
-      identify: (value2) => typeof value2 === "boolean",
+      identify: (value) => typeof value === "boolean",
       default: true,
       tag: "tag:yaml.org,2002:bool",
       test: /^(?:[Tt]rue|TRUE|[Ff]alse|FALSE)$/,
       resolve: (str) => new Scalar.Scalar(str[0] === "t" || str[0] === "T"),
-      stringify({ source, value: value2 }, ctx) {
+      stringify({ source, value }, ctx) {
         if (source && boolTag.test.test(source)) {
           const sv = source[0] === "t" || source[0] === "T";
-          if (value2 === sv)
+          if (value === sv)
             return source;
         }
-        return value2 ? ctx.options.trueStr : ctx.options.falseStr;
+        return value ? ctx.options.trueStr : ctx.options.falseStr;
       }
     };
     exports.boolTag = boolTag;
@@ -13644,13 +13644,13 @@ var require_bool = __commonJS({
 var require_stringifyNumber = __commonJS({
   "node_modules/yaml/dist/stringify/stringifyNumber.js"(exports) {
     "use strict";
-    function stringifyNumber({ format, minFractionDigits, tag, value: value2 }) {
-      if (typeof value2 === "bigint")
-        return String(value2);
-      const num = typeof value2 === "number" ? value2 : Number(value2);
+    function stringifyNumber({ format, minFractionDigits, tag, value }) {
+      if (typeof value === "bigint")
+        return String(value);
+      const num = typeof value === "number" ? value : Number(value);
       if (!isFinite(num))
         return isNaN(num) ? ".nan" : num < 0 ? "-.inf" : ".inf";
-      let n = Object.is(value2, -0) ? "-0" : JSON.stringify(value2);
+      let n = Object.is(value, -0) ? "-0" : JSON.stringify(value);
       if (!format && minFractionDigits && (!tag || tag === "tag:yaml.org,2002:float") && /^-?\d/.test(n) && !n.includes("e")) {
         let i = n.indexOf(".");
         if (i < 0) {
@@ -13674,7 +13674,7 @@ var require_float = __commonJS({
     var Scalar = require_Scalar();
     var stringifyNumber = require_stringifyNumber();
     var floatNaN = {
-      identify: (value2) => typeof value2 === "number",
+      identify: (value) => typeof value === "number",
       default: true,
       tag: "tag:yaml.org,2002:float",
       test: /^(?:[-+]?\.(?:inf|Inf|INF)|\.nan|\.NaN|\.NAN)$/,
@@ -13682,7 +13682,7 @@ var require_float = __commonJS({
       stringify: stringifyNumber.stringifyNumber
     };
     var floatExp = {
-      identify: (value2) => typeof value2 === "number",
+      identify: (value) => typeof value === "number",
       default: true,
       tag: "tag:yaml.org,2002:float",
       format: "EXP",
@@ -13694,7 +13694,7 @@ var require_float = __commonJS({
       }
     };
     var float = {
-      identify: (value2) => typeof value2 === "number",
+      identify: (value) => typeof value === "number",
       default: true,
       tag: "tag:yaml.org,2002:float",
       test: /^[-+]?(?:\.[0-9]+|[0-9]+\.[0-9]*)$/,
@@ -13718,16 +13718,16 @@ var require_int = __commonJS({
   "node_modules/yaml/dist/schema/core/int.js"(exports) {
     "use strict";
     var stringifyNumber = require_stringifyNumber();
-    var intIdentify = (value2) => typeof value2 === "bigint" || Number.isInteger(value2);
+    var intIdentify = (value) => typeof value === "bigint" || Number.isInteger(value);
     var intResolve = (str, offset, radix, { intAsBigInt }) => intAsBigInt ? BigInt(str) : parseInt(str.substring(offset), radix);
     function intStringify(node, radix, prefix2) {
-      const { value: value2 } = node;
-      if (intIdentify(value2) && value2 >= 0)
-        return prefix2 + value2.toString(radix);
+      const { value } = node;
+      if (intIdentify(value) && value >= 0)
+        return prefix2 + value.toString(radix);
       return stringifyNumber.stringifyNumber(node);
     }
     var intOct = {
-      identify: (value2) => intIdentify(value2) && value2 >= 0,
+      identify: (value) => intIdentify(value) && value >= 0,
       default: true,
       tag: "tag:yaml.org,2002:int",
       format: "OCT",
@@ -13744,7 +13744,7 @@ var require_int = __commonJS({
       stringify: stringifyNumber.stringifyNumber
     };
     var intHex = {
-      identify: (value2) => intIdentify(value2) && value2 >= 0,
+      identify: (value) => intIdentify(value) && value >= 0,
       default: true,
       tag: "tag:yaml.org,2002:int",
       format: "HEX",
@@ -13793,20 +13793,20 @@ var require_schema2 = __commonJS({
     var Scalar = require_Scalar();
     var map = require_map();
     var seq = require_seq();
-    function intIdentify(value2) {
-      return typeof value2 === "bigint" || Number.isInteger(value2);
+    function intIdentify(value) {
+      return typeof value === "bigint" || Number.isInteger(value);
     }
-    var stringifyJSON = ({ value: value2 }) => JSON.stringify(value2);
+    var stringifyJSON = ({ value }) => JSON.stringify(value);
     var jsonScalars = [
       {
-        identify: (value2) => typeof value2 === "string",
+        identify: (value) => typeof value === "string",
         default: true,
         tag: "tag:yaml.org,2002:str",
         resolve: (str) => str,
         stringify: stringifyJSON
       },
       {
-        identify: (value2) => value2 == null,
+        identify: (value) => value == null,
         createNode: () => new Scalar.Scalar(null),
         default: true,
         tag: "tag:yaml.org,2002:null",
@@ -13815,7 +13815,7 @@ var require_schema2 = __commonJS({
         stringify: stringifyJSON
       },
       {
-        identify: (value2) => typeof value2 === "boolean",
+        identify: (value) => typeof value === "boolean",
         default: true,
         tag: "tag:yaml.org,2002:bool",
         test: /^true$|^false$/,
@@ -13828,10 +13828,10 @@ var require_schema2 = __commonJS({
         tag: "tag:yaml.org,2002:int",
         test: /^-?(?:0|[1-9][0-9]*)$/,
         resolve: (str, _onError, { intAsBigInt }) => intAsBigInt ? BigInt(str) : parseInt(str, 10),
-        stringify: ({ value: value2 }) => intIdentify(value2) ? value2.toString() : JSON.stringify(value2)
+        stringify: ({ value }) => intIdentify(value) ? value.toString() : JSON.stringify(value)
       },
       {
-        identify: (value2) => typeof value2 === "number",
+        identify: (value) => typeof value === "number",
         default: true,
         tag: "tag:yaml.org,2002:float",
         test: /^-?(?:0|[1-9][0-9]*)(?:\.[0-9]*)?(?:[eE][-+]?[0-9]+)?$/,
@@ -13861,7 +13861,7 @@ var require_binary = __commonJS({
     var Scalar = require_Scalar();
     var stringifyString = require_stringifyString();
     var binary = {
-      identify: (value2) => value2 instanceof Uint8Array,
+      identify: (value) => value instanceof Uint8Array,
       // Buffer inherits from Uint8Array
       default: false,
       tag: "tag:yaml.org,2002:binary",
@@ -13887,10 +13887,10 @@ var require_binary = __commonJS({
           return src;
         }
       },
-      stringify({ comment, type, value: value2 }, ctx, onComment, onChompKeep) {
-        if (!value2)
+      stringify({ comment, type, value }, ctx, onComment, onChompKeep) {
+        if (!value)
           return "";
-        const buf = value2;
+        const buf = value;
         let str;
         if (typeof node_buffer.Buffer === "function") {
           str = buf instanceof node_buffer.Buffer ? buf.toString("base64") : node_buffer.Buffer.from(buf.buffer).toString("base64");
@@ -13962,25 +13962,25 @@ ${cn.comment}` : item.comment;
         for (let it of iterable) {
           if (typeof replacer === "function")
             it = replacer.call(iterable, String(i++), it);
-          let key, value2;
+          let key, value;
           if (Array.isArray(it)) {
             if (it.length === 2) {
               key = it[0];
-              value2 = it[1];
+              value = it[1];
             } else
               throw new TypeError(`Expected [key, value] tuple: ${it}`);
           } else if (it && it instanceof Object) {
             const keys2 = Object.keys(it);
             if (keys2.length === 1) {
               key = keys2[0];
-              value2 = it[key];
+              value = it[key];
             } else {
               throw new TypeError(`Expected tuple with one key, not ${keys2.length} keys`);
             }
           } else {
             key = it;
           }
-          pairs2.items.push(Pair.createPair(key, value2, ctx));
+          pairs2.items.push(Pair.createPair(key, value, ctx));
         }
       return pairs2;
     }
@@ -14027,16 +14027,16 @@ var require_omap = __commonJS({
         if (ctx?.onCreate)
           ctx.onCreate(map);
         for (const pair of this.items) {
-          let key, value2;
+          let key, value;
           if (identity.isPair(pair)) {
             key = toJS.toJS(pair.key, "", ctx);
-            value2 = toJS.toJS(pair.value, key, ctx);
+            value = toJS.toJS(pair.value, key, ctx);
           } else {
             key = toJS.toJS(pair, "", ctx);
           }
           if (map.has(key))
             throw new Error("Ordered maps must not include duplicate keys");
-          map.set(key, value2);
+          map.set(key, value);
         }
         return map;
       }
@@ -14050,7 +14050,7 @@ var require_omap = __commonJS({
     YAMLOMap.tag = "tag:yaml.org,2002:omap";
     var omap = {
       collection: "seq",
-      identify: (value2) => value2 instanceof Map,
+      identify: (value) => value instanceof Map,
       nodeClass: YAMLOMap,
       default: false,
       tag: "tag:yaml.org,2002:omap",
@@ -14080,14 +14080,14 @@ var require_bool2 = __commonJS({
   "node_modules/yaml/dist/schema/yaml-1.1/bool.js"(exports) {
     "use strict";
     var Scalar = require_Scalar();
-    function boolStringify({ value: value2, source }, ctx) {
-      const boolObj = value2 ? trueTag : falseTag;
+    function boolStringify({ value, source }, ctx) {
+      const boolObj = value ? trueTag : falseTag;
       if (source && boolObj.test.test(source))
         return source;
-      return value2 ? ctx.options.trueStr : ctx.options.falseStr;
+      return value ? ctx.options.trueStr : ctx.options.falseStr;
     }
     var trueTag = {
-      identify: (value2) => value2 === true,
+      identify: (value) => value === true,
       default: true,
       tag: "tag:yaml.org,2002:bool",
       test: /^(?:Y|y|[Yy]es|YES|[Tt]rue|TRUE|[Oo]n|ON)$/,
@@ -14095,7 +14095,7 @@ var require_bool2 = __commonJS({
       stringify: boolStringify
     };
     var falseTag = {
-      identify: (value2) => value2 === false,
+      identify: (value) => value === false,
       default: true,
       tag: "tag:yaml.org,2002:bool",
       test: /^(?:N|n|[Nn]o|NO|[Ff]alse|FALSE|[Oo]ff|OFF)$/,
@@ -14114,7 +14114,7 @@ var require_float2 = __commonJS({
     var Scalar = require_Scalar();
     var stringifyNumber = require_stringifyNumber();
     var floatNaN = {
-      identify: (value2) => typeof value2 === "number",
+      identify: (value) => typeof value === "number",
       default: true,
       tag: "tag:yaml.org,2002:float",
       test: /^(?:[-+]?\.(?:inf|Inf|INF)|\.nan|\.NaN|\.NAN)$/,
@@ -14122,7 +14122,7 @@ var require_float2 = __commonJS({
       stringify: stringifyNumber.stringifyNumber
     };
     var floatExp = {
-      identify: (value2) => typeof value2 === "number",
+      identify: (value) => typeof value === "number",
       default: true,
       tag: "tag:yaml.org,2002:float",
       format: "EXP",
@@ -14134,7 +14134,7 @@ var require_float2 = __commonJS({
       }
     };
     var float = {
-      identify: (value2) => typeof value2 === "number",
+      identify: (value) => typeof value === "number",
       default: true,
       tag: "tag:yaml.org,2002:float",
       test: /^[-+]?(?:[0-9][0-9_]*)?\.[0-9_]*$/,
@@ -14161,7 +14161,7 @@ var require_int2 = __commonJS({
   "node_modules/yaml/dist/schema/yaml-1.1/int.js"(exports) {
     "use strict";
     var stringifyNumber = require_stringifyNumber();
-    var intIdentify = (value2) => typeof value2 === "bigint" || Number.isInteger(value2);
+    var intIdentify = (value) => typeof value === "bigint" || Number.isInteger(value);
     function intResolve(str, offset, radix, { intAsBigInt }) {
       const sign = str[0];
       if (sign === "-" || sign === "+")
@@ -14186,10 +14186,10 @@ var require_int2 = __commonJS({
       return sign === "-" ? -1 * n : n;
     }
     function intStringify(node, radix, prefix2) {
-      const { value: value2 } = node;
-      if (intIdentify(value2)) {
-        const str = value2.toString(radix);
-        return value2 < 0 ? "-" + prefix2 + str.substr(1) : prefix2 + str;
+      const { value } = node;
+      if (intIdentify(value)) {
+        const str = value.toString(radix);
+        return value < 0 ? "-" + prefix2 + str.substr(1) : prefix2 + str;
       }
       return stringifyNumber.stringifyNumber(node);
     }
@@ -14267,13 +14267,13 @@ var require_set = __commonJS({
         const pair = YAMLMap.findPair(this.items, key);
         return !keepPair && identity.isPair(pair) ? identity.isScalar(pair.key) ? pair.key.value : pair.key : pair;
       }
-      set(key, value2) {
-        if (typeof value2 !== "boolean")
-          throw new Error(`Expected boolean value for set(key, value) in a YAML set, not ${typeof value2}`);
+      set(key, value) {
+        if (typeof value !== "boolean")
+          throw new Error(`Expected boolean value for set(key, value) in a YAML set, not ${typeof value}`);
         const prev = YAMLMap.findPair(this.items, key);
-        if (prev && !value2) {
+        if (prev && !value) {
           this.items.splice(this.items.indexOf(prev), 1);
-        } else if (!prev && value2) {
+        } else if (!prev && value) {
           this.items.push(new Pair.Pair(key));
         }
       }
@@ -14292,10 +14292,10 @@ var require_set = __commonJS({
         const { replacer } = ctx;
         const set2 = new this(schema);
         if (iterable && Symbol.iterator in Object(iterable))
-          for (let value2 of iterable) {
+          for (let value of iterable) {
             if (typeof replacer === "function")
-              value2 = replacer.call(iterable, value2, value2);
-            set2.items.push(Pair.createPair(value2, null, ctx));
+              value = replacer.call(iterable, value, value);
+            set2.items.push(Pair.createPair(value, null, ctx));
           }
         return set2;
       }
@@ -14303,7 +14303,7 @@ var require_set = __commonJS({
     YAMLSet.tag = "tag:yaml.org,2002:set";
     var set = {
       collection: "map",
-      identify: (value2) => value2 instanceof Set,
+      identify: (value) => value instanceof Set,
       nodeClass: YAMLSet,
       default: false,
       tag: "tag:yaml.org,2002:set",
@@ -14337,33 +14337,33 @@ var require_timestamp = __commonJS({
       return sign === "-" ? num(-1) * res : res;
     }
     function stringifySexagesimal(node) {
-      let { value: value2 } = node;
+      let { value } = node;
       let num = (n) => n;
-      if (typeof value2 === "bigint")
+      if (typeof value === "bigint")
         num = (n) => BigInt(n);
-      else if (isNaN(value2) || !isFinite(value2))
+      else if (isNaN(value) || !isFinite(value))
         return stringifyNumber.stringifyNumber(node);
       let sign = "";
-      if (value2 < 0) {
+      if (value < 0) {
         sign = "-";
-        value2 *= num(-1);
+        value *= num(-1);
       }
       const _60 = num(60);
-      const parts = [value2 % _60];
-      if (value2 < 60) {
+      const parts = [value % _60];
+      if (value < 60) {
         parts.unshift(0);
       } else {
-        value2 = (value2 - parts[0]) / _60;
-        parts.unshift(value2 % _60);
-        if (value2 >= 60) {
-          value2 = (value2 - parts[0]) / _60;
-          parts.unshift(value2);
+        value = (value - parts[0]) / _60;
+        parts.unshift(value % _60);
+        if (value >= 60) {
+          value = (value - parts[0]) / _60;
+          parts.unshift(value);
         }
       }
       return sign + parts.map((n) => String(n).padStart(2, "0")).join(":").replace(/000000\d*$/, "");
     }
     var intTime = {
-      identify: (value2) => typeof value2 === "bigint" || Number.isInteger(value2),
+      identify: (value) => typeof value === "bigint" || Number.isInteger(value),
       default: true,
       tag: "tag:yaml.org,2002:int",
       format: "TIME",
@@ -14372,7 +14372,7 @@ var require_timestamp = __commonJS({
       stringify: stringifySexagesimal
     };
     var floatTime = {
-      identify: (value2) => typeof value2 === "number",
+      identify: (value) => typeof value === "number",
       default: true,
       tag: "tag:yaml.org,2002:float",
       format: "TIME",
@@ -14381,7 +14381,7 @@ var require_timestamp = __commonJS({
       stringify: stringifySexagesimal
     };
     var timestamp = {
-      identify: (value2) => value2 instanceof Date,
+      identify: (value) => value instanceof Date,
       default: true,
       tag: "tag:yaml.org,2002:timestamp",
       // If the time zone is omitted, the timestamp is assumed to be specified in UTC. The time part
@@ -14389,13 +14389,13 @@ var require_timestamp = __commonJS({
       // assumed to be 00:00:00Z (start of day, UTC).
       test: RegExp("^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})(?:(?:t|T|[ \\t]+)([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2}(\\.[0-9]+)?)(?:[ \\t]*(Z|[-+][012]?[0-9](?::[0-9]{2})?))?)?$"),
       resolve(str) {
-        const match2 = str.match(timestamp.test);
-        if (!match2)
+        const match = str.match(timestamp.test);
+        if (!match)
           throw new Error("!!timestamp expects a date, starting with yyyy-mm-dd");
-        const [, year, month, day, hour, minute, second] = match2.map(Number);
-        const millisec = match2[7] ? Number((match2[7] + "00").substr(1, 3)) : 0;
+        const [, year, month, day, hour, minute, second] = match.map(Number);
+        const millisec = match[7] ? Number((match[7] + "00").substr(1, 3)) : 0;
         let date2 = Date.UTC(year, month - 1, day, hour || 0, minute || 0, second || 0, millisec);
-        const tz = match2[8];
+        const tz = match[8];
         if (tz && tz !== "Z") {
           let d = parseSexagesimal(tz, false);
           if (Math.abs(d) < 30)
@@ -14404,7 +14404,7 @@ var require_timestamp = __commonJS({
         }
         return new Date(date2);
       },
-      stringify: ({ value: value2 }) => value2?.toISOString().replace(/(T00:00:00)?\.000Z$/, "") ?? ""
+      stringify: ({ value }) => value?.toISOString().replace(/(T00:00:00)?\.000Z$/, "") ?? ""
     };
     exports.floatTime = floatTime;
     exports.intTime = intTime;
@@ -14587,7 +14587,7 @@ var require_stringifyDocument = __commonJS({
   "node_modules/yaml/dist/stringify/stringifyDocument.js"(exports) {
     "use strict";
     var identity = require_identity();
-    var stringify2 = require_stringify();
+    var stringify = require_stringify();
     var stringifyComment = require_stringifyComment();
     function stringifyDocument(doc, options) {
       const lines = [];
@@ -14602,7 +14602,7 @@ var require_stringifyDocument = __commonJS({
       }
       if (hasDirectives)
         lines.push("---");
-      const ctx = stringify2.createStringifyContext(doc, options);
+      const ctx = stringify.createStringifyContext(doc, options);
       const { commentString } = ctx.options;
       if (doc.commentBefore) {
         if (lines.length !== 1)
@@ -14624,7 +14624,7 @@ var require_stringifyDocument = __commonJS({
           contentComment = doc.contents.comment;
         }
         const onChompKeep = contentComment ? void 0 : () => chompKeep = true;
-        let body = stringify2.stringify(doc.contents, ctx, () => contentComment = null, onChompKeep);
+        let body = stringify.stringify(doc.contents, ctx, () => contentComment = null, onChompKeep);
         if (contentComment)
           body += stringifyComment.lineComment(body, "", commentString(contentComment));
         if ((body[0] === "|" || body[0] === ">") && lines[lines.length - 1] === "---") {
@@ -14632,7 +14632,7 @@ var require_stringifyDocument = __commonJS({
         } else
           lines.push(body);
       } else {
-        lines.push(stringify2.stringify(doc.contents, ctx));
+        lines.push(stringify.stringify(doc.contents, ctx));
       }
       if (doc.directives?.docEnd) {
         if (doc.comment) {
@@ -14678,7 +14678,7 @@ var require_Document = __commonJS({
     var createNode = require_createNode();
     var directives = require_directives();
     var Document = class _Document {
-      constructor(value2, replacer, options) {
+      constructor(value, replacer, options) {
         this.commentBefore = null;
         this.comment = null;
         this.errors = [];
@@ -14710,7 +14710,7 @@ var require_Document = __commonJS({
         } else
           this.directives = new directives.Directives({ version });
         this.setSchema(version, options);
-        this.contents = value2 === void 0 ? null : this.createNode(value2, _replacer, options);
+        this.contents = value === void 0 ? null : this.createNode(value, _replacer, options);
       }
       /**
        * Create a deep copy of this Document and its contents.
@@ -14735,14 +14735,14 @@ var require_Document = __commonJS({
         return copy;
       }
       /** Adds a value to the document. */
-      add(value2) {
+      add(value) {
         if (assertCollection(this.contents))
-          this.contents.add(value2);
+          this.contents.add(value);
       }
       /** Adds a value to the document. */
-      addIn(path, value2) {
+      addIn(path, value) {
         if (assertCollection(this.contents))
-          this.contents.addIn(path, value2);
+          this.contents.addIn(path, value);
       }
       /**
        * Create a new `Alias` node, ensuring that the target `node` has the required anchor.
@@ -14761,10 +14761,10 @@ var require_Document = __commonJS({
         }
         return new Alias.Alias(node.anchor);
       }
-      createNode(value2, replacer, options) {
+      createNode(value, replacer, options) {
         let _replacer = void 0;
         if (typeof replacer === "function") {
-          value2 = replacer.call({ "": value2 }, "", value2);
+          value = replacer.call({ "": value }, "", value);
           _replacer = replacer;
         } else if (Array.isArray(replacer)) {
           const keyToStr = (v) => typeof v === "number" || v instanceof String || v instanceof Number;
@@ -14791,7 +14791,7 @@ var require_Document = __commonJS({
           schema: this.schema,
           sourceObjects
         };
-        const node = createNode.createNode(value2, tag, ctx);
+        const node = createNode.createNode(value, tag, ctx);
         if (flow && identity.isCollection(node))
           node.flow = true;
         setAnchors();
@@ -14801,9 +14801,9 @@ var require_Document = __commonJS({
        * Convert a key and a value into a `Pair` using the current schema,
        * recursively wrapping all values as `Scalar` or `Collection` nodes.
        */
-      createPair(key, value2, options = {}) {
+      createPair(key, value, options = {}) {
         const k = this.createNode(key, null, options);
-        const v = this.createNode(value2, null, options);
+        const v = this.createNode(value, null, options);
         return new Pair.Pair(k, v);
       }
       /**
@@ -14862,24 +14862,24 @@ var require_Document = __commonJS({
        * Sets a value in this document. For `!!set`, `value` needs to be a
        * boolean to add/remove the item from the set.
        */
-      set(key, value2) {
+      set(key, value) {
         if (this.contents == null) {
-          this.contents = Collection.collectionFromPath(this.schema, [key], value2);
+          this.contents = Collection.collectionFromPath(this.schema, [key], value);
         } else if (assertCollection(this.contents)) {
-          this.contents.set(key, value2);
+          this.contents.set(key, value);
         }
       }
       /**
        * Sets a value in this document. For `!!set`, `value` needs to be a
        * boolean to add/remove the item from the set.
        */
-      setIn(path, value2) {
+      setIn(path, value) {
         if (Collection.isEmptyPath(path)) {
-          this.contents = value2;
+          this.contents = value;
         } else if (this.contents == null) {
-          this.contents = Collection.collectionFromPath(this.schema, Array.from(path), value2);
+          this.contents = Collection.collectionFromPath(this.schema, Array.from(path), value);
         } else if (assertCollection(this.contents)) {
-          this.contents.setIn(path, value2);
+          this.contents.setIn(path, value);
         }
       }
       /**
@@ -15055,29 +15055,29 @@ var require_resolve_props = __commonJS({
       let comma = null;
       let found = null;
       let start = null;
-      for (const token2 of tokens) {
+      for (const token of tokens) {
         if (reqSpace) {
-          if (token2.type !== "space" && token2.type !== "newline" && token2.type !== "comma")
-            onError(token2.offset, "MISSING_CHAR", "Tags and anchors must be separated from the next token by white space");
+          if (token.type !== "space" && token.type !== "newline" && token.type !== "comma")
+            onError(token.offset, "MISSING_CHAR", "Tags and anchors must be separated from the next token by white space");
           reqSpace = false;
         }
         if (tab) {
-          if (atNewline && token2.type !== "comment" && token2.type !== "newline") {
+          if (atNewline && token.type !== "comment" && token.type !== "newline") {
             onError(tab, "TAB_AS_INDENT", "Tabs are not allowed as indentation");
           }
           tab = null;
         }
-        switch (token2.type) {
+        switch (token.type) {
           case "space":
-            if (!flow && (indicator !== "doc-start" || next?.type !== "flow-collection") && token2.source.includes("	")) {
-              tab = token2;
+            if (!flow && (indicator !== "doc-start" || next?.type !== "flow-collection") && token.source.includes("	")) {
+              tab = token;
             }
             hasSpace = true;
             break;
           case "comment": {
             if (!hasSpace)
-              onError(token2, "MISSING_CHAR", "Comments must be separated from other tokens by white space characters");
-            const cb = token2.source.substring(1) || " ";
+              onError(token, "MISSING_CHAR", "Comments must be separated from other tokens by white space characters");
+            const cb = token.source.substring(1) || " ";
             if (!comment)
               comment = cb;
             else
@@ -15089,33 +15089,33 @@ var require_resolve_props = __commonJS({
           case "newline":
             if (atNewline) {
               if (comment)
-                comment += token2.source;
+                comment += token.source;
               else if (!found || indicator !== "seq-item-ind")
                 spaceBefore = true;
             } else
-              commentSep += token2.source;
+              commentSep += token.source;
             atNewline = true;
             hasNewline = true;
             if (anchor || tag)
-              newlineAfterProp = token2;
+              newlineAfterProp = token;
             hasSpace = true;
             break;
           case "anchor":
             if (anchor)
-              onError(token2, "MULTIPLE_ANCHORS", "A node can have at most one anchor");
-            if (token2.source.endsWith(":"))
-              onError(token2.offset + token2.source.length - 1, "BAD_ALIAS", "Anchor ending in : is ambiguous", true);
-            anchor = token2;
-            start ?? (start = token2.offset);
+              onError(token, "MULTIPLE_ANCHORS", "A node can have at most one anchor");
+            if (token.source.endsWith(":"))
+              onError(token.offset + token.source.length - 1, "BAD_ALIAS", "Anchor ending in : is ambiguous", true);
+            anchor = token;
+            start ?? (start = token.offset);
             atNewline = false;
             hasSpace = false;
             reqSpace = true;
             break;
           case "tag": {
             if (tag)
-              onError(token2, "MULTIPLE_TAGS", "A node can have at most one tag");
-            tag = token2;
-            start ?? (start = token2.offset);
+              onError(token, "MULTIPLE_TAGS", "A node can have at most one tag");
+            tag = token;
+            start ?? (start = token.offset);
             atNewline = false;
             hasSpace = false;
             reqSpace = true;
@@ -15123,25 +15123,25 @@ var require_resolve_props = __commonJS({
           }
           case indicator:
             if (anchor || tag)
-              onError(token2, "BAD_PROP_ORDER", `Anchors and tags must be after the ${token2.source} indicator`);
+              onError(token, "BAD_PROP_ORDER", `Anchors and tags must be after the ${token.source} indicator`);
             if (found)
-              onError(token2, "UNEXPECTED_TOKEN", `Unexpected ${token2.source} in ${flow ?? "collection"}`);
-            found = token2;
+              onError(token, "UNEXPECTED_TOKEN", `Unexpected ${token.source} in ${flow ?? "collection"}`);
+            found = token;
             atNewline = indicator === "seq-item-ind" || indicator === "explicit-key-ind";
             hasSpace = false;
             break;
           case "comma":
             if (flow) {
               if (comma)
-                onError(token2, "UNEXPECTED_TOKEN", `Unexpected , in ${flow}`);
-              comma = token2;
+                onError(token, "UNEXPECTED_TOKEN", `Unexpected , in ${flow}`);
+              comma = token;
               atNewline = false;
               hasSpace = false;
               break;
             }
           // else fallthrough
           default:
-            onError(token2, "UNEXPECTED_TOKEN", `Unexpected ${token2.type} token`);
+            onError(token, "UNEXPECTED_TOKEN", `Unexpected ${token.type} token`);
             atNewline = false;
             hasSpace = false;
         }
@@ -15265,7 +15265,7 @@ var require_resolve_block_map = __commonJS({
       let offset = bm.offset;
       let commentEnd = null;
       for (const collItem of bm.items) {
-        const { start, key, sep, value: value2 } = collItem;
+        const { start, key, sep, value } = collItem;
         const keyProps = resolveProps.resolveProps(start, {
           indicator: "explicit-key-ind",
           next: key ?? sep?.[0],
@@ -15308,7 +15308,7 @@ var require_resolve_block_map = __commonJS({
           onError(keyStart, "DUPLICATE_KEY", "Map keys must be unique");
         const valueProps = resolveProps.resolveProps(sep ?? [], {
           indicator: "map-value-ind",
-          next: value2,
+          next: value,
           offset: keyNode.range[2],
           onError,
           parentIndent: bm.indent,
@@ -15317,14 +15317,14 @@ var require_resolve_block_map = __commonJS({
         offset = valueProps.end;
         if (valueProps.found) {
           if (implicitKey) {
-            if (value2?.type === "block-map" && !valueProps.hasNewline)
+            if (value?.type === "block-map" && !valueProps.hasNewline)
               onError(offset, "BLOCK_AS_IMPLICIT_KEY", "Nested mappings are not allowed in compact mappings");
             if (ctx.options.strict && keyProps.start < valueProps.found.offset - 1024)
               onError(keyNode.range, "KEY_OVER_1024_CHARS", "The : indicator must be at most 1024 chars after the start of an implicit block mapping key");
           }
-          const valueNode = value2 ? composeNode(ctx, value2, valueProps, onError) : composeEmptyNode(ctx, offset, sep, null, valueProps, onError);
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : composeEmptyNode(ctx, offset, sep, null, valueProps, onError);
           if (ctx.schema.compat)
-            utilFlowIndentCheck.flowIndentCheck(bm.indent, value2, onError);
+            utilFlowIndentCheck.flowIndentCheck(bm.indent, value, onError);
           offset = valueNode.range[2];
           const pair = new Pair.Pair(keyNode, valueNode);
           if (ctx.options.keepSourceTokens)
@@ -15370,18 +15370,18 @@ var require_resolve_block_seq = __commonJS({
         ctx.atKey = false;
       let offset = bs.offset;
       let commentEnd = null;
-      for (const { start, value: value2 } of bs.items) {
+      for (const { start, value } of bs.items) {
         const props = resolveProps.resolveProps(start, {
           indicator: "seq-item-ind",
-          next: value2,
+          next: value,
           offset,
           onError,
           parentIndent: bs.indent,
           startOnNewline: true
         });
         if (!props.found) {
-          if (props.anchor || props.tag || value2) {
-            if (value2?.type === "block-seq")
+          if (props.anchor || props.tag || value) {
+            if (value?.type === "block-seq")
               onError(props.end, "BAD_INDENT", "All sequence items must start at the same column");
             else
               onError(offset, "MISSING_CHAR", "Sequence item without - indicator");
@@ -15392,9 +15392,9 @@ var require_resolve_block_seq = __commonJS({
             continue;
           }
         }
-        const node = value2 ? composeNode(ctx, value2, props, onError) : composeEmptyNode(ctx, props.end, start, null, props, onError);
+        const node = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, start, null, props, onError);
         if (ctx.schema.compat)
-          utilFlowIndentCheck.flowIndentCheck(bs.indent, value2, onError);
+          utilFlowIndentCheck.flowIndentCheck(bs.indent, value, onError);
         offset = node.range[2];
         seq.items.push(node);
       }
@@ -15414,15 +15414,15 @@ var require_resolve_end = __commonJS({
       if (end) {
         let hasSpace = false;
         let sep = "";
-        for (const token2 of end) {
-          const { source, type } = token2;
+        for (const token of end) {
+          const { source, type } = token;
           switch (type) {
             case "space":
               hasSpace = true;
               break;
             case "comment": {
               if (reqSpace && !hasSpace)
-                onError(token2, "MISSING_CHAR", "Comments must be separated from other tokens by white space characters");
+                onError(token, "MISSING_CHAR", "Comments must be separated from other tokens by white space characters");
               const cb = source.substring(1) || " ";
               if (!comment)
                 comment = cb;
@@ -15437,7 +15437,7 @@ var require_resolve_end = __commonJS({
               hasSpace = true;
               break;
             default:
-              onError(token2, "UNEXPECTED_TOKEN", `Unexpected ${type} at node end`);
+              onError(token, "UNEXPECTED_TOKEN", `Unexpected ${type} at node end`);
           }
           offset += source.length;
         }
@@ -15461,7 +15461,7 @@ var require_resolve_flow_collection = __commonJS({
     var utilContainsNewline = require_util_contains_newline();
     var utilMapIncludes = require_util_map_includes();
     var blockMsg = "Block collections are not allowed within flow collections";
-    var isBlock = (token2) => token2 && (token2.type === "block-map" || token2.type === "block-seq");
+    var isBlock = (token) => token && (token.type === "block-map" || token.type === "block-seq");
     function resolveFlowCollection({ composeNode, composeEmptyNode }, ctx, fc, onError, tag) {
       const isMap2 = fc.start.source === "{";
       const fcName = isMap2 ? "flow map" : "flow sequence";
@@ -15476,7 +15476,7 @@ var require_resolve_flow_collection = __commonJS({
       let offset = fc.offset + fc.start.source.length;
       for (let i = 0; i < fc.items.length; ++i) {
         const collItem = fc.items[i];
-        const { start, key, sep, value: value2 } = collItem;
+        const { start, key, sep, value } = collItem;
         const props = resolveProps.resolveProps(start, {
           flow: fcName,
           indicator: "explicit-key-ind",
@@ -15487,7 +15487,7 @@ var require_resolve_flow_collection = __commonJS({
           startOnNewline: false
         });
         if (!props.found) {
-          if (!props.anchor && !props.tag && !sep && !value2) {
+          if (!props.anchor && !props.tag && !sep && !value) {
             if (i === 0 && props.comma)
               onError(props.comma, "UNEXPECTED_TOKEN", `Unexpected , in ${fcName}`);
             else if (i < fc.items.length - 1)
@@ -15542,10 +15542,10 @@ var require_resolve_flow_collection = __commonJS({
           }
         }
         if (!isMap2 && !sep && !props.found) {
-          const valueNode = value2 ? composeNode(ctx, value2, props, onError) : composeEmptyNode(ctx, props.end, sep, null, props, onError);
+          const valueNode = value ? composeNode(ctx, value, props, onError) : composeEmptyNode(ctx, props.end, sep, null, props, onError);
           coll.items.push(valueNode);
           offset = valueNode.range[2];
-          if (isBlock(value2))
+          if (isBlock(value))
             onError(valueNode.range, "BLOCK_IN_FLOW", blockMsg);
         } else {
           ctx.atKey = true;
@@ -15557,7 +15557,7 @@ var require_resolve_flow_collection = __commonJS({
           const valueProps = resolveProps.resolveProps(sep ?? [], {
             flow: fcName,
             indicator: "map-value-ind",
-            next: value2,
+            next: value,
             offset: keyNode.range[2],
             onError,
             parentIndent: fc.indent,
@@ -15577,15 +15577,15 @@ var require_resolve_flow_collection = __commonJS({
               if (props.start < valueProps.found.offset - 1024)
                 onError(valueProps.found, "KEY_OVER_1024_CHARS", "The : indicator must be at most 1024 chars after the start of an implicit flow sequence key");
             }
-          } else if (value2) {
-            if ("source" in value2 && value2.source?.[0] === ":")
-              onError(value2, "MISSING_CHAR", `Missing space after : in ${fcName}`);
+          } else if (value) {
+            if ("source" in value && value.source?.[0] === ":")
+              onError(value, "MISSING_CHAR", `Missing space after : in ${fcName}`);
             else
               onError(valueProps.start, "MISSING_CHAR", `Missing , or : between ${fcName} items`);
           }
-          const valueNode = value2 ? composeNode(ctx, value2, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep, null, valueProps, onError) : null;
+          const valueNode = value ? composeNode(ctx, value, valueProps, onError) : valueProps.found ? composeEmptyNode(ctx, valueProps.end, sep, null, valueProps, onError) : null;
           if (valueNode) {
-            if (isBlock(value2))
+            if (isBlock(value))
               onError(valueNode.range, "BLOCK_IN_FLOW", blockMsg);
           } else if (valueProps.comment) {
             if (keyNode.comment)
@@ -15653,8 +15653,8 @@ var require_compose_collection = __commonJS({
     var resolveBlockMap = require_resolve_block_map();
     var resolveBlockSeq = require_resolve_block_seq();
     var resolveFlowCollection = require_resolve_flow_collection();
-    function resolveCollection(CN, ctx, token2, onError, tagName, tag) {
-      const coll = token2.type === "block-map" ? resolveBlockMap.resolveBlockMap(CN, ctx, token2, onError, tag) : token2.type === "block-seq" ? resolveBlockSeq.resolveBlockSeq(CN, ctx, token2, onError, tag) : resolveFlowCollection.resolveFlowCollection(CN, ctx, token2, onError, tag);
+    function resolveCollection(CN, ctx, token, onError, tagName, tag) {
+      const coll = token.type === "block-map" ? resolveBlockMap.resolveBlockMap(CN, ctx, token, onError, tag) : token.type === "block-seq" ? resolveBlockSeq.resolveBlockSeq(CN, ctx, token, onError, tag) : resolveFlowCollection.resolveFlowCollection(CN, ctx, token, onError, tag);
       const Coll = coll.constructor;
       if (tagName === "!" || tagName === Coll.tagName) {
         coll.tag = Coll.tagName;
@@ -15664,10 +15664,10 @@ var require_compose_collection = __commonJS({
         coll.tag = tagName;
       return coll;
     }
-    function composeCollection(CN, ctx, token2, props, onError) {
+    function composeCollection(CN, ctx, token, props, onError) {
       const tagToken = props.tag;
       const tagName = !tagToken ? null : ctx.directives.tagName(tagToken.source, (msg) => onError(tagToken, "TAG_RESOLVE_FAILED", msg));
-      if (token2.type === "block-seq") {
+      if (token.type === "block-seq") {
         const { anchor, newlineAfterProp: nl } = props;
         const lastProp = anchor && tagToken ? anchor.offset > tagToken.offset ? anchor : tagToken : anchor ?? tagToken;
         if (lastProp && (!nl || nl.offset < lastProp.offset)) {
@@ -15675,9 +15675,9 @@ var require_compose_collection = __commonJS({
           onError(lastProp, "MISSING_CHAR", message);
         }
       }
-      const expType = token2.type === "block-map" ? "map" : token2.type === "block-seq" ? "seq" : token2.start.source === "{" ? "map" : "seq";
+      const expType = token.type === "block-map" ? "map" : token.type === "block-seq" ? "seq" : token.start.source === "{" ? "map" : "seq";
       if (!tagToken || !tagName || tagName === "!" || tagName === YAMLMap.YAMLMap.tagName && expType === "map" || tagName === YAMLSeq.YAMLSeq.tagName && expType === "seq") {
-        return resolveCollection(CN, ctx, token2, onError, tagName);
+        return resolveCollection(CN, ctx, token, onError, tagName);
       }
       let tag = ctx.schema.tags.find((t) => t.tag === tagName && t.collection === expType);
       if (!tag) {
@@ -15691,10 +15691,10 @@ var require_compose_collection = __commonJS({
           } else {
             onError(tagToken, "TAG_RESOLVE_FAILED", `Unresolved tag: ${tagName}`, true);
           }
-          return resolveCollection(CN, ctx, token2, onError, tagName);
+          return resolveCollection(CN, ctx, token, onError, tagName);
         }
       }
-      const coll = resolveCollection(CN, ctx, token2, onError, tagName, tag);
+      const coll = resolveCollection(CN, ctx, token, onError, tagName, tag);
       const res = tag.resolve?.(coll, (msg) => onError(tagToken, "TAG_RESOLVE_FAILED", msg), ctx.options) ?? coll;
       const node = identity.isNode(res) ? res : new Scalar.Scalar(res);
       node.range = coll.range;
@@ -15728,11 +15728,11 @@ var require_resolve_block_scalar = __commonJS({
           break;
       }
       if (chompStart === 0) {
-        const value3 = header.chomp === "+" && lines.length > 0 ? "\n".repeat(Math.max(1, lines.length - 1)) : "";
+        const value2 = header.chomp === "+" && lines.length > 0 ? "\n".repeat(Math.max(1, lines.length - 1)) : "";
         let end2 = start + header.length;
         if (scalar.source)
           end2 += scalar.source.length;
-        return { value: value3, type, comment: header.comment, range: [start, end2, end2] };
+        return { value: value2, type, comment: header.comment, range: [start, end2, end2] };
       }
       let trimIndent = scalar.indent + header.indent;
       let offset = scalar.offset + header.length;
@@ -15762,11 +15762,11 @@ var require_resolve_block_scalar = __commonJS({
         if (lines[i][0].length > trimIndent)
           chompStart = i + 1;
       }
-      let value2 = "";
+      let value = "";
       let sep = "";
       let prevMoreIndented = false;
       for (let i = 0; i < contentStart; ++i)
-        value2 += lines[i][0].slice(trimIndent) + "\n";
+        value += lines[i][0].slice(trimIndent) + "\n";
       for (let i = contentStart; i < chompStart; ++i) {
         let [indent, content] = lines[i];
         offset += indent.length + content.length + 1;
@@ -15780,23 +15780,23 @@ var require_resolve_block_scalar = __commonJS({
           indent = "";
         }
         if (type === Scalar.Scalar.BLOCK_LITERAL) {
-          value2 += sep + indent.slice(trimIndent) + content;
+          value += sep + indent.slice(trimIndent) + content;
           sep = "\n";
         } else if (indent.length > trimIndent || content[0] === "	") {
           if (sep === " ")
             sep = "\n";
           else if (!prevMoreIndented && sep === "\n")
             sep = "\n\n";
-          value2 += sep + indent.slice(trimIndent) + content;
+          value += sep + indent.slice(trimIndent) + content;
           sep = "\n";
           prevMoreIndented = true;
         } else if (content === "") {
           if (sep === "\n")
-            value2 += "\n";
+            value += "\n";
           else
             sep = "\n";
         } else {
-          value2 += sep + content;
+          value += sep + content;
           sep = " ";
           prevMoreIndented = false;
         }
@@ -15806,15 +15806,15 @@ var require_resolve_block_scalar = __commonJS({
           break;
         case "+":
           for (let i = chompStart; i < lines.length; ++i)
-            value2 += "\n" + lines[i][0].slice(trimIndent);
-          if (value2[value2.length - 1] !== "\n")
-            value2 += "\n";
+            value += "\n" + lines[i][0].slice(trimIndent);
+          if (value[value.length - 1] !== "\n")
+            value += "\n";
           break;
         default:
-          value2 += "\n";
+          value += "\n";
       }
       const end = start + header.length + scalar.source.length;
-      return { value: value2, type, comment: header.comment, range: [start, end, end] };
+      return { value, type, comment: header.comment, range: [start, end, end] };
     }
     function parseBlockScalarHeader({ offset, props }, strict, onError) {
       if (props[0].type !== "block-scalar-header") {
@@ -15844,31 +15844,31 @@ var require_resolve_block_scalar = __commonJS({
       let comment = "";
       let length = source.length;
       for (let i = 1; i < props.length; ++i) {
-        const token2 = props[i];
-        switch (token2.type) {
+        const token = props[i];
+        switch (token.type) {
           case "space":
             hasSpace = true;
           // fallthrough
           case "newline":
-            length += token2.source.length;
+            length += token.source.length;
             break;
           case "comment":
             if (strict && !hasSpace) {
               const message = "Comments must be separated from other tokens by white space characters";
-              onError(token2, "MISSING_CHAR", message);
+              onError(token, "MISSING_CHAR", message);
             }
-            length += token2.source.length;
-            comment = token2.source.substring(1);
+            length += token.source.length;
+            comment = token.source.substring(1);
             break;
           case "error":
-            onError(token2, "UNEXPECTED_TOKEN", token2.message);
-            length += token2.source.length;
+            onError(token, "UNEXPECTED_TOKEN", token.message);
+            length += token.source.length;
             break;
           /* istanbul ignore next should not happen */
           default: {
-            const message = `Unexpected token in block scalar header: ${token2.type}`;
-            onError(token2, "UNEXPECTED_TOKEN", message);
-            const ts = token2.source;
+            const message = `Unexpected token in block scalar header: ${token.type}`;
+            onError(token, "UNEXPECTED_TOKEN", message);
+            const ts = token.source;
             if (ts && typeof ts === "string")
               length += ts.length;
           }
@@ -15899,20 +15899,20 @@ var require_resolve_flow_scalar = __commonJS({
     function resolveFlowScalar(scalar, strict, onError) {
       const { offset, type, source, end } = scalar;
       let _type;
-      let value2;
+      let value;
       const _onError = (rel, code, msg) => onError(offset + rel, code, msg);
       switch (type) {
         case "scalar":
           _type = Scalar.Scalar.PLAIN;
-          value2 = plainValue(source, _onError);
+          value = plainValue(source, _onError);
           break;
         case "single-quoted-scalar":
           _type = Scalar.Scalar.QUOTE_SINGLE;
-          value2 = singleQuotedValue(source, _onError);
+          value = singleQuotedValue(source, _onError);
           break;
         case "double-quoted-scalar":
           _type = Scalar.Scalar.QUOTE_DOUBLE;
-          value2 = doubleQuotedValue(source, _onError);
+          value = doubleQuotedValue(source, _onError);
           break;
         /* istanbul ignore next should not happen */
         default:
@@ -15927,7 +15927,7 @@ var require_resolve_flow_scalar = __commonJS({
       const valueEnd = offset + source.length;
       const re = resolveEnd.resolveEnd(end, valueEnd, strict, onError);
       return {
-        value: value2,
+        value,
         type: _type,
         comment: re.comment,
         range: [offset, valueEnd, re.offset]
@@ -15968,8 +15968,8 @@ var require_resolve_flow_scalar = __commonJS({
     }
     function unfoldLines(source) {
       const line = /(.*?)\r?\n/sy;
-      let match2 = line.exec(source);
-      if (!match2)
+      let match = line.exec(source);
+      if (!match)
         return source;
       let trimEnd, trimBoth;
       try {
@@ -15979,11 +15979,11 @@ var require_resolve_flow_scalar = __commonJS({
         trimEnd = /[ \t]+$/;
         trimBoth = /^[ \t]+|[ \t]+$/g;
       }
-      let res = match2[1].replace(trimEnd, "");
+      let res = match[1].replace(trimEnd, "");
       let sep = " ";
       let pos = line.lastIndex;
-      while (match2 = line.exec(source)) {
-        const lm = match2[1].replace(trimBoth, "");
+      while (match = line.exec(source)) {
+        const lm = match[1].replace(trimBoth, "");
         if (lm === "") {
           if (sep === "\n")
             res += sep;
@@ -15997,8 +15997,8 @@ var require_resolve_flow_scalar = __commonJS({
       }
       const last = /[ \t]*(.*)/sy;
       last.lastIndex = pos;
-      match2 = last.exec(source);
-      return res + sep + (match2?.[1] ?? "");
+      match = last.exec(source);
+      return res + sep + (match?.[1] ?? "");
     }
     function doubleQuotedValue(source, onError) {
       let res = "";
@@ -16119,29 +16119,29 @@ var require_compose_scalar = __commonJS({
     var Scalar = require_Scalar();
     var resolveBlockScalar = require_resolve_block_scalar();
     var resolveFlowScalar = require_resolve_flow_scalar();
-    function composeScalar(ctx, token2, tagToken, onError) {
-      const { value: value2, type, comment, range } = token2.type === "block-scalar" ? resolveBlockScalar.resolveBlockScalar(ctx, token2, onError) : resolveFlowScalar.resolveFlowScalar(token2, ctx.options.strict, onError);
+    function composeScalar(ctx, token, tagToken, onError) {
+      const { value, type, comment, range } = token.type === "block-scalar" ? resolveBlockScalar.resolveBlockScalar(ctx, token, onError) : resolveFlowScalar.resolveFlowScalar(token, ctx.options.strict, onError);
       const tagName = tagToken ? ctx.directives.tagName(tagToken.source, (msg) => onError(tagToken, "TAG_RESOLVE_FAILED", msg)) : null;
       let tag;
       if (ctx.options.stringKeys && ctx.atKey) {
         tag = ctx.schema[identity.SCALAR];
       } else if (tagName)
-        tag = findScalarTagByName(ctx.schema, value2, tagName, tagToken, onError);
-      else if (token2.type === "scalar")
-        tag = findScalarTagByTest(ctx, value2, token2, onError);
+        tag = findScalarTagByName(ctx.schema, value, tagName, tagToken, onError);
+      else if (token.type === "scalar")
+        tag = findScalarTagByTest(ctx, value, token, onError);
       else
         tag = ctx.schema[identity.SCALAR];
       let scalar;
       try {
-        const res = tag.resolve(value2, (msg) => onError(tagToken ?? token2, "TAG_RESOLVE_FAILED", msg), ctx.options);
+        const res = tag.resolve(value, (msg) => onError(tagToken ?? token, "TAG_RESOLVE_FAILED", msg), ctx.options);
         scalar = identity.isScalar(res) ? res : new Scalar.Scalar(res);
       } catch (error) {
         const msg = error instanceof Error ? error.message : String(error);
-        onError(tagToken ?? token2, "TAG_RESOLVE_FAILED", msg);
-        scalar = new Scalar.Scalar(value2);
+        onError(tagToken ?? token, "TAG_RESOLVE_FAILED", msg);
+        scalar = new Scalar.Scalar(value);
       }
       scalar.range = range;
-      scalar.source = value2;
+      scalar.source = value;
       if (type)
         scalar.type = type;
       if (tagName)
@@ -16152,7 +16152,7 @@ var require_compose_scalar = __commonJS({
         scalar.comment = comment;
       return scalar;
     }
-    function findScalarTagByName(schema, value2, tagName, tagToken, onError) {
+    function findScalarTagByName(schema, value, tagName, tagToken, onError) {
       if (tagName === "!")
         return schema[identity.SCALAR];
       const matchWithTest = [];
@@ -16165,7 +16165,7 @@ var require_compose_scalar = __commonJS({
         }
       }
       for (const tag of matchWithTest)
-        if (tag.test?.test(value2))
+        if (tag.test?.test(value))
           return tag;
       const kt = schema.knownTags[tagName];
       if (kt && !kt.collection) {
@@ -16175,15 +16175,15 @@ var require_compose_scalar = __commonJS({
       onError(tagToken, "TAG_RESOLVE_FAILED", `Unresolved tag: ${tagName}`, tagName !== "tag:yaml.org,2002:str");
       return schema[identity.SCALAR];
     }
-    function findScalarTagByTest({ atKey, directives, schema }, value2, token2, onError) {
-      const tag = schema.tags.find((tag2) => (tag2.default === true || atKey && tag2.default === "key") && tag2.test?.test(value2)) || schema[identity.SCALAR];
+    function findScalarTagByTest({ atKey, directives, schema }, value, token, onError) {
+      const tag = schema.tags.find((tag2) => (tag2.default === true || atKey && tag2.default === "key") && tag2.test?.test(value)) || schema[identity.SCALAR];
       if (schema.compat) {
-        const compat = schema.compat.find((tag2) => tag2.default && tag2.test?.test(value2)) ?? schema[identity.SCALAR];
+        const compat = schema.compat.find((tag2) => tag2.default && tag2.test?.test(value)) ?? schema[identity.SCALAR];
         if (tag.tag !== compat.tag) {
           const ts = directives.tagString(tag.tag);
           const cs = directives.tagString(compat.tag);
           const msg = `Value may be parsed as either ${ts} or ${cs}`;
-          onError(token2, "TAG_RESOLVE_FAILED", msg, true);
+          onError(token, "TAG_RESOLVE_FAILED", msg, true);
         }
       }
       return tag;
@@ -16233,22 +16233,22 @@ var require_compose_node = __commonJS({
     var resolveEnd = require_resolve_end();
     var utilEmptyScalarPosition = require_util_empty_scalar_position();
     var CN = { composeNode, composeEmptyNode };
-    function composeNode(ctx, token2, props, onError) {
+    function composeNode(ctx, token, props, onError) {
       const atKey = ctx.atKey;
       const { spaceBefore, comment, anchor, tag } = props;
       let node;
       let isSrcToken = true;
-      switch (token2.type) {
+      switch (token.type) {
         case "alias":
-          node = composeAlias(ctx, token2, onError);
+          node = composeAlias(ctx, token, onError);
           if (anchor || tag)
-            onError(token2, "ALIAS_PROPS", "An alias node must not specify any properties");
+            onError(token, "ALIAS_PROPS", "An alias node must not specify any properties");
           break;
         case "scalar":
         case "single-quoted-scalar":
         case "double-quoted-scalar":
         case "block-scalar":
-          node = composeScalar.composeScalar(ctx, token2, tag, onError);
+          node = composeScalar.composeScalar(ctx, token, tag, onError);
           if (anchor)
             node.anchor = anchor.source.substring(1);
           break;
@@ -16256,47 +16256,47 @@ var require_compose_node = __commonJS({
         case "block-seq":
         case "flow-collection":
           try {
-            node = composeCollection.composeCollection(CN, ctx, token2, props, onError);
+            node = composeCollection.composeCollection(CN, ctx, token, props, onError);
             if (anchor)
               node.anchor = anchor.source.substring(1);
           } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
-            onError(token2, "RESOURCE_EXHAUSTION", message);
+            onError(token, "RESOURCE_EXHAUSTION", message);
           }
           break;
         default: {
-          const message = token2.type === "error" ? token2.message : `Unsupported token (type: ${token2.type})`;
-          onError(token2, "UNEXPECTED_TOKEN", message);
+          const message = token.type === "error" ? token.message : `Unsupported token (type: ${token.type})`;
+          onError(token, "UNEXPECTED_TOKEN", message);
           isSrcToken = false;
         }
       }
-      node ?? (node = composeEmptyNode(ctx, token2.offset, void 0, null, props, onError));
+      node ?? (node = composeEmptyNode(ctx, token.offset, void 0, null, props, onError));
       if (anchor && node.anchor === "")
         onError(anchor, "BAD_ALIAS", "Anchor cannot be an empty string");
       if (atKey && ctx.options.stringKeys && (!identity.isScalar(node) || typeof node.value !== "string" || node.tag && node.tag !== "tag:yaml.org,2002:str")) {
         const msg = "With stringKeys, all keys must be strings";
-        onError(tag ?? token2, "NON_STRING_KEY", msg);
+        onError(tag ?? token, "NON_STRING_KEY", msg);
       }
       if (spaceBefore)
         node.spaceBefore = true;
       if (comment) {
-        if (token2.type === "scalar" && token2.source === "")
+        if (token.type === "scalar" && token.source === "")
           node.comment = comment;
         else
           node.commentBefore = comment;
       }
       if (ctx.options.keepSourceTokens && isSrcToken)
-        node.srcToken = token2;
+        node.srcToken = token;
       return node;
     }
     function composeEmptyNode(ctx, offset, before, pos, { spaceBefore, comment, anchor, tag, end }, onError) {
-      const token2 = {
+      const token = {
         type: "scalar",
         offset: utilEmptyScalarPosition.emptyScalarPosition(offset, before, pos),
         indent: -1,
         source: ""
       };
-      const node = composeScalar.composeScalar(ctx, token2, tag, onError);
+      const node = composeScalar.composeScalar(ctx, token, tag, onError);
       if (anchor) {
         node.anchor = anchor.source.substring(1);
         if (node.anchor === "")
@@ -16336,7 +16336,7 @@ var require_compose_doc = __commonJS({
     var composeNode = require_compose_node();
     var resolveEnd = require_resolve_end();
     var resolveProps = require_resolve_props();
-    function composeDoc(options, directives, { offset, start, value: value2, end }, onError) {
+    function composeDoc(options, directives, { offset, start, value, end }, onError) {
       const opts = Object.assign({ _directives: directives }, options);
       const doc = new Document.Document(void 0, opts);
       const ctx = {
@@ -16348,7 +16348,7 @@ var require_compose_doc = __commonJS({
       };
       const props = resolveProps.resolveProps(start, {
         indicator: "doc-start",
-        next: value2 ?? end?.[0],
+        next: value ?? end?.[0],
         offset,
         onError,
         parentIndent: 0,
@@ -16356,10 +16356,10 @@ var require_compose_doc = __commonJS({
       });
       if (props.found) {
         doc.directives.docStart = true;
-        if (value2 && (value2.type === "block-map" || value2.type === "block-seq") && !props.hasNewline)
+        if (value && (value.type === "block-map" || value.type === "block-seq") && !props.hasNewline)
           onError(props.end, "MISSING_CHAR", "Block collection cannot start on same line with directives-end marker");
       }
-      doc.contents = value2 ? composeNode.composeNode(ctx, value2, props, onError) : composeNode.composeEmptyNode(ctx, props.end, start, null, props, onError);
+      doc.contents = value ? composeNode.composeNode(ctx, value, props, onError) : composeNode.composeEmptyNode(ctx, props.end, start, null, props, onError);
       const contentEnd = doc.contents.range[2];
       const re = resolveEnd.resolveEnd(end, contentEnd, false, onError);
       if (re.comment)
@@ -16487,28 +16487,28 @@ ${cb}` : comment;
        * @param endOffset - Should be set if `forceDoc` is also set, to set the document range end and to indicate errors correctly.
        */
       *compose(tokens, forceDoc = false, endOffset = -1) {
-        for (const token2 of tokens)
-          yield* this.next(token2);
+        for (const token of tokens)
+          yield* this.next(token);
         yield* this.end(forceDoc, endOffset);
       }
       /** Advance the composer by one CST token. */
-      *next(token2) {
+      *next(token) {
         if (node_process.env.LOG_STREAM)
-          console.dir(token2, { depth: null });
-        switch (token2.type) {
+          console.dir(token, { depth: null });
+        switch (token.type) {
           case "directive":
-            this.directives.add(token2.source, (offset, message, warning) => {
-              const pos = getErrorPos(token2);
+            this.directives.add(token.source, (offset, message, warning) => {
+              const pos = getErrorPos(token);
               pos[0] += offset;
               this.onError(pos, "BAD_DIRECTIVE", message, warning);
             });
-            this.prelude.push(token2.source);
+            this.prelude.push(token.source);
             this.atDirectives = true;
             break;
           case "document": {
-            const doc = composeDoc.composeDoc(this.options, this.directives, token2, this.onError);
+            const doc = composeDoc.composeDoc(this.options, this.directives, token, this.onError);
             if (this.atDirectives && !doc.directives.docStart)
-              this.onError(token2, "MISSING_CHAR", "Missing directives-end/doc-start indicator line");
+              this.onError(token, "MISSING_CHAR", "Missing directives-end/doc-start indicator line");
             this.decorate(doc, false);
             if (this.doc)
               yield this.doc;
@@ -16521,11 +16521,11 @@ ${cb}` : comment;
             break;
           case "comment":
           case "newline":
-            this.prelude.push(token2.source);
+            this.prelude.push(token.source);
             break;
           case "error": {
-            const msg = token2.source ? `${token2.message}: ${JSON.stringify(token2.source)}` : token2.message;
-            const error = new errors.YAMLParseError(getErrorPos(token2), "UNEXPECTED_TOKEN", msg);
+            const msg = token.source ? `${token.message}: ${JSON.stringify(token.source)}` : token.message;
+            const error = new errors.YAMLParseError(getErrorPos(token), "UNEXPECTED_TOKEN", msg);
             if (this.atDirectives || !this.doc)
               this.errors.push(error);
             else
@@ -16535,11 +16535,11 @@ ${cb}` : comment;
           case "doc-end": {
             if (!this.doc) {
               const msg = "Unexpected doc-end without preceding document";
-              this.errors.push(new errors.YAMLParseError(getErrorPos(token2), "UNEXPECTED_TOKEN", msg));
+              this.errors.push(new errors.YAMLParseError(getErrorPos(token), "UNEXPECTED_TOKEN", msg));
               break;
             }
             this.doc.directives.docEnd = true;
-            const end = resolveEnd.resolveEnd(token2.end, token2.offset + token2.source.length, this.doc.options.strict, this.onError);
+            const end = resolveEnd.resolveEnd(token.end, token.offset + token.source.length, this.doc.options.strict, this.onError);
             this.decorate(this.doc, true);
             if (end.comment) {
               const dc = this.doc.comment;
@@ -16550,7 +16550,7 @@ ${end.comment}` : end.comment;
             break;
           }
           default:
-            this.errors.push(new errors.YAMLParseError(getErrorPos(token2), "UNEXPECTED_TOKEN", `Unsupported token ${token2.type}`));
+            this.errors.push(new errors.YAMLParseError(getErrorPos(token), "UNEXPECTED_TOKEN", `Unsupported token ${token.type}`));
         }
       }
       /**
@@ -16587,8 +16587,8 @@ var require_cst_scalar = __commonJS({
     var resolveFlowScalar = require_resolve_flow_scalar();
     var errors = require_errors2();
     var stringifyString = require_stringifyString();
-    function resolveAsScalar(token2, strict = true, onError) {
-      if (token2) {
+    function resolveAsScalar(token, strict = true, onError) {
+      if (token) {
         const _onError = (pos, code, message) => {
           const offset = typeof pos === "number" ? pos : Array.isArray(pos) ? pos[0] : pos.offset;
           if (onError)
@@ -16596,20 +16596,20 @@ var require_cst_scalar = __commonJS({
           else
             throw new errors.YAMLParseError([offset, offset + 1], code, message);
         };
-        switch (token2.type) {
+        switch (token.type) {
           case "scalar":
           case "single-quoted-scalar":
           case "double-quoted-scalar":
-            return resolveFlowScalar.resolveFlowScalar(token2, strict, _onError);
+            return resolveFlowScalar.resolveFlowScalar(token, strict, _onError);
           case "block-scalar":
-            return resolveBlockScalar.resolveBlockScalar({ options: { strict } }, token2, _onError);
+            return resolveBlockScalar.resolveBlockScalar({ options: { strict } }, token, _onError);
         }
       }
       return null;
     }
-    function createScalarToken(value2, context) {
+    function createScalarToken(value, context) {
       const { implicitKey = false, indent, inFlow = false, offset = -1, type = "PLAIN" } = context;
-      const source = stringifyString.stringifyString({ type, value: value2 }, {
+      const source = stringifyString.stringifyString({ type, value }, {
         implicitKey,
         indent: indent > 0 ? " ".repeat(indent) : "",
         inFlow,
@@ -16639,13 +16639,13 @@ var require_cst_scalar = __commonJS({
           return { type: "scalar", offset, indent, source, end };
       }
     }
-    function setScalarValue(token2, value2, context = {}) {
+    function setScalarValue(token, value, context = {}) {
       let { afterKey = false, implicitKey = false, inFlow = false, type } = context;
-      let indent = "indent" in token2 ? token2.indent : null;
+      let indent = "indent" in token ? token.indent : null;
       if (afterKey && typeof indent === "number")
         indent += 2;
       if (!type)
-        switch (token2.type) {
+        switch (token.type) {
           case "single-quoted-scalar":
             type = "QUOTE_SINGLE";
             break;
@@ -16653,7 +16653,7 @@ var require_cst_scalar = __commonJS({
             type = "QUOTE_DOUBLE";
             break;
           case "block-scalar": {
-            const header = token2.props[0];
+            const header = token.props[0];
             if (header.type !== "block-scalar-header")
               throw new Error("Invalid block scalar header");
             type = header.source[0] === ">" ? "BLOCK_FOLDED" : "BLOCK_LITERAL";
@@ -16662,7 +16662,7 @@ var require_cst_scalar = __commonJS({
           default:
             type = "PLAIN";
         }
-      const source = stringifyString.stringifyString({ type, value: value2 }, {
+      const source = stringifyString.stringifyString({ type, value }, {
         implicitKey: implicitKey || indent === null,
         indent: indent !== null && indent > 0 ? " ".repeat(indent) : "",
         inFlow,
@@ -16671,40 +16671,40 @@ var require_cst_scalar = __commonJS({
       switch (source[0]) {
         case "|":
         case ">":
-          setBlockScalarValue(token2, source);
+          setBlockScalarValue(token, source);
           break;
         case '"':
-          setFlowScalarValue(token2, source, "double-quoted-scalar");
+          setFlowScalarValue(token, source, "double-quoted-scalar");
           break;
         case "'":
-          setFlowScalarValue(token2, source, "single-quoted-scalar");
+          setFlowScalarValue(token, source, "single-quoted-scalar");
           break;
         default:
-          setFlowScalarValue(token2, source, "scalar");
+          setFlowScalarValue(token, source, "scalar");
       }
     }
-    function setBlockScalarValue(token2, source) {
+    function setBlockScalarValue(token, source) {
       const he = source.indexOf("\n");
       const head = source.substring(0, he);
       const body = source.substring(he + 1) + "\n";
-      if (token2.type === "block-scalar") {
-        const header = token2.props[0];
+      if (token.type === "block-scalar") {
+        const header = token.props[0];
         if (header.type !== "block-scalar-header")
           throw new Error("Invalid block scalar header");
         header.source = head;
-        token2.source = body;
+        token.source = body;
       } else {
-        const { offset } = token2;
-        const indent = "indent" in token2 ? token2.indent : -1;
+        const { offset } = token;
+        const indent = "indent" in token ? token.indent : -1;
         const props = [
           { type: "block-scalar-header", offset, indent, source: head }
         ];
-        if (!addEndtoBlockProps(props, "end" in token2 ? token2.end : void 0))
+        if (!addEndtoBlockProps(props, "end" in token ? token.end : void 0))
           props.push({ type: "newline", offset: -1, indent, source: "\n" });
-        for (const key of Object.keys(token2))
+        for (const key of Object.keys(token))
           if (key !== "type" && key !== "offset")
-            delete token2[key];
-        Object.assign(token2, { type: "block-scalar", indent, props, source: body });
+            delete token[key];
+        Object.assign(token, { type: "block-scalar", indent, props, source: body });
       }
     }
     function addEndtoBlockProps(props, end) {
@@ -16721,40 +16721,40 @@ var require_cst_scalar = __commonJS({
           }
       return false;
     }
-    function setFlowScalarValue(token2, source, type) {
-      switch (token2.type) {
+    function setFlowScalarValue(token, source, type) {
+      switch (token.type) {
         case "scalar":
         case "double-quoted-scalar":
         case "single-quoted-scalar":
-          token2.type = type;
-          token2.source = source;
+          token.type = type;
+          token.source = source;
           break;
         case "block-scalar": {
-          const end = token2.props.slice(1);
+          const end = token.props.slice(1);
           let oa = source.length;
-          if (token2.props[0].type === "block-scalar-header")
-            oa -= token2.props[0].source.length;
+          if (token.props[0].type === "block-scalar-header")
+            oa -= token.props[0].source.length;
           for (const tok of end)
             tok.offset += oa;
-          delete token2.props;
-          Object.assign(token2, { type, source, end });
+          delete token.props;
+          Object.assign(token, { type, source, end });
           break;
         }
         case "block-map":
         case "block-seq": {
-          const offset = token2.offset + source.length;
-          const nl = { type: "newline", offset, indent: token2.indent, source: "\n" };
-          delete token2.items;
-          Object.assign(token2, { type, source, end: [nl] });
+          const offset = token.offset + source.length;
+          const nl = { type: "newline", offset, indent: token.indent, source: "\n" };
+          delete token.items;
+          Object.assign(token, { type, source, end: [nl] });
           break;
         }
         default: {
-          const indent = "indent" in token2 ? token2.indent : -1;
-          const end = "end" in token2 && Array.isArray(token2.end) ? token2.end.filter((st) => st.type === "space" || st.type === "comment" || st.type === "newline") : [];
-          for (const key of Object.keys(token2))
+          const indent = "indent" in token ? token.indent : -1;
+          const end = "end" in token && Array.isArray(token.end) ? token.end.filter((st) => st.type === "space" || st.type === "comment" || st.type === "newline") : [];
+          for (const key of Object.keys(token))
             if (key !== "type" && key !== "offset")
-              delete token2[key];
-          Object.assign(token2, { type, indent, source, end });
+              delete token[key];
+          Object.assign(token, { type, indent, source, end });
         }
       }
     }
@@ -16768,47 +16768,47 @@ var require_cst_scalar = __commonJS({
 var require_cst_stringify = __commonJS({
   "node_modules/yaml/dist/parse/cst-stringify.js"(exports) {
     "use strict";
-    var stringify2 = (cst) => "type" in cst ? stringifyToken(cst) : stringifyItem(cst);
-    function stringifyToken(token2) {
-      switch (token2.type) {
+    var stringify = (cst) => "type" in cst ? stringifyToken(cst) : stringifyItem(cst);
+    function stringifyToken(token) {
+      switch (token.type) {
         case "block-scalar": {
           let res = "";
-          for (const tok of token2.props)
+          for (const tok of token.props)
             res += stringifyToken(tok);
-          return res + token2.source;
+          return res + token.source;
         }
         case "block-map":
         case "block-seq": {
           let res = "";
-          for (const item of token2.items)
+          for (const item of token.items)
             res += stringifyItem(item);
           return res;
         }
         case "flow-collection": {
-          let res = token2.start.source;
-          for (const item of token2.items)
+          let res = token.start.source;
+          for (const item of token.items)
             res += stringifyItem(item);
-          for (const st of token2.end)
+          for (const st of token.end)
             res += st.source;
           return res;
         }
         case "document": {
-          let res = stringifyItem(token2);
-          if (token2.end)
-            for (const st of token2.end)
+          let res = stringifyItem(token);
+          if (token.end)
+            for (const st of token.end)
               res += st.source;
           return res;
         }
         default: {
-          let res = token2.source;
-          if ("end" in token2 && token2.end)
-            for (const st of token2.end)
+          let res = token.source;
+          if ("end" in token && token.end)
+            for (const st of token.end)
               res += st.source;
           return res;
         }
       }
     }
-    function stringifyItem({ start, key, sep, value: value2 }) {
+    function stringifyItem({ start, key, sep, value }) {
       let res = "";
       for (const st of start)
         res += st.source;
@@ -16817,11 +16817,11 @@ var require_cst_stringify = __commonJS({
       if (sep)
         for (const st of sep)
           res += st.source;
-      if (value2)
-        res += stringifyToken(value2);
+      if (value)
+        res += stringifyToken(value);
       return res;
     }
-    exports.stringify = stringify2;
+    exports.stringify = stringify;
   }
 });
 
@@ -16864,16 +16864,16 @@ var require_cst_visit = __commonJS({
       if (typeof ctrl === "symbol")
         return ctrl;
       for (const field of ["key", "value"]) {
-        const token2 = item[field];
-        if (token2 && "items" in token2) {
-          for (let i = 0; i < token2.items.length; ++i) {
-            const ci = _visit(Object.freeze(path.concat([[field, i]])), token2.items[i], visitor);
+        const token = item[field];
+        if (token && "items" in token) {
+          for (let i = 0; i < token.items.length; ++i) {
+            const ci = _visit(Object.freeze(path.concat([[field, i]])), token.items[i], visitor);
             if (typeof ci === "number")
               i = ci - 1;
             else if (ci === BREAK)
               return BREAK;
             else if (ci === REMOVE) {
-              token2.items.splice(i, 1);
+              token.items.splice(i, 1);
               i -= 1;
             }
           }
@@ -16898,10 +16898,10 @@ var require_cst = __commonJS({
     var DOCUMENT = "";
     var FLOW_END = "";
     var SCALAR = "";
-    var isCollection = (token2) => !!token2 && "items" in token2;
-    var isScalar2 = (token2) => !!token2 && (token2.type === "scalar" || token2.type === "single-quoted-scalar" || token2.type === "double-quoted-scalar" || token2.type === "block-scalar");
-    function prettyToken(token2) {
-      switch (token2) {
+    var isCollection = (token) => !!token && "items" in token;
+    var isScalar2 = (token) => !!token && (token.type === "scalar" || token.type === "single-quoted-scalar" || token.type === "double-quoted-scalar" || token.type === "block-scalar");
+    function prettyToken(token) {
+      switch (token) {
         case BOM:
           return "<BOM>";
         case DOCUMENT:
@@ -16911,7 +16911,7 @@ var require_cst = __commonJS({
         case SCALAR:
           return "<SCALAR>";
         default:
-          return JSON.stringify(token2);
+          return JSON.stringify(token);
       }
     }
     function tokenType(source) {
@@ -17092,11 +17092,11 @@ var require_lexer = __commonJS({
       hasChars(n) {
         return this.pos + n <= this.buffer.length;
       }
-      setNext(state2) {
+      setNext(state) {
         this.buffer = this.buffer.substring(this.pos);
         this.pos = 0;
         this.lineEndPos = null;
-        this.next = state2;
+        this.next = state;
         return null;
       }
       peek(n) {
@@ -17635,8 +17635,8 @@ var require_parser = __commonJS({
       }
       return -1;
     }
-    function isFlowToken(token2) {
-      switch (token2?.type) {
+    function isFlowToken(token) {
+      switch (token?.type) {
         case "alias":
         case "scalar":
         case "single-quoted-scalar":
@@ -17843,38 +17843,38 @@ var require_parser = __commonJS({
         return this.stack[this.stack.length - n];
       }
       *pop(error) {
-        const token2 = error ?? this.stack.pop();
-        if (!token2) {
+        const token = error ?? this.stack.pop();
+        if (!token) {
           const message = "Tried to pop an empty stack";
           yield { type: "error", offset: this.offset, source: "", message };
         } else if (this.stack.length === 0) {
-          yield token2;
+          yield token;
         } else {
           const top = this.peek(1);
-          if (token2.type === "block-scalar") {
-            token2.indent = "indent" in top ? top.indent : 0;
-          } else if (token2.type === "flow-collection" && top.type === "document") {
-            token2.indent = 0;
+          if (token.type === "block-scalar") {
+            token.indent = "indent" in top ? top.indent : 0;
+          } else if (token.type === "flow-collection" && top.type === "document") {
+            token.indent = 0;
           }
-          if (token2.type === "flow-collection")
-            fixFlowSeqItems(token2);
+          if (token.type === "flow-collection")
+            fixFlowSeqItems(token);
           switch (top.type) {
             case "document":
-              top.value = token2;
+              top.value = token;
               break;
             case "block-scalar":
-              top.props.push(token2);
+              top.props.push(token);
               break;
             case "block-map": {
               const it = top.items[top.items.length - 1];
               if (it.value) {
-                top.items.push({ start: [], key: token2, sep: [] });
+                top.items.push({ start: [], key: token, sep: [] });
                 this.onKeyLine = true;
                 return;
               } else if (it.sep) {
-                it.value = token2;
+                it.value = token;
               } else {
-                Object.assign(it, { key: token2, sep: [] });
+                Object.assign(it, { key: token, sep: [] });
                 this.onKeyLine = !it.explicitKey;
                 return;
               }
@@ -17883,34 +17883,34 @@ var require_parser = __commonJS({
             case "block-seq": {
               const it = top.items[top.items.length - 1];
               if (it.value)
-                top.items.push({ start: [], value: token2 });
+                top.items.push({ start: [], value: token });
               else
-                it.value = token2;
+                it.value = token;
               break;
             }
             case "flow-collection": {
               const it = top.items[top.items.length - 1];
               if (!it || it.value)
-                top.items.push({ start: [], key: token2, sep: [] });
+                top.items.push({ start: [], key: token, sep: [] });
               else if (it.sep)
-                it.value = token2;
+                it.value = token;
               else
-                Object.assign(it, { key: token2, sep: [] });
+                Object.assign(it, { key: token, sep: [] });
               return;
             }
             /* istanbul ignore next should not happen */
             default:
               yield* this.pop();
-              yield* this.pop(token2);
+              yield* this.pop(token);
           }
-          if ((top.type === "document" || top.type === "block-map" || top.type === "block-seq") && (token2.type === "block-map" || token2.type === "block-seq")) {
-            const last = token2.items[token2.items.length - 1];
-            if (last && !last.sep && !last.value && last.start.length > 0 && findNonEmptyIndex(last.start) === -1 && (token2.indent === 0 || last.start.every((st) => st.type !== "comment" || st.indent < token2.indent))) {
+          if ((top.type === "document" || top.type === "block-map" || top.type === "block-seq") && (token.type === "block-map" || token.type === "block-seq")) {
+            const last = token.items[token.items.length - 1];
+            if (last && !last.sep && !last.value && last.start.length > 0 && findNonEmptyIndex(last.start) === -1 && (token.indent === 0 || last.start.every((st) => st.type !== "comment" || st.indent < token.indent))) {
               if (top.type === "document")
                 top.end = last.start;
               else
                 top.items.push({ start: last.start });
-              token2.items.splice(-1, 1);
+              token.items.splice(-1, 1);
             }
           }
         }
@@ -18453,7 +18453,7 @@ var require_parser = __commonJS({
             yield* this.pop();
         }
       }
-      *lineEnd(token2) {
+      *lineEnd(token) {
         switch (this.type) {
           case "comma":
           case "doc-start":
@@ -18470,10 +18470,10 @@ var require_parser = __commonJS({
           case "space":
           case "comment":
           default:
-            if (token2.end)
-              token2.end.push(this.sourceToken);
+            if (token.end)
+              token.end.push(this.sourceToken);
             else
-              token2.end = [this.sourceToken];
+              token.end = [this.sourceToken];
             if (this.type === "newline")
               yield* this.pop();
         }
@@ -18551,7 +18551,7 @@ var require_public_api = __commonJS({
       }
       return doc.toJS(Object.assign({ reviver: _reviver }, options));
     }
-    function stringify2(value2, replacer, options) {
+    function stringify(value, replacer, options) {
       let _replacer = null;
       if (typeof replacer === "function" || Array.isArray(replacer)) {
         _replacer = replacer;
@@ -18564,19 +18564,19 @@ var require_public_api = __commonJS({
         const indent = Math.round(options);
         options = indent < 1 ? void 0 : indent > 8 ? { indent: 8 } : { indent };
       }
-      if (value2 === void 0) {
+      if (value === void 0) {
         const { keepUndefined } = options ?? replacer ?? {};
         if (!keepUndefined)
           return void 0;
       }
-      if (identity.isDocument(value2) && !_replacer)
-        return value2.toString(options);
-      return new Document.Document(value2, _replacer, options).toString(options);
+      if (identity.isDocument(value) && !_replacer)
+        return value.toString(options);
+      return new Document.Document(value, _replacer, options).toString(options);
     }
     exports.parse = parse;
     exports.parseAllDocuments = parseAllDocuments;
     exports.parseDocument = parseDocument2;
-    exports.stringify = stringify2;
+    exports.stringify = stringify;
   }
 });
 
@@ -26975,7 +26975,7 @@ var ajv = new import_ajv.Ajv({ strict: false, allErrors: false, validateFormats:
 (0, import_ajv_formats.default)(ajv);
 (0, import_ajv_formats_draft2019.default)(ajv);
 var iriReference = ajv.formats["iri-reference"];
-ajv.addFormat("iri-reference", (value2) => /^urn:cdx:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/[1-9][0-9]*(?:#[^\s]+)?$/.test(value2) || iriReference(value2));
+ajv.addFormat("iri-reference", (value) => /^urn:cdx:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/[1-9][0-9]*(?:#[^\s]+)?$/.test(value) || iriReference(value));
 ajv.addSchema(spdx_schema_default);
 ajv.addSchema(jsf_0_82_schema_default);
 ajv.addSchema(cryptography_defs_schema_default);
@@ -26994,294 +26994,85 @@ function validateBom(bom) {
   });
 }
 
-// src/codec.ts
-var import_yaml = __toESM(require_dist2(), 1);
-
 // src/portable.ts
 var MAX_BYTES = 2 * 1024 * 1024;
 var MAX_DEPTH = 64;
 function fail(path, message) {
   throw new Error(`${path}: ${message}`);
 }
-function checkSize(text2) {
-  if (Buffer.byteLength(text2, "utf8") > MAX_BYTES) fail("$", "exceeds 2 MiB limit");
+function checkSize(text) {
+  if (Buffer.byteLength(text, "utf8") > MAX_BYTES) fail("$", "exceeds 2 MiB limit");
 }
-function portable(value2, path = "$", ancestors = /* @__PURE__ */ new Set(), depth = 0) {
+function portable(value, path = "$", ancestors = /* @__PURE__ */ new Set(), depth = 0) {
   if (depth > MAX_DEPTH) fail(path, "exceeds depth 64");
-  if (value2 === null || typeof value2 === "boolean") return;
-  if (typeof value2 === "string") {
-    if (!value2.isWellFormed()) fail(path, "unpaired Unicode surrogate");
+  if (value === null || typeof value === "boolean") return;
+  if (typeof value === "string") {
+    if (!value.isWellFormed()) fail(path, "unpaired Unicode surrogate");
     return;
   }
-  if (typeof value2 === "number") {
-    if (!Number.isSafeInteger(value2) || Object.is(value2, -0)) fail(path, "requires a safe integer (no negative zero)");
+  if (typeof value === "number") {
+    if (!Number.isSafeInteger(value) || Object.is(value, -0)) fail(path, "requires a safe integer (no negative zero)");
     return;
   }
-  if (typeof value2 !== "object") fail(path, "unsupported portable value");
-  if (ancestors.has(value2)) fail(path, "object cycle; use identified graph edges");
-  const array2 = Array.isArray(value2);
-  const prototype = Object.getPrototypeOf(value2);
-  if (array2 && prototype !== Array.prototype) fail(path, "requires a plain array");
-  if (!array2 && prototype !== Object.prototype && prototype !== null) fail(path, "requires a plain object");
-  const descriptors = Object.getOwnPropertyDescriptors(value2);
-  const keys2 = Reflect.ownKeys(value2);
-  if (array2 && keys2.length !== value2.length + 1) fail(path, "sparse array or extra array properties");
-  ancestors.add(value2);
+  if (typeof value !== "object") fail(path, "unsupported portable value");
+  if (ancestors.has(value)) fail(path, "object cycle; use identified graph edges");
+  const array = Array.isArray(value);
+  const prototype = Object.getPrototypeOf(value);
+  if (array && prototype !== Array.prototype) fail(path, "requires a plain array");
+  if (!array && prototype !== Object.prototype && prototype !== null) fail(path, "requires a plain object");
+  const descriptors = Object.getOwnPropertyDescriptors(value);
+  const keys2 = Reflect.ownKeys(value);
+  if (array && keys2.length !== value.length + 1) fail(path, "sparse array or extra array properties");
+  ancestors.add(value);
   for (const key of keys2) {
-    if (array2 && key === "length") continue;
+    if (array && key === "length") continue;
     if (typeof key !== "string") fail(path, "symbol key");
     portable(key, path);
-    if (array2 && (!/^(0|[1-9][0-9]*)$/.test(key) || Number(key) >= value2.length)) fail(path, "extra array property");
+    if (array && (!/^(0|[1-9][0-9]*)$/.test(key) || Number(key) >= value.length)) fail(path, "extra array property");
     const descriptor = descriptors[key];
     if (!("value" in descriptor) || !descriptor.enumerable) fail(`${path}.${key}`, "requires enumerable data property");
     portable(descriptor.value, `${path}.${key}`, ancestors, depth + 1);
   }
-  ancestors.delete(value2);
+  ancestors.delete(value);
 }
-function canonical(value2) {
-  portable(value2);
+function canonical(value) {
+  portable(value);
   const write = (v) => {
     if (Array.isArray(v)) return `[${v.map(write).join(",")}]`;
     if (v !== null && typeof v === "object") return `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${write(v[k])}`).join(",")}}`;
     return JSON.stringify(v);
   };
-  const text2 = write(value2);
-  checkSize(text2);
-  return text2;
+  const text = write(value);
+  checkSize(text);
+  return text;
 }
 
-// src/validate.ts
-var text = (v, p) => {
-  if (typeof v !== "string" || !v.trim()) fail(p, "requires nonempty string");
+// src/surface-privacy.ts
+var fail2 = (code) => {
+  throw new Error(`Surface operation refused: ${code}. No input values are included.`);
 };
-var match = (pattern, label) => (v, p) => {
-  text(v, p);
-  if (!pattern.test(v)) fail(p, label);
-};
-var id = match(/^[a-z][a-z0-9+.-]*:[^\s]+$/i, "requires namespaced identifier");
-var token = match(/^[A-Za-z0-9][A-Za-z0-9._-]*$/, "requires revision/version token");
-var hash = match(/^sha256:[a-f0-9]{64}$/, "requires SHA-256 digest");
-var time = (v, p) => {
-  text(v, p);
-  if (!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(v) || !Number.isFinite(Date.parse(v)) || new Date(v).toISOString() !== v.replace("Z", ".000Z")) fail(p, "requires real UTC timestamp with seconds");
-};
-var oneOf = (...values) => (v, p) => {
-  if (!values.includes(v)) fail(p, `expected ${values.join("|")}`);
-};
-var array = (check, min = 0) => (v, p) => {
-  if (!Array.isArray(v) || v.length < min) fail(p, `requires array with at least ${min} entries`);
-  v.forEach((x, i) => check(x, `${p}[${i}]`));
-};
-function object(v, p) {
-  if (v === null || typeof v !== "object" || Array.isArray(v)) fail(p, "requires object");
-  return v;
+function privacy(value) {
+  const text = canonical(value);
+  if (/(?:https?|mongodb(?:\+srv)?|postgres(?:ql)?):\/\/|\b(?:\d{1,3}\.){3}\d{1,3}\b|\b(?:[a-f0-9]{1,4}:){2,}[a-f0-9:]+\b|(?:password|passwd|token|secret|username|api[_-]?key)\s*[=:]\s*[^\s"},]+|(?:\/Users\/|\/home\/|[A-Z]:\\\\)|[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text)) fail2("privacy review required");
 }
-var shape = (required, optional = {}) => (v, p) => {
-  const data = object(v, p);
-  for (const [key, check] of Object.entries(required)) {
-    if (!Object.hasOwn(data, key)) fail(`${p}.${key}`, "required");
-    check(data[key], `${p}.${key}`);
-  }
-  for (const key of Object.keys(data)) {
-    if (Object.hasOwn(required, key)) continue;
-    if (!Object.hasOwn(optional, key)) fail(`${p}.${key}`, "unsupported field; preserve additions in extensions");
-    optional[key](data[key], `${p}.${key}`);
-  }
-};
-var dictionary = (keyCheck, valueCheck) => (v, p) => {
-  for (const [k, value2] of Object.entries(object(v, p))) {
-    keyCheck(k, `${p} key`);
-    valueCheck(value2, `${p}.${k}`);
-  }
-};
-var value = (v, p) => portable(v, p);
-var state = oneOf("known", "unknown", "omitted", "redacted", "absent", "out-of-scope");
-var ref = shape({ id, revision: token, digest: hash });
-var revision = shape({ id: token, parent: (v, p) => {
-  if (v !== null) ref(v, p);
-}, createdAt: time, author: text, reason: text });
-var common = { id, title: text, revision, scope: text, extensions: dictionary(id, value) };
-var evidence = shape({ source: id, locator: text });
-var location = (v, p) => {
-  text(v, p);
-  const s = v;
-  if (/^https?:\/\//.test(s)) {
-    const url = new URL(s);
-    if (url.username || url.password) fail(p, "credentials in source URL");
-    return;
-  }
-  if (s.startsWith("urn:")) {
-    id(v, p);
-    return;
-  }
-  if (s.startsWith("/") || /[\\:?#%]/.test(s) || s.split("/").some((part) => !part || part === "." || part === "..")) fail(p, "requires portable relative path or http(s)/urn reference");
-};
-var finding = (v, p) => {
-  shape({
-    id,
-    subject: id,
-    property: text,
-    state: oneOf("known", "unknown", "omitted", "redacted", "absent", "out-of-scope", "conflicting"),
-    note: text,
-    claims: array(shape({ value, evidence: array(evidence, 1) }))
-  })(v, p);
-  const f = v;
-  const distinct = new Set(f.claims.map((c) => canonical(c.value))).size;
-  if ((f.state === "known" || f.state === "absent") && distinct !== 1) fail(p, "known/absent requires one agreed claim value");
-  if (f.state === "conflicting" && distinct < 2) fail(p, "conflicting requires differing sourced claims");
-  if (["unknown", "omitted", "redacted", "out-of-scope"].includes(f.state) && f.claims.length) fail(p, "non-value state must not carry claims");
-};
-var research = shape({
-  ...common,
-  contract: oneOf("n8r.research/0.1"),
-  sources: array(shape({
-    id,
-    location,
-    version: text,
-    digest: hash,
-    inspectedAt: time,
-    coverage: array(shape({ path: text, status: oneOf("inspected", "missing", "unreadable", "excluded", "truncated", "unsupported"), note: text }), 1)
-  })),
-  findings: array(finding),
-  alternatives: array(shape({ id, title: text, findings: array(id), requirements: array(text) })),
-  decisions: array(shape({ id, alternative: id, choice: oneOf("selected", "rejected", "deferred"), reason: text, by: text, at: time })),
-  questions: array(shape({ id, text, findings: array(id) })),
-  notes: array(shape({ by: text, at: time, text }))
-});
-var fact = (v, p) => {
-  shape({ state, note: text }, { value })(v, p);
-  const f = object(v, p);
-  if (f.state === "known" !== Object.hasOwn(f, "value")) fail(p, "only known facts require a value");
-};
-var entity = {
-  id,
-  type: shape({ vocabulary: id, term: text }),
-  attributes: dictionary(text, fact),
-  basis: array(shape({ record: id, revision: token, items: array(id, 1) })),
-  requirements: array(id)
-};
-var surface = shape({
-  ...common,
-  contract: oneOf("n8r.surface/0.1"),
-  kind: oneOf("definition"),
-  records: array(ref),
-  vocabularies: array(shape({ id, version: token })),
-  nodes: array(shape({ ...entity, label: text })),
-  relationships: array(shape({ ...entity, from: id, to: id, claim: oneOf("declared") })),
-  requirements: array(shape({ id, kind: oneOf("secret", "resource", "configuration"), description: text, state })),
-  coverage: array(text),
-  gaps: array(text)
-});
-var basis = shape({ record: id, revision: token, items: array(id, 1) });
-var descriptionType = shape({ vocabulary: id, term: text });
-var descriptionCommon = {
-  ...common,
-  contract: oneOf("n8r.surface/0.2"),
-  extensions: shape({}),
-  records: array(ref),
-  vocabularies: array(shape({ id, version: token })),
-  nodes: array(shape({ id, label: text, type: descriptionType })),
-  coverage: array(text),
-  gaps: array(text)
-};
-var capabilityShape = shape({
-  ...descriptionCommon,
-  kind: oneOf("capability"),
-  capabilities: array(shape({
-    id,
-    from: id,
-    to: id,
-    type: descriptionType,
-    state: oneOf("possible", "unknown", "omitted", "redacted", "absent", "out-of-scope", "conflicting"),
-    basis: array(basis),
-    conditions: array(text),
-    note: text
-  })),
-  exclusiveGroups: array(shape({ id, members: array(id, 2) }))
-});
-var boundShape = shape({
-  ...descriptionCommon,
-  kind: oneOf("bound"),
-  capability: ref,
-  instance: shape({ id, label: text }),
-  bindings: array(shape({
-    id,
-    capability: id,
-    state: oneOf("configured", "unknown", "omitted", "redacted", "out-of-scope", "conflicting"),
-    claims: array(shape({ target: id, basis: array(basis, 1) })),
-    decisions: array(basis),
-    note: text
-  }))
-});
-var configLocation = (v, p) => {
-  text(v, p);
-  const s = v;
-  if (s.startsWith("/") || /[\\:?#%]/.test(s) || s.split("/").some((part) => !part || part === "." || part === "..")) fail(p, "requires safe relative documentation location");
-};
-var configReference = shape({ owner: id, mechanism: oneOf("environment-variable", "file-key", "argument", "admin-setting", "code"), key: text, location: configLocation });
-var detailShape = (check) => (v, p) => {
-  shape({
-    state: oneOf("known", "unknown", "omitted", "redacted", "absent", "out-of-scope", "conflicting"),
-    claims: array(shape({ value: check, basis: array(basis, 1) })),
-    note: text
-  })(v, p);
-  const d = v;
-  const count = d.claims.length;
-  if (d.state === "known" || d.state === "absent") {
-    if (count !== 1) fail(p, "known/absent requires one evidenced claim");
-  } else if (d.state === "conflicting") {
-    if (count < 2 || new Set(d.claims.map((c) => canonical(c))).size !== count) fail(p, "conflicting requires distinct evidenced claims");
-  } else if (count) fail(p, "non-value state cannot carry claims");
-};
-var sharedRelationship = {
-  id,
-  from: id,
-  to: id,
-  type: descriptionType,
-  basis: array(basis),
-  conditions: array(text),
-  note: text,
-  purpose: detailShape(text),
-  integration: detailShape(text),
-  configuration: detailShape(array(configReference))
-};
-var bindingAnnotation = shape({
-  state: oneOf("configured", "unknown", "omitted", "redacted", "out-of-scope", "conflicting"),
-  claims: array(shape({ target: id, basis: array(basis, 1) })),
-  decisions: array(basis),
-  note: text
-});
-var graphCommon = { ...descriptionCommon, contract: oneOf("n8r.surface/0.3") };
-var capabilityGraphShape = shape({
-  ...graphCommon,
-  kind: oneOf("capability"),
-  relationships: array(shape({ ...sharedRelationship, state: oneOf("possible", "unknown", "omitted", "redacted", "absent", "out-of-scope", "conflicting") })),
-  exclusiveGroups: array(shape({ id, members: array(id, 2) }))
-});
-var boundGraphShape = shape({
-  ...graphCommon,
-  kind: oneOf("bound"),
-  capability: ref,
-  instance: shape({ id, label: text }),
-  relationships: array(shape({ ...sharedRelationship, binding: bindingAnnotation }))
-});
 
-// src/codec.ts
+// src/encoded-value.ts
+var import_yaml = __toESM(require_dist2(), 1);
 function formatCheck(format) {
   if (format !== "json" && format !== "yaml") fail("$format", "unsupported encoding");
 }
-function decodeValue(text2, format) {
+function decodeValue(text, format) {
   formatCheck(format);
-  checkSize(text2);
+  checkSize(text);
   if (format === "json") {
     try {
-      JSON.parse(text2);
+      JSON.parse(text);
     } catch {
       fail("$", "invalid JSON syntax");
     }
   }
-  if (/^%/m.test(text2)) fail("$", "YAML directives unsupported");
-  const doc = (0, import_yaml.parseDocument)(text2, { version: "1.2", schema: "core", uniqueKeys: true, strict: true });
+  if (/^%/m.test(text)) fail("$", "YAML directives unsupported");
+  const doc = (0, import_yaml.parseDocument)(text, { version: "1.2", schema: "core", uniqueKeys: true, strict: true });
   if (doc.errors.length || doc.warnings.length) fail("$", "invalid encoded syntax or duplicate keys");
   (0, import_yaml.visit)(doc, (_key, node, path) => {
     if (path.length > MAX_DEPTH * 2 + 2) fail("$", "exceeds depth 64");
@@ -27292,20 +27083,11 @@ function decodeValue(text2, format) {
     }
     if ((0, import_yaml.isScalar)(node) && typeof node.value === "number" && !/^-?(0|[1-9][0-9]*)$/.test(node.source ?? "")) fail("$", "numbers require decimal integer notation");
   });
-  const data = format === "json" ? JSON.parse(text2) : doc.toJS({ maxAliasCount: 0 });
+  const data = format === "json" ? JSON.parse(text) : doc.toJS({ maxAliasCount: 0 });
   return data;
 }
-function decodeJsonValue(text2) {
-  return decodeValue(text2, "json");
-}
-
-// src/skill-artifacts.ts
-function fail2(code) {
-  throw new Error(`Surface operation refused: ${code}. No input values are included.`);
-}
-function privacy(value2) {
-  const text2 = canonical(value2);
-  if (/(?:https?|mongodb(?:\+srv)?|postgres(?:ql)?):\/\/|\b(?:\d{1,3}\.){3}\d{1,3}\b|\b(?:[a-f0-9]{1,4}:){2,}[a-f0-9:]+\b|(?:password|passwd|token|secret|username|api[_-]?key)\s*[=:]\s*[^\s"},]+|(?:\/Users\/|\/home\/|[A-Z]:\\\\)|[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text2)) fail2("privacy review required");
+function decodeJsonValue(text) {
+  return decodeValue(text, "json");
 }
 
 // src/surface-bom.ts
@@ -27328,7 +27110,7 @@ function projectDependencies(edges) {
     targets.add(e.to);
     map.set(e.from, targets);
   }
-  return [...map].sort(([a], [b]) => a.localeCompare(b)).map(([ref2, to]) => ({ ref: ref2, dependsOn: [...to].sort() }));
+  return [...map].sort(([a], [b]) => a.localeCompare(b)).map(([ref, to]) => ({ ref, dependsOn: [...to].sort() }));
 }
 function checkSurfaceBom(input) {
   validateBom(input);
@@ -27356,7 +27138,7 @@ function checkSurfaceBom(input) {
   visit2(b);
   const nodes = new Set([...b.components ?? [], ...b.services ?? []].map((n) => n["bom-ref"]));
   const annotations = new Map((b.annotations ?? []).map((a) => [a["bom-ref"], a]));
-  for (const a of annotations.values()) requireThat(nonempty(a["bom-ref"]) && a.subjects.length > 0 && a.subjects.every((id2) => refs.has(id2)), "annotation subjects");
+  for (const a of annotations.values()) requireThat(nonempty(a["bom-ref"]) && a.subjects.length > 0 && a.subjects.every((id) => refs.has(id)), "annotation subjects");
   for (const c of b.citations ?? []) {
     requireThat(c.pointers && !c.expressions && refs.has(c.attributedTo) && !c.process, "citation attribution");
     for (const p of c.pointers) {
@@ -27386,15 +27168,15 @@ function checkSurfaceBom(input) {
       return fail3("profile JSON");
     }
   });
-  const evidence2 = parsed("evidence"), relationships = parsed("relationship"), entries = parsed("entry");
-  requireThat(unique(evidence2.map((e) => e.id)) && unique(relationships.map((e) => e.id)) && unique(entries.map((e) => e.id)), "unique profile IDs");
-  const evidenceIds = new Set(evidence2.map((e) => e.id));
-  for (const e of evidence2) {
+  const evidence = parsed("evidence"), relationships = parsed("relationship"), entries = parsed("entry");
+  requireThat(unique(evidence.map((e) => e.id)) && unique(relationships.map((e) => e.id)) && unique(entries.map((e) => e.id)), "unique profile IDs");
+  const evidenceIds = new Set(evidence.map((e) => e.id));
+  for (const e of evidence) {
     requireThat(keys(e, ["id", "basis", "sources", "applicability"]) && annotations.has(e.id) && ["source", "configuration", "observation", "user"].includes(e.basis) && nonempty(e.applicability) && Array.isArray(e.sources), "evidence record");
     requireThat(e.basis === "user" || e.sources.length > 0, "source-backed evidence");
     for (const s of e.sources) requireThat(keys(s, ["index", "locator"]) && Number.isSafeInteger(s.index) && s.index >= 0 && b.externalReferences?.[s.index] && nonempty(s.locator), "source reference");
   }
-  const evidenceFor = (ids, subjects, basis2) => strings(ids) && ids.every((id2) => evidenceIds.has(id2) && subjects.every((n) => annotations.get(id2).subjects.includes(n)) && (!basis2 || basis2.includes(evidence2.find((e) => e.id === id2).basis)));
+  const evidenceFor = (ids, subjects, basis) => strings(ids) && ids.every((id) => evidenceIds.has(id) && subjects.every((n) => annotations.get(id).subjects.includes(n)) && (!basis || basis.includes(evidence.find((e) => e.id === id).basis)));
   const presentation = /* @__PURE__ */ Object.create(null);
   for (const n of [...b.components ?? [], ...b.services ?? []]) {
     const hints = (n.properties ?? []).filter((p2) => p2.name === prefix + "presentation");
@@ -27429,16 +27211,16 @@ function checkSurfaceBom(input) {
   for (const e of entries) {
     requireThat(keys(e, ["id", "kind", "title", "text", "status", "reason", "access", "evidence", "at"], ["parent", "supersedes"]) && [e.id, e.title, e.text, e.reason, e.access].every(nonempty) && date(e.at), "investigation entry");
     requireThat(["next", "question", "decision", "diversion", "finding"].includes(e.kind) && ["open", "active", "done", "deferred", "superseded"].includes(e.status), "investigation state");
-    requireThat(strings(e.evidence) && e.evidence.every((id2) => evidenceIds.has(id2)), "investigation evidence");
-    requireThat(e.kind !== "decision" || e.evidence.some((id2) => evidence2.find((x) => x.id === id2)?.basis === "user"), "decision provenance");
-    for (const id2 of [e.parent, e.supersedes]) requireThat(id2 === void 0 || entryIds.has(id2) && id2 !== e.id, "investigation links");
+    requireThat(strings(e.evidence) && e.evidence.every((id) => evidenceIds.has(id)), "investigation evidence");
+    requireThat(e.kind !== "decision" || e.evidence.some((id) => evidence.find((x) => x.id === id)?.basis === "user"), "decision provenance");
+    for (const id of [e.parent, e.supersedes]) requireThat(id === void 0 || entryIds.has(id) && id !== e.id, "investigation links");
   }
   const deps = (b.dependencies ?? []).map((d) => ({ ref: d.ref, dependsOn: [...d.dependsOn ?? []].sort() })).sort((a, z) => a.ref.localeCompare(z.ref));
   requireThat((b.dependencies ?? []).every((d) => !d.provides) && canonical(deps) === canonical(projectDependencies(relationships)), "selected dependency projection");
   requireThat(b.compositions?.some((c) => c.aggregate === "unknown"), "bounded coverage declaration");
   const coverage = values("coverage"), gaps = values("gap");
   requireThat(strings(coverage) && strings(gaps), "coverage/gaps");
-  return { bom: b, objective: one("objective"), scope: one("scope"), relationships, entries, evidence: evidence2, coverage, gaps, presentation };
+  return { bom: b, objective: one("objective"), scope: one("scope"), relationships, entries, evidence, coverage, gaps, presentation };
 }
 
 // src/skill-surface-store.ts
@@ -27448,7 +27230,7 @@ import { createHash } from "node:crypto";
 
 // src/surface-overview.ts
 var escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-var fragmentId = (kind, id2) => kind + "-" + Array.from(id2).map((c) => /[a-zA-Z0-9-]/.test(c) ? c : "_" + c.codePointAt(0).toString(16) + "_").join("");
+var fragmentId = (kind, id) => kind + "-" + Array.from(id).map((c) => /[a-zA-Z0-9-]/.test(c) ? c : "_" + c.codePointAt(0).toString(16) + "_").join("");
 var boundaryNames = { internal: "Inside the application", external: "External integrations", unknown: "Unclassified" };
 function nodeGroups(s) {
   const groups = /* @__PURE__ */ new Map();
@@ -27460,10 +27242,10 @@ function nodeGroups(s) {
   }
   return [...groups.values()].sort((a, b) => Object.keys(boundaryNames).indexOf(a.boundary) - Object.keys(boundaryNames).indexOf(b.boundary));
 }
-function wrap(text2) {
+function wrap(text) {
   const lines = [];
   let line = "";
-  for (const word of text2.split(/\s+/)) {
+  for (const word of text.split(/\s+/)) {
     if (line && (line + " " + word).length > 30) {
       lines.push(line);
       line = "";
@@ -27522,7 +27304,7 @@ function renderOverview(s) {
     }
     return `<a href="#edge-${i}"><path data-edge="${h(e.id)}" d="${d}" class="${e.selection === "selected" ? "selected" : "possible"}" marker-end="url(#arrow)"><title>${h(a.n.name + " \u2192 " + b.n.name + ": " + e.purpose + "; support " + e.support + "; selection " + e.selection)}</title></path></a>`;
   }).join("");
-  const nodes = [...positions].map(([id2, p]) => `<a href="#${fragmentId("node", id2)}"><g data-node="${h(id2)}"><title>${h(p.n.name)}</title><rect x="${p.x}" y="${p.y}" width="280" height="${p.height}" rx="6"/><text x="${p.x + 12}" y="${p.y + 24}">${p.lines.map((line, i) => `<tspan x="${p.x + 12}" dy="${i ? 18 : 0}">${h(line)}</tspan>`).join("")}</text></g></a>`).join("");
+  const nodes = [...positions].map(([id, p]) => `<a href="#${fragmentId("node", id)}"><g data-node="${h(id)}"><title>${h(p.n.name)}</title><rect x="${p.x}" y="${p.y}" width="280" height="${p.height}" rx="6"/><text x="${p.x + 12}" y="${p.y + 24}">${p.lines.map((line, i) => `<tspan x="${p.x + 12}" dy="${i ? 18 : 0}">${h(line)}</tspan>`).join("")}</text></g></a>`).join("");
   return `<div class="map"><svg role="img" aria-label="Connected application overview; full relationships follow" viewBox="0 0 ${canvasWidth} ${Math.max(...heights) + 20}"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#64746d"/></marker></defs>${columns.map((c, i) => `<text x="${25 + i * columnWidth}" y="30" class="boundary-label">${h(boundaryNames[c])}</text>`).join("")}${labels}${edges}${nodes}</svg></div>`;
 }
 
@@ -27530,7 +27312,7 @@ function renderOverview(s) {
 var md = (s) => String(s).replace(/[\r\n]/g, " ").replace(/[\\`*_{}\[\]<>|]/g, (c) => "\\" + c);
 function renderSurface(s) {
   const nodes = [...s.bom.components ?? [], ...s.bom.services ?? []];
-  const name = (id2) => nodes.find((n) => n["bom-ref"] === id2)?.name ?? id2;
+  const name = (id) => nodes.find((n) => n["bom-ref"] === id)?.name ?? id;
   const focus = nodes.find((n) => s.presentation[n["bom-ref"]]?.focus);
   const title = focus ? `${focus.name} \u2014 initial security overview` : "Surface overview";
   const intro = focus?.description ?? s.objective;
@@ -27545,15 +27327,15 @@ function renderSurface(s) {
   const scopeNote = "Supported paths describe options. Selection can reflect human intent or configuration; inspect its evidence. Dated observations stand separately. Missing information does not establish absence.";
   const continuation = "Continue with the available evidence: trace a source-level path, describe an intended setup, or inspect an identified deployment. Source-only research needs no running services. Choose another direction or stop at any time.";
   const interchange = "This architecture and research record is not a comprehensive dependency SBOM. Standard dependencies contain only selected dependency relationships; profile properties retain other paths and evidence. Generic consumers may omit that detail.";
-  const evidence2 = (ids) => ids.map((id2) => `<a href="#${fragmentId("ev", id2)}">${escapeHtml(id2)}</a>`).join(", ") || "No evidence yet";
-  const evidenceMd = (ids) => ids.map((id2) => `[${md(id2)}](surface.html#${fragmentId("ev", id2)})`).join(", ");
-  const basis2 = (id2) => {
-    const b = s.evidence.find((e) => e.id === id2)?.basis;
+  const evidence = (ids) => ids.map((id) => `<a href="#${fragmentId("ev", id)}">${escapeHtml(id)}</a>`).join(", ") || "No evidence yet";
+  const evidenceMd = (ids) => ids.map((id) => `[${md(id)}](surface.html#${fragmentId("ev", id)})`).join(", ");
+  const basis = (id) => {
+    const b = s.evidence.find((e) => e.id === id)?.basis;
     return b === "user" ? "user intent" : b ?? "unknown";
   };
-  const placementMd = (id2) => {
-    const p = s.presentation[id2];
-    return p ? " Placement basis: " + (p.evidence.map((e) => `${md(basis2(e))} \u2014 ${evidenceMd([e])}`).join("; ") || "Not recorded") : "";
+  const placementMd = (id) => {
+    const p = s.presentation[id];
+    return p ? " Placement basis: " + (p.evidence.map((e) => `${md(basis(e))} \u2014 ${evidenceMd([e])}`).join("; ") || "Not recorded") : "";
   };
   const list = (xs, empty) => xs.length ? xs.map((x) => "- " + md(x)).join("\n") : "- " + empty;
   const more = (count, section) => count > 0 ? `
@@ -27644,13 +27426,13 @@ ${list(s.gaps, "No gaps recorded; completeness is not established.")}
 
 Choose a next step, inspect the whole map, redirect or stop.
 `;
-  const details = s.relationships.map((e, i) => `<details id="edge-${i}"><summary>${escapeHtml(name(e.from))} \u2192 ${escapeHtml(name(e.to))} <small>${escapeHtml(label(e))}</small></summary><p>${escapeHtml(e.purpose)}</p><p>Support: ${escapeHtml(e.support)}. Selection: ${escapeHtml(e.selection)}. Optionality: ${escapeHtml(e.optionality)}. ${escapeHtml(e.group ? "Alternative group: " + e.group : "")}</p><p>${escapeHtml(e.note)}</p><p>Integration: ${escapeHtml(e.mechanism)}. Configuration locations: ${escapeHtml(e.configuration.join("; ") || "Unknown")}</p><p>Conditions: ${escapeHtml(e.conditions.join("; ") || "None recorded")}</p><p>Support evidence: ${evidence2(e.evidence)}. Selection evidence: ${evidence2(e.selectionEvidence)}</p>${e.observations.map((o) => `<p>Observed ${escapeHtml(o.at)}: ${escapeHtml(o.note)} \u2014 ${evidence2(o.evidence)}</p>`).join("")}</details>`).join("");
-  const ev = (s.bom.annotations ?? []).map((a) => `<article id="${fragmentId("ev", a["bom-ref"])}"><h3>${escapeHtml(a["bom-ref"])}</h3><p>${escapeHtml(a.text)}</p><p>${escapeHtml(a.timestamp)} \xB7 ${escapeHtml(a.annotator.individual?.name ?? a.annotator.organization?.name ?? "Recorded annotator")}</p>${s.evidence.filter((e) => e.id === a["bom-ref"]).map((e) => `<p>${escapeHtml(e.basis)} \u2014 ${escapeHtml(e.applicability)}</p>${e.sources.map((ref2) => {
-    const source = s.bom.externalReferences[ref2.index];
-    return `<p>Source: ${escapeHtml(source.url)} \xB7 ${escapeHtml(ref2.locator)}<br>${escapeHtml(source.comment ?? "")}<br>${escapeHtml((source.hashes ?? []).map((h) => h.alg + ": " + h.content).join("; "))}</p>`;
+  const details = s.relationships.map((e, i) => `<details id="edge-${i}"><summary>${escapeHtml(name(e.from))} \u2192 ${escapeHtml(name(e.to))} <small>${escapeHtml(label(e))}</small></summary><p>${escapeHtml(e.purpose)}</p><p>Support: ${escapeHtml(e.support)}. Selection: ${escapeHtml(e.selection)}. Optionality: ${escapeHtml(e.optionality)}. ${escapeHtml(e.group ? "Alternative group: " + e.group : "")}</p><p>${escapeHtml(e.note)}</p><p>Integration: ${escapeHtml(e.mechanism)}. Configuration locations: ${escapeHtml(e.configuration.join("; ") || "Unknown")}</p><p>Conditions: ${escapeHtml(e.conditions.join("; ") || "None recorded")}</p><p>Support evidence: ${evidence(e.evidence)}. Selection evidence: ${evidence(e.selectionEvidence)}</p>${e.observations.map((o) => `<p>Observed ${escapeHtml(o.at)}: ${escapeHtml(o.note)} \u2014 ${evidence(o.evidence)}</p>`).join("")}</details>`).join("");
+  const ev = (s.bom.annotations ?? []).map((a) => `<article id="${fragmentId("ev", a["bom-ref"])}"><h3>${escapeHtml(a["bom-ref"])}</h3><p>${escapeHtml(a.text)}</p><p>${escapeHtml(a.timestamp)} \xB7 ${escapeHtml(a.annotator.individual?.name ?? a.annotator.organization?.name ?? "Recorded annotator")}</p>${s.evidence.filter((e) => e.id === a["bom-ref"]).map((e) => `<p>${escapeHtml(e.basis)} \u2014 ${escapeHtml(e.applicability)}</p>${e.sources.map((ref) => {
+    const source = s.bom.externalReferences[ref.index];
+    return `<p>Source: ${escapeHtml(source.url)} \xB7 ${escapeHtml(ref.locator)}<br>${escapeHtml(source.comment ?? "")}<br>${escapeHtml((source.hashes ?? []).map((h) => h.alg + ": " + h.content).join("; "))}</p>`;
   }).join("")}`).join("")}</article>`).join("");
   const ul = (items) => "<ul>" + items.map((x) => `<li>${escapeHtml(x)}</li>`).join("") + "</ul>";
-  const journey = (entries) => entries.map((e) => `<article><p class="tag">${escapeHtml(e.kind)} \xB7 ${escapeHtml(e.status)}</p><h3>${escapeHtml(e.title)}</h3><p>${escapeHtml(e.text)}</p><p>Why: ${escapeHtml(e.reason)}<br>Access needed: ${escapeHtml(e.access)}</p><p>${escapeHtml(e.at)} \xB7 ${escapeHtml(e.id)}${e.parent ? " \xB7 Branch of " + escapeHtml(e.parent) : ""}${e.supersedes ? " \xB7 Supersedes " + escapeHtml(e.supersedes) : ""}</p><p>${evidence2(e.evidence)}</p></article>`).join("");
+  const journey = (entries) => entries.map((e) => `<article><p class="tag">${escapeHtml(e.kind)} \xB7 ${escapeHtml(e.status)}</p><h3>${escapeHtml(e.title)}</h3><p>${escapeHtml(e.text)}</p><p>Why: ${escapeHtml(e.reason)}<br>Access needed: ${escapeHtml(e.access)}</p><p>${escapeHtml(e.at)} \xB7 ${escapeHtml(e.id)}${e.parent ? " \xB7 Branch of " + escapeHtml(e.parent) : ""}${e.supersedes ? " \xB7 Supersedes " + escapeHtml(e.supersedes) : ""}</p><p>${evidence(e.evidence)}</p></article>`).join("");
   const body = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>${escapeHtml(title)}</title><style>
 body{margin:0;background:#f5f3ec;color:#18362e;font:17px/1.6 system-ui,sans-serif}main{max-width:1200px;margin:auto;padding:40px 28px}header{border-bottom:2px solid #18362e;padding-bottom:25px}h1{font:42px/1.1 Georgia,serif;max-width:1000px}h2{font:28px Georgia,serif;margin-top:48px}a{color:#14634b}nav{display:flex;gap:22px;flex-wrap:wrap}small,.muted{color:#58675f}svg{width:100%;min-width:1000px}svg rect{fill:#e6ebe1;stroke:#a3b7a7}svg text{fill:#18362e;font:14px system-ui,sans-serif}.boundary-label{font-weight:bold}.area-label{font-style:italic}.selected{stroke:#14634b;stroke-width:3;fill:none}.possible{stroke:#64746d;stroke-width:2;stroke-dasharray:7 5;fill:none}svg a:focus{outline:3px solid #ba882f}svg path:hover{stroke:#ba882f;stroke-width:5}.map{overflow:auto;background:white;border:1px solid #d6dace;border-radius:8px;margin:24px 0}details,article{background:#fff;padding:18px 22px;margin:12px 0;border:1px solid #d6dace;border-radius:6px;overflow-wrap:anywhere}summary{cursor:pointer;font-weight:600}summary small{display:block;font-weight:400}:target{outline:3px solid #ba882f}li{margin:10px 0}.tag{letter-spacing:.12em;font-size:12px;text-transform:uppercase}p,li,h1,h2,h3{overflow-wrap:anywhere}
 </style></head><body><main><header><p class="tag">Initial security overview</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(intro)}</p><p>Scope: ${escapeHtml(s.scope)}</p><nav><a href="#overview">Overview</a><a href="#findings">Security observations</a><a href="#coverage">Coverage</a><a href="#next">Next step</a><a href="#relationships">Relationships</a><a href="#evidence">Evidence</a><a href="brief.md">Brief</a></nav></header>
@@ -27659,7 +27441,7 @@ body{margin:0;background:#f5f3ec;color:#18362e;font:17px/1.6 system-ui,sans-seri
 <section id="coverage"><h2>Coverage and gaps</h2><h3>Researched</h3>${s.coverage.length ? ul(s.coverage) : "<p>No coverage recorded.</p>"}<h3>Unknown or not researched</h3>${s.gaps.length ? ul(s.gaps) : "<p>No gaps recorded; completeness is not established.</p>"}</section>
 <section id="next"><h2>Next step</h2><p>${escapeHtml(continuation)}</p>${journey(next)}</section>
 <section id="relationships"><h2>Detailed relationships</h2>${details || "<p>No relationships recorded yet.</p>"}</section>
-<section id="inventory"><h2>Component and service records</h2>${groups.map((g) => `<h3>${escapeHtml(boundaryNames[g.boundary])} \xB7 ${escapeHtml(g.area)}</h3>${g.nodes.map((n) => `<article id="${fragmentId("node", n["bom-ref"])}"><h3>${escapeHtml(n.name)}</h3><p>${escapeHtml(n.description ?? "Description not recorded.")}</p><p>${escapeHtml(n.type ?? "service")} \xB7 ${escapeHtml(n["bom-ref"])}${s.relationships.some((e) => e.from === n["bom-ref"] || e.to === n["bom-ref"]) ? "" : " \xB7 Connections unknown."}</p><p>Grouping evidence: ${(s.presentation[n["bom-ref"]]?.evidence ?? []).map((id2) => escapeHtml(basis2(id2)) + " \u2014 " + evidence2([id2])).join("; ") || "Not recorded"}</p></article>`).join("")}`).join("")}</section>
+<section id="inventory"><h2>Component and service records</h2>${groups.map((g) => `<h3>${escapeHtml(boundaryNames[g.boundary])} \xB7 ${escapeHtml(g.area)}</h3>${g.nodes.map((n) => `<article id="${fragmentId("node", n["bom-ref"])}"><h3>${escapeHtml(n.name)}</h3><p>${escapeHtml(n.description ?? "Description not recorded.")}</p><p>${escapeHtml(n.type ?? "service")} \xB7 ${escapeHtml(n["bom-ref"])}${s.relationships.some((e) => e.from === n["bom-ref"] || e.to === n["bom-ref"]) ? "" : " \xB7 Connections unknown."}</p><p>Grouping evidence: ${(s.presentation[n["bom-ref"]]?.evidence ?? []).map((id) => escapeHtml(basis(id)) + " \u2014 " + evidence([id])).join("; ") || "Not recorded"}</p></article>`).join("")}`).join("")}</section>
 <section id="journey"><h2>Investigation journey</h2><p>Choose a next step, inspect the full journey, redirect or stop.</p>${journey(s.entries)}</section><section id="evidence"><h2>Evidence and decisions</h2>${ev}</section><footer><h2>Saved detail and interoperability</h2><p>${escapeHtml(interchange)}</p><p><a href="investigation.md">Journal file</a> \xB7 <a href="surface.cdx.json">Saved Surface</a></p><p>${escapeHtml(mechanics)} This view proves neither completeness nor runtime use.</p></footer></main></body></html>
 `;
   return { "brief.md": brief, "investigation.md": journal, "surface.html": body };
@@ -27694,7 +27476,7 @@ function readBytes(file) {
 }
 var readJson = (file) => decodeJsonValue(new TextDecoder("utf8", { fatal: true }).decode(readBytes(file)));
 var prop = (s, key) => s.bom.properties.find((p) => p.name === prefix + key)?.value;
-function location2(file) {
+function location(file) {
   safeParents(dirname(file));
   return fs.lstatSync(file).isDirectory() ? join(file, "surface.cdx.json") : file;
 }
@@ -27707,13 +27489,13 @@ function savedDirectory(file) {
 function readSurface(file) {
   const directory = savedDirectory(file);
   if (directory) checkViews(directory, false);
-  return checkSurfaceBom(readJson(location2(resolve(file))));
+  return checkSurfaceBom(readJson(location(resolve(file))));
 }
 function checkViews(directory, reconcile) {
   const manifest = readJson(join(directory, "manifest.json"));
   if (manifest.profile !== "n8r.surface-save/1" || Object.keys(manifest.files ?? {}).sort().join(",") !== "brief.md,investigation.md,surface.cdx.json,surface.html") refuse2("manifest");
-  for (const [name, hash2] of Object.entries(manifest.files)) {
-    const changed = byteDigest(readBytes(join(directory, name))) !== hash2;
+  for (const [name, hash] of Object.entries(manifest.files)) {
+    const changed = byteDigest(readBytes(join(directory, name))) !== hash;
     if (changed && (name === "surface.cdx.json" || !reconcile)) refuse2(name === "surface.cdx.json" ? "changed predecessor BOM" : "edited generated view; reconcile proposals into a successor explicitly");
   }
 }
@@ -27724,7 +27506,7 @@ function saveSurface(input, destination, previous, reconcile = false) {
   let prevFile, previousBytes;
   if (previous) {
     const prior = resolve(previous);
-    prevFile = location2(prior);
+    prevFile = location(prior);
     previousBytes = readBytes(prevFile);
     const old = checkSurfaceBom(decodeJsonValue(previousBytes.toString("utf8")));
     const saved2 = savedDirectory(prior);
@@ -27746,8 +27528,8 @@ function saveSurface(input, destination, previous, reconcile = false) {
       const next = s.entries.find((x) => x.id === e.id);
       if (!next || canonical({ ...next, status: e.status }) !== canonical(e)) refuse2("lost or rewritten decision");
       if (next.status !== e.status && (next.status !== "superseded" || !s.entries.some((x) => x.supersedes === e.id && x.kind === "decision"))) refuse2("decision supersession");
-      for (const id2 of e.evidence) {
-        const a = old.bom.annotations.find((a2) => a2["bom-ref"] === id2);
+      for (const id of e.evidence) {
+        const a = old.bom.annotations.find((a2) => a2["bom-ref"] === id);
         if (!s.bom.annotations.some((b) => canonical(a) === canonical(b))) refuse2("rewritten decision provenance");
       }
     }

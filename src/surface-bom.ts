@@ -1,8 +1,8 @@
 /** Bounded Surface profile over CycloneDX 1.7; no parallel native authority. */
 import {validateBom} from './cyclonedx-validation.js';
-import {privacy} from './skill-artifacts.js';
+import {privacy} from './surface-privacy.js';
 import {canonical} from './portable.js';
-import {decodeJsonValue} from './codec.js';
+import {decodeJsonValue} from './encoded-value.js';
 export type Bom = Record<string,any>;
 export interface Relationship {
  id:string;from:string;to:string;kind:'dependency'|'integration'|'hosting'|'data-flow';

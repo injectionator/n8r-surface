@@ -1,3 +1,5 @@
+import {privacy} from './surface-privacy.js';
+export {privacy} from './surface-privacy.js';
 /** Standalone installed-skill persistence. No CLI, runner, network or source reads. */
 import fs from 'node:fs';
 import {resolve, dirname, join} from 'node:path';
@@ -14,11 +16,6 @@ const members=['research.html','surface.json','dependencies.json','brief.md'] as
 const hash=(s:string|Buffer)=>`sha256:${createHash('sha256').update(s).digest('hex')}`;
 function fail(code:string):never {throw new Error(`Surface operation refused: ${code}. No input values are included.`);}
 function guarded<T>(code:string,fn:()=>T):T {try{return fn();}catch{ return fail(code);}}
-/** Conservative defense in depth; host must omit sensitive values before staging. */
-export function privacy(value:unknown) {
- const text=canonical(value);
- if (/(?:https?|mongodb(?:\+srv)?|postgres(?:ql)?):\/\/|\b(?:\d{1,3}\.){3}\d{1,3}\b|\b(?:[a-f0-9]{1,4}:){2,}[a-f0-9:]+\b|(?:password|passwd|token|secret|username|api[_-]?key)\s*[=:]\s*[^\s"},]+|(?:\/Users\/|\/home\/|[A-Z]:\\\\)|[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text)) fail('privacy review required');
-}
 export function checkBundle(input:unknown):Bundle {
  return guarded('bundle validation or privacy check',()=>{
   if(!input || typeof input!=='object' || Object.keys(input).sort().join(',')!=='dependencies,research,surface') fail('bundle shape');
