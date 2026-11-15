@@ -206,3 +206,10 @@ Experiment data. Third-party material retains its applicable terms.
 
 This is an independent Injectionator project, with no claimed OWASP affiliation
 or endorsement.
+
+## Follow the work in practice
+
+The [Injectionator field-notes series plan](docs/field-notes/README.md) starts with
+fresh local LibreChat research, remote sources and a running-instance continuation.
+It tracks actual attempts, mistakes and evidence for articles authored in
+`injectionator-website`; preparation is not a completed walkthrough.
