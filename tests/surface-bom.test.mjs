@@ -99,3 +99,34 @@ test('successors cannot drop historical observation date, note or relationship a
  const p=b.properties.find(p=>p.name==='n8r:surface:relationship'&&JSON.parse(p.value).to==='db-b');const e=JSON.parse(p.value);e.observations=[{at:'2026-11-13T12:00:00Z',note:'One synthetic observed call',evidence:['observation-1']}];p.value=JSON.stringify(e);
  const dir=path.join(root,'001');persistence.saveSurface(b,dir);const next=successor(b,fs.readFileSync(path.join(dir,'surface.cdx.json')));const np=next.properties.find(p=>p.name==='n8r:surface:relationship'&&JSON.parse(p.value).to==='db-b');const ne=JSON.parse(np.value);ne.observations=[];np.value=JSON.stringify(ne);assert.throws(()=>persistence.saveSurface(next,path.join(root,'002'),dir));
 }));
+
+test('clock times in evidence survive validation while address and credential checks still apply',()=>{
+ const bom=fixture(), annotation=bom.annotations[0];
+ annotation.text='Observed at 11:37:49 and 9:04:07.';
+ assert.equal(check(bom).bom.annotations[0].text,annotation.text);
+ for(const sensitive of ['2001:db8::11:37:49','::11:37:49','token=11:37:49']){
+  annotation.text='Observed at 11:37:49 with '+sensitive;
+  assert.throws(()=>check(bom),/privacy review required/);
+ }
+});
+
+test('ordinary relationships may omit group while alternatives require a nonblank group',()=>{
+ const bom=fixture();
+ const property=bom.properties.find(p=>p.name==='n8r:surface:relationship');
+ const edge=JSON.parse(property.value);
+ const validate=()=>{property.value=JSON.stringify(edge);return check(bom);};
+ edge.optionality='optional';
+ delete edge.group;
+ validate();
+ edge.group='';
+ validate();
+ edge.group=23;
+ assert.throws(validate);
+ edge.optionality='alternative';
+ for(const group of [undefined,'',' ']){
+  edge.group=group;
+  assert.throws(validate,/alternative group/);
+ }
+ edge.group='storage';
+ validate();
+});

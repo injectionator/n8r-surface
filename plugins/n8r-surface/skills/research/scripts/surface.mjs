@@ -27077,7 +27077,10 @@ var fail2 = (code) => {
 };
 function privacy(value) {
   const text = canonical(value);
-  if (/(?:https?|mongodb(?:\+srv)?|postgres(?:ql)?):\/\/|\b(?:\d{1,3}\.){3}\d{1,3}\b|\b(?:[a-f0-9]{1,4}:){2,}[a-f0-9:]+\b|(?:password|passwd|token|secret|username|api[_-]?key)\s*[=:]\s*[^\s"},]+|(?:\/Users\/|\/home\/|[A-Z]:\\\\)|[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text)) fail2("privacy review required");
+  for (const match of text.matchAll(/(?<![\w:])(?:[a-f0-9]{0,4}:){2,}[a-f0-9:]+\b/gi)) {
+    if (!/^(?:[01]?\d|2[0-3]):[0-5]\d:[0-5]\d$/.test(match[0])) fail2("privacy review required");
+  }
+  if (/(?:https?|mongodb(?:\+srv)?|postgres(?:ql)?):\/\/|\b(?:\d{1,3}\.){3}\d{1,3}\b|(?:password|passwd|token|secret|username|api[_-]?key)\s*[=:]\s*[^\s"},]+|(?:\/Users\/|\/home\/|[A-Z]:\\\\)|[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text)) fail2("privacy review required");
 }
 
 // src/encoded-value.ts
@@ -27217,10 +27220,10 @@ function checkSurfaceBom(input) {
     presentation[n["bom-ref"]] = p;
   }
   requireThat(Object.values(presentation).filter((p) => p.focus).length <= 1, "single focus application");
-  const edgeKeys = ["id", "from", "to", "kind", "optionality", "group", "support", "selection", "observations", "evidence", "selectionEvidence", "purpose", "mechanism", "configuration", "conditions", "note"];
+  const edgeKeys = ["id", "from", "to", "kind", "optionality", "support", "selection", "observations", "evidence", "selectionEvidence", "purpose", "mechanism", "configuration", "conditions", "note"];
   for (const e of relationships) {
-    requireThat(keys(e, edgeKeys) && nonempty(e.id) && nodes.has(e.from) && nodes.has(e.to), "relationship endpoints/shape");
-    requireThat(["dependency", "integration", "hosting", "data-flow"].includes(e.kind) && ["required", "optional", "alternative", "unknown"].includes(e.optionality) && typeof e.group === "string", "relationship kind/optionality");
+    requireThat(keys(e, edgeKeys, ["group"]) && nonempty(e.id) && nodes.has(e.from) && nodes.has(e.to), "relationship endpoints/shape");
+    requireThat(["dependency", "integration", "hosting", "data-flow"].includes(e.kind) && ["required", "optional", "alternative", "unknown"].includes(e.optionality) && (e.group === void 0 || typeof e.group === "string"), "relationship kind/optionality");
     requireThat(e.optionality !== "alternative" || nonempty(e.group), "alternative group");
     requireThat(["supported", "unknown", "absent", "conflicting", "out-of-scope"].includes(e.support) && ["selected", "unknown", "not-selected", "conflicting"].includes(e.selection), "relationship states");
     requireThat([e.purpose, e.mechanism, e.note].every(nonempty) && strings(e.configuration) && strings(e.conditions), "relationship detail");
