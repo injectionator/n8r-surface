@@ -42,7 +42,8 @@
     "check:release": "node scripts/check-release.mjs",
     "acceptance:skill": "node scripts/skill-acceptance/run.mjs",
     "build:skill": "node scripts/build-skill.mjs",
-    "check:skill": "node scripts/build-skill.mjs --check"
+    "check:skill": "node scripts/build-skill.mjs --check",
+    "cache:runtime": "node scripts/cache-runtime.mjs"
   },
   "dependencies": {
     "yaml": "2.9.1",

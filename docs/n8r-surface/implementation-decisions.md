@@ -86,7 +86,7 @@ versioned tests and a documented migration.
 `npm test` checks this profile, its source/reference fixtures and HTML/data
 consistency. `npm run check:package` packs and installs into a temporary directory,
 then imports built exports and bundled fixtures with no checkout-relative imports.
-Prepare npm's local dependency cache with `npm ci` and `npm cache add yaml@2.9.1`:
+Prepare npm's local dependency cache with `npm ci` and `npm run cache:runtime`:
 the latter also fetches registry metadata needed on a fresh machine. The installer
 then runs with `--offline --ignore-scripts`. Temporary files are removed after the
 check. See [contributor commands](../../CONTRIBUTING.md#researcher-contract-library).

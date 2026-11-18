@@ -288,14 +288,14 @@ For the experimental Researcher library, use Node.js 22, 24 or 26 and npm:
 
 ```sh
 npm ci
-npm cache add yaml@2.9.1
+npm run cache:runtime
 npm test
 npm run check:package
 ```
 
-`npm ci` downloads dependencies. `npm cache add yaml@2.9.1` also downloads the
-runtime dependency's metadata needed by the offline consumer install; keep that
-command and its CI step aligned with runtime dependency changes.
+`npm ci` downloads dependencies. `npm run cache:runtime` also downloads the
+direct and transitive runtime metadata from the lockfile needed by the offline
+consumer install; keep the lockfile and CI preparation aligned.
 Tests are offline and cover contracts, codecs,
 references, revision checks, HTML/data conflicts and synthetic fixtures. The
 package check builds, packs and installs in a temporary directory using the local
