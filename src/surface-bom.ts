@@ -6,7 +6,7 @@ import {decodeJsonValue} from './encoded-value.js';
 export type Bom = Record<string,any>;
 export interface Relationship {
  id:string;from:string;to:string;kind:'dependency'|'integration'|'hosting'|'data-flow';
- optionality:'required'|'optional'|'alternative'|'unknown';group:string;
+ optionality:'required'|'optional'|'alternative'|'unknown';group?:string;
  support:'supported'|'unknown'|'absent'|'conflicting'|'out-of-scope';
  selection:'selected'|'unknown'|'not-selected'|'conflicting';
  observations:{at:string;evidence:string[];note:string}[];
@@ -95,10 +95,10 @@ export function checkSurfaceBom(input:unknown):Surface {
   presentation[n['bom-ref']]=p;
  }
  requireThat(Object.values(presentation).filter(p=>p.focus).length<=1,'single focus application');
- const edgeKeys=['id','from','to','kind','optionality','group','support','selection','observations','evidence','selectionEvidence','purpose','mechanism','configuration','conditions','note'];
+ const edgeKeys=['id','from','to','kind','optionality','support','selection','observations','evidence','selectionEvidence','purpose','mechanism','configuration','conditions','note'];
  for(const e of relationships){
-  requireThat(keys(e,edgeKeys)&&nonempty(e.id)&&nodes.has(e.from)&&nodes.has(e.to),'relationship endpoints/shape');
-  requireThat(['dependency','integration','hosting','data-flow'].includes(e.kind)&&['required','optional','alternative','unknown'].includes(e.optionality)&&typeof e.group==='string','relationship kind/optionality');
+  requireThat(keys(e,edgeKeys,['group'])&&nonempty(e.id)&&nodes.has(e.from)&&nodes.has(e.to),'relationship endpoints/shape');
+  requireThat(['dependency','integration','hosting','data-flow'].includes(e.kind)&&['required','optional','alternative','unknown'].includes(e.optionality)&&(e.group===undefined||typeof e.group==='string'),'relationship kind/optionality');
   requireThat(e.optionality!=='alternative'||nonempty(e.group),'alternative group');
   requireThat(['supported','unknown','absent','conflicting','out-of-scope'].includes(e.support)&&['selected','unknown','not-selected','conflicting'].includes(e.selection),'relationship states');
   requireThat([e.purpose,e.mechanism,e.note].every(nonempty)&&strings(e.configuration)&&strings(e.conditions),'relationship detail');

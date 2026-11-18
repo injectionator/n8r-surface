@@ -7429,7 +7429,10 @@ var fail2 = (code) => {
 };
 function privacy(value2) {
   const text2 = canonical(value2);
-  if (/(?:https?|mongodb(?:\+srv)?|postgres(?:ql)?):\/\/|\b(?:\d{1,3}\.){3}\d{1,3}\b|\b(?:[a-f0-9]{1,4}:){2,}[a-f0-9:]+\b|(?:password|passwd|token|secret|username|api[_-]?key)\s*[=:]\s*[^\s"},]+|(?:\/Users\/|\/home\/|[A-Z]:\\\\)|[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text2)) fail2("privacy review required");
+  for (const match2 of text2.matchAll(/(?<![\w:])(?:[a-f0-9]{0,4}:){2,}[a-f0-9:]+\b/gi)) {
+    if (!/^(?:[01]?\d|2[0-3]):[0-5]\d:[0-5]\d$/.test(match2[0])) fail2("privacy review required");
+  }
+  if (/(?:https?|mongodb(?:\+srv)?|postgres(?:ql)?):\/\/|\b(?:\d{1,3}\.){3}\d{1,3}\b|(?:password|passwd|token|secret|username|api[_-]?key)\s*[=:]\s*[^\s"},]+|(?:\/Users\/|\/home\/|[A-Z]:\\\\)|[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text2)) fail2("privacy review required");
 }
 
 // src/skill-artifacts.ts
