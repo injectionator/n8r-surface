@@ -42,9 +42,11 @@ diagnostics, clock-time privacy handling and ordinary relationships without an
 alternative group. Alternatives still require a group.
 
 There is no new research engine, read/report feature or CLI/BOM format migration.
-The retained candidate predates later `main` integration and this documentation
-update; preserve its identity and recheck the selected release revision before
-publication.
+The preparation branch has been reconciled with `main` at
+`ea03385d78a49a626fc88cf5c9af8e3ed159e0eb`. Earlier candidate identities below
+remain historical evidence. The current candidate revision, digest and rerun
+results are recorded in [PR #93](https://github.com/injectionator/n8r-surface/pull/93);
+use its selected artifact for human verification.
 
 Changed prerelease bytes advance the package's experimental suffix; skill
 identity advances independently. Both plugin manifests and instruction identity
@@ -137,9 +139,9 @@ replacing the archive fails. Raw local logs, prepared fixtures, installed consum
 and saved revisions are retained privately with the candidate; no local paths or
 application data are published here.
 
-### Final retained candidate
+### Final candidate before reconciliation
 
-The final preparation candidate is from clean commit
+The final preparation candidate before reconciliation is from clean commit
 `f1dff0c71fc02f764d1ce05c9e46aaacc75b23af` (`dirty: false`), package
 `0.1.0-experimental.6` and skill `0.1.17`. Its archive is
 `scoped/n8r-surface-0.1.0-experimental.6.tgz`, SHA-256:
@@ -219,9 +221,11 @@ human acceptance result.
 
 ## Remaining verification before release
 
-- [ ] Reconcile the preparation branch with current `main` and select the exact
-  release commit. Repeat source, bundle and installed-package checks on Node
-  22/24/26 for that revision; retain a new report if candidate bytes change.
+- [x] Reconcile the preparation branch with `main` at
+  `ea03385d78a49a626fc88cf5c9af8e3ed159e0eb`, preserving earlier evidence.
+- [ ] Before publication, confirm the selected release commit includes all intended
+  changes and has passing source, bundle and installed-package checks on Node
+  22/24/26. Use the current PR report; rerun affected checks if that revision changes.
 - [ ] Confirm the public API and generated helper still use the same shared
   sources and packaged instructions. Run `npm run check:skill` and the public
   consumer check; exercise valid/invalid drafts and saved-revision readback.
