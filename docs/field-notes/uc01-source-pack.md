@@ -135,3 +135,27 @@ caller. No exploit, filtering effectiveness or isolation guarantee was demonstra
 The private Surface retains ten nodes and thirteen paths with stable identities;
 new memory and prompt paths have unknown selection and no observed transfer.
 BOM SHA-256: `facb47205f103c4f30e4a972e1a9ed1c4c6c3face4973c51c0f97a77f36fbacb`.
+
+## Bounded investigation closure — revision 013
+
+The user authorized a final pass, feature consolidation and artifact save, with
+unresolved questions recorded instead of extending discovery. That scope is
+complete. The signed-in Langfuse connection panel reports **Not configured**;
+this does not establish global telemetry absence. Reference saved memories is
+enabled, but the actor-effective memory USE grant and resolved server configuration
+remain unresolved. The mounted base has no explicit memory section; source still
+requires the preference, permission and configuration gates. No inference,
+database-record browsing, live settings change or lifecycle action was performed.
+
+Final private revision 013 retains ten nodes and thirteen paths, stable identities
+and every predecessor. It includes the feature matrix, unknowns and deferred
+experiments; a readable companion summary renders the matrix from the BOM because
+the generated brief flattens multiline tables. The BOM is the sole authority.
+SHA-256: `9dcbfea00410c9041da1c587281b8cf08e43b7aff4431b45d98a1107b5c052ab`.
+Installed helper save/readback and independent checks verified identities,
+predecessor linkage and 46 retained source hashes. Agent verification does not
+establish human acceptance, runtime enforcement or consumer compatibility.
+
+Further Atlas depth, live experiments and Labs import remain deferred. No further
+investigation is needed within this bounded scope. The broader issue remains open
+for its separate acceptance and publication work; the PR remains draft.

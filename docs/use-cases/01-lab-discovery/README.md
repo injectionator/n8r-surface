@@ -1,7 +1,7 @@
 # Surface UC01 — Discover the existing lab
 
 Agreed 18 November 2026. [Issue #96](https://github.com/injectionator/n8r-surface/issues/96).
-State: **Discovery underway; installed skill and fresh-chat continuation verified by agents. Runtime evidence is captured; deeper node/edge investigation continues. Labs import is separate work.**
+State: **Bounded discovery complete at revision 013. Installed-skill save/readback and fresh-chat continuation verified by agents. Unresolved questions are recorded; Labs import and human acceptance remain separate.**
 
 ## Intent and boundaries
 
@@ -28,7 +28,8 @@ must not implicitly apply settings, restart services or repair the lab.
 - [x] Install skill 0.1.17 at the identified merged revision and compare its bytes.
 - [x] Exercise the installed helper with synthetic data before discovery.
 - [x] Confirm a fresh intended host chat loads that exact installation.
-- [ ] Conduct observational discovery, capturing actual interactions and decisions.
+- [x] Conduct bounded observational discovery, capturing actual interactions,
+  decisions and unresolved questions.
 - [x] Save and independently inspect the BOM, brief, map and journal; verify key
   claims against sources. Reopen in a fresh chat and preserve predecessor bytes
   (bounded agent rehearsal; human acceptance remains pending).
@@ -311,3 +312,27 @@ caller. No exploit, filtering effectiveness or isolation guarantee was demonstra
 The private Surface retains ten nodes and thirteen paths with stable identities;
 new memory and prompt paths have unknown selection and no observed transfer.
 BOM SHA-256: `facb47205f103c4f30e4a972e1a9ed1c4c6c3face4973c51c0f97a77f36fbacb`.
+
+## Bounded investigation closure — revision 013
+
+The user authorized a final pass, feature consolidation and artifact save, with
+unresolved questions recorded instead of extending discovery. That scope is
+complete. The signed-in Langfuse connection panel reports **Not configured**;
+this does not establish global telemetry absence. Reference saved memories is
+enabled, but the actor-effective memory USE grant and resolved server configuration
+remain unresolved. The mounted base has no explicit memory section; source still
+requires the preference, permission and configuration gates. No inference,
+database-record browsing, live settings change or lifecycle action was performed.
+
+Final private revision 013 retains ten nodes and thirteen paths, stable identities
+and every predecessor. It includes the feature matrix, unknowns and deferred
+experiments; a readable companion summary renders the matrix from the BOM because
+the generated brief flattens multiline tables. The BOM is the sole authority.
+SHA-256: `9dcbfea00410c9041da1c587281b8cf08e43b7aff4431b45d98a1107b5c052ab`.
+Installed helper save/readback and independent checks verified identities,
+predecessor linkage and 46 retained source hashes. Agent verification does not
+establish human acceptance, runtime enforcement or consumer compatibility.
+
+Further Atlas depth, live experiments and Labs import remain deferred. No further
+investigation is needed within this bounded scope. The broader issue remains open
+for its separate acceptance and publication work; the PR remains draft.

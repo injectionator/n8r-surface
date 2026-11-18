@@ -105,7 +105,7 @@ The exact revision 002 BOM selected for the UI attempt has SHA-256:
 Fresh-chat successor revision 003 has SHA-256:
 `4bf3884452b624a8d3db81899cb9fe893782e29964260f838d6703e0457822c7`.
 Neither has passed Labs import and useful-continuation acceptance.
-Current research revision 012 incorporates runtime and node/edge findings;
+Historical research revision 012 incorporated runtime and node/edge findings;
 its SHA-256 is
 `facb47205f103c4f30e4a972e1a9ed1c4c6c3face4973c51c0f97a77f36fbacb`.
 
@@ -137,12 +137,16 @@ and appropriate read-only access. A running Labs UI is needed only for the separ
 import acceptance. Use the existing installation;
 do not publish raw research or credentials.
 
-- [ ] Open the saved brief and map. Expect ten nodes and thirteen
+- [ ] Open revision 013 final summary, generated brief and map. Expect ten nodes and thirteen
   paths, preserving earlier identities and adding a configured-default model node.
   Its selection must say configured default, not observed inference or availability.
   Hosting, connector, Atlas and volume selections have configuration evidence;
   inference and authenticated database use remain unproved. Follow each important
   claim to its source/configuration receipt and check the observation time.
+- [ ] Inspect the final feature matrix. Expect Langfuse connection status
+  **Not configured**, memory preference enabled, effective memory grant/configuration
+  unresolved, and experiments deferred. Follow evidence links; a missing receipt
+  blocks re-verification rather than proving the claim false.
 - [ ] Open the fresh-chat receipt. Expect revision 002 → 003, the same serial and
   component identities, a provenance correction, and unchanged predecessor hashes.
   This is an agent rehearsal; make a separate human judgement of usefulness.
@@ -200,3 +204,27 @@ BOM SHA-256: `facb47205f103c4f30e4a972e1a9ed1c4c6c3face4973c51c0f97a77f36fbacb`.
 
 These tests are proposals, not executed acceptance. Clean up disposable users,
 records and instances and independently verify the restored baseline.
+
+## Bounded investigation closure — revision 013
+
+The user authorized a final pass, feature consolidation and artifact save, with
+unresolved questions recorded instead of extending discovery. That scope is
+complete. The signed-in Langfuse connection panel reports **Not configured**;
+this does not establish global telemetry absence. Reference saved memories is
+enabled, but the actor-effective memory USE grant and resolved server configuration
+remain unresolved. The mounted base has no explicit memory section; source still
+requires the preference, permission and configuration gates. No inference,
+database-record browsing, live settings change or lifecycle action was performed.
+
+Final private revision 013 retains ten nodes and thirteen paths, stable identities
+and every predecessor. It includes the feature matrix, unknowns and deferred
+experiments; a readable companion summary renders the matrix from the BOM because
+the generated brief flattens multiline tables. The BOM is the sole authority.
+SHA-256: `9dcbfea00410c9041da1c587281b8cf08e43b7aff4431b45d98a1107b5c052ab`.
+Installed helper save/readback and independent checks verified identities,
+predecessor linkage and 46 retained source hashes. Agent verification does not
+establish human acceptance, runtime enforcement or consumer compatibility.
+
+Further Atlas depth, live experiments and Labs import remain deferred. No further
+investigation is needed within this bounded scope. The broader issue remains open
+for its separate acceptance and publication work; the PR remains draft.
