@@ -65,7 +65,9 @@ retain publication-safe journal summaries and reporting packs here. UC01 testing
 may require candidate fixes before releasing skill 0.1.17 and npm experimental.6.
 Preserve each tested revision and digest and repeat affected verification.
 Prepare separate release facts and investigation reporting packs for the website
-chat; publication follows verified release results.
+chat; publication follows verified release results. The current
+[UC01 source pack](uc01-source-pack.md) records source discovery, fresh-chat
+continuation, public readback and the blocked external-BOM consumer handoff.
 
 The earlier item 01 preparation remains intact below. Article queue numbers are
 not use-case identifiers; prioritize UC01 without rewriting that history.

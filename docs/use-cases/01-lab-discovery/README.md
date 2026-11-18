@@ -1,7 +1,7 @@
 # Surface UC01 — Discover the existing lab
 
 Agreed 18 November 2026. [Issue #96](https://github.com/injectionator/n8r-surface/issues/96).
-State: **Plan recorded; skill installation technically verified; discovery pending.**
+State: **Discovery underway; installed skill and fresh-chat continuation verified by agents. Runtime and Labs consumer acceptance remain incomplete.**
 
 ## Intent and boundaries
 
@@ -27,10 +27,11 @@ must not implicitly apply settings, restart services or repair the lab.
 - [x] Record this use case, link the field-notes plan and create the tracking issue.
 - [x] Install skill 0.1.17 at the identified merged revision and compare its bytes.
 - [x] Exercise the installed helper with synthetic data before discovery.
-- [ ] Confirm a fresh intended host chat loads that exact installation.
+- [x] Confirm a fresh intended host chat loads that exact installation.
 - [ ] Conduct observational discovery, capturing actual interactions and decisions.
-- [ ] Save and independently inspect the BOM, brief, map and journal; verify key
-  claims against sources. Reopen in a fresh chat and preserve predecessor bytes.
+- [x] Save and independently inspect the BOM, brief, map and journal; verify key
+  claims against sources. Reopen in a fresh chat and preserve predecessor bytes
+  (bounded agent rehearsal; human acceptance remains pending).
 - [ ] Open the exact saved `surface.cdx.json` in n8r-labs Surface through its normal
   user workflow. Inspect components, connections, evidence, uncertainty and history,
   then begin a continuation using the imported description. Record the actual
@@ -83,7 +84,8 @@ save and successor read all exited 0. The successor preserves the serial number,
 uses revision 2 and references the predecessor digest. All predecessor files
 remained byte-identical. An alternative relationship without a group was rejected
 with exit 1. These are technical fixture results, not discovered lab findings,
-fresh-chat invocation or human acceptance. No lab discovery has started.
+fresh-chat invocation or human acceptance. No lab discovery had started at the end
+of that preparation increment.
 
 ## Candidate and release policy
 
@@ -99,9 +101,9 @@ npm publication, registry/provenance checks and Labs adoption are distinct.
 Prepare a release facts pack (changes, versions, installation, evidence and limits)
 and a field report (actual investigation and learning). Neither is a finished article.
 
-## Human verification task list
+## Preparation verification task list
 
-For this documentation increment:
+For the earlier preparation increment:
 
 - [ ] Open this record and the [field-notes plan](../../field-notes/README.md).
   Expect Surface UC01 first, preserved earlier preparation, private raw evidence,
@@ -117,4 +119,66 @@ For this documentation increment:
 
 No cleanup is required for document review. Keep installation and synthetic
 verification evidence for continuation. Full discovery and Labs acceptance remain
-unchecked above; this preparation increment does not complete issue #96.
+incomplete above; preparation did not complete issue #96. For the current increment,
+use the [discovery and consumer task list](uc11-handoff.md#human-verification-task-list).
+
+## Discovery journal — 18 November 2026
+
+The new research chat exposes both 0.1.16 and 0.1.17 installations. It explicitly
+selected the catalogued 0.1.17 skill, read its instructions and both manifests,
+checked the helper digest above and compared all 27 plugin files against the
+expected commit. All matched. Discovery used that installed helper with Node
+26.13.0; no candidate bytes were changed.
+
+The first private save recorded an empty investigation plan. The next saved eight
+components and eight source-backed paths from the supplied Labs checkout at
+`2d50313ccdc81d7a0090cc99f2c521db201a6b5f`. Operator records, retained configuration
+recipes and implementation source were kept distinct from current deployment
+observations. Existing Labs working-copy changes were preserved.
+
+A separate fresh chat reopened revision 002, independently checked selected source
+hashes and saved revision 003. It corrected an evidence locator: connector
+validation was described against the server entry point but implemented in the
+provider handler. The correction retains the original annotation and adds the
+missing provenance. It also traced caller context into developer instructions;
+this is a source-level investigation lead, not a demonstrated vulnerability.
+Serial identity, component identities and all predecessor files were preserved.
+This passes the bounded agent reopening rehearsal, not human acceptance.
+
+Runtime access remains incomplete. Noninteractive SSH with strict host-key checking
+returned permission denied. The first normal Labs browser attempt refused the
+connection; after the user started Labs, the same address opened successfully.
+Surface collection and the existing Lab's Files and notes were inspected. A normal
+Attach file attempt for the exact revision 002 BOM was blocked before upload by
+the browser extension's disabled local-file permission. After the user enabled
+that permission, retry attached the exact 29,093-byte
+BOM. File preview showed the matching digest; the Lab assistant recovered its
+graph and uncertainty. It reported no external-BOM opening operation and refused
+a new save that would replace identity. The answer was saved in chat; no successor
+Surface was created. Exact Surface opening and continuation remain **Blocked**.
+Earlier research surfaced by the existing Lab UI remains
+historical context, not this run's findings.
+
+The source-level consumer review also found a boundary to test: the setup-package
+importer expects its own format, while the assistant Surface save adapter assigns
+host-owned serial/version values. Neither route proves preservation of an external
+BOM. The inspected consumer dependency is the retained experimental.5 archive at
+`e3fef8f5d8986bf40a30e5d375050776009fad29`; its recorded SHA-256 is
+`dffdbab5eabb443d3ac2ff329be712c1776c6eefd2d4aa874d6b50b72ed35413`.
+That is a checkout dependency pin, not a verified running-build identity.
+
+See the [UC11 handoff and acceptance gaps](uc11-handoff.md) and the
+[publication-safe reporting pack](../../field-notes/uc01-source-pack.md).
+Private BOMs, receipts and infrastructure details remain in the selected vault.
+A passive read through the existing documented LibreChat tunnel returned HTTP 200
+for health and public configuration. The allowlisted public fields reported the
+application title and login/registration flags; an independent repeat agreed.
+These observations do not prove current host/container state, database health,
+loaded private configuration or inference. Revision 004 reconciles the resolved
+UI/upload access gaps while preserving earlier failures and all predecessor bytes.
+Final readback found stale description wording and two competing active actions;
+revision 005 corrects them and retains consumer runtime metadata (Bun 1.4.4).
+Its BOM SHA-256 is
+`7cbdf82608c490feba1945dca353cc8fc97022ba1d23fab44b508e043d30fa5b`.
+
+The full scope of #96 is still incomplete; PR #97 remains draft and related work.
