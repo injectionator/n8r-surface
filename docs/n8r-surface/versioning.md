@@ -9,8 +9,8 @@ The maintainer removed unscoped publication and name reservation from the plan
 on 5 November 2026. The first verified release is
 [`@n8r/surface@0.1.0-experimental.2`](npm-release.md#verified-scoped-release).
 Historical dual archives remain evidence, not a second supported package or a
-future publication commitment. Existing dual-package tooling must be reduced to
-the scoped package before another release; that cleanup does not authorize one.
+future publication commitment. Current tooling prepares only the scoped package; preparation does not authorize
+a release.
 
 ## Compatibility and version changes
 
@@ -36,9 +36,9 @@ Use `npm version VERSION --no-git-tag-version` for an approved version change,
 then review both manifests in the issue's PR. `npm run check:version` rejects
 invalid versions and drift in either lockfile version. `npm test` and candidate
 packing run that check. A version bump needs no source-code edit for CLI output.
-The maintainer confirmed `0.1.0-experimental.2` and authorized publication on
-5 November 2026. Review/merge and required account actions remain separate. See
-the [first-release procedure](npm-release.md).
+The maintainer authorized the next release on 14 November 2026. The current
+release is `0.1.0-experimental.5`; required account actions remain separate. See
+the [release procedure](npm-release.md#experimental5-release).
 
 npm distribution tags are movable pointers, unlike permanent Git release tags:
 
@@ -67,12 +67,10 @@ Retain the approved scoped archive, its digest report, build environment, test
 evidence, release notes and registry readback. SHA-256 identifies bytes; it does
 not authenticate the builder. Do not rebuild or alter a published version.
 
-The current packer and release checker still retain two artifacts from the
-superseded implementation. Preserve the historical report and both archives for
-verification of `.1` and `.2`; remove the unscoped output and dual-package
-requirements when adapting the tooling for future scoped releases. Source and
-default candidates remain private. Never strip a guard from an old tarball and
-retain its old digest or source claim.
+The packer produces one scoped archive. Preserve the historical reports and both
+archives for verification of `.1` and `.2`; their version-specific verification
+still checks both. Source and default candidates remain private. Never strip a
+guard from an old tarball and retain its old digest or source claim.
 
 ## Read-only verification commands
 
@@ -86,7 +84,7 @@ npm run check:release -- /path/to/candidates
 
 The second command reads GitHub's release API and resolves the remote tag. It
 checks the source and lockfile versions, clean HEAD, report revision/dirty flag,
-local and remote tag targets, release target SHA and prerelease flag, both archive
+local and remote tag targets, release target SHA and prerelease flag, required archive
 manifests and hashes, and matching uploaded asset names/digests. It fails closed
 on missing data or API errors. A passing JSON result includes the version,
 revision, tag, draft status, `evidence: "GitHub API readback"`, and explicit
@@ -143,7 +141,7 @@ No npm credentials, real Git tag, GitHub Release or global-install change is nee
 Keep the current terminal with `candidate_run` set by that guide.
 
 - [ ] From the checkout root run `npm run check:version`. Expect
-  `Version consistent: 0.1.0-experimental.2`, exit 0. Inspect `package.json` and
+  `Version consistent: 0.1.0-experimental.5`, exit 0. Inspect `package.json` and
   both root version fields in `package-lock.json`; they must match.
 - [ ] Follow the [candidate install steps](npm-distribution.md#human-verification)
   for the scoped package. In its consumer directory run:
@@ -154,9 +152,9 @@ Keep the current terminal with `candidate_run` set by that guide.
   ```
 
   Expect
-  `0.1.0-experimental.2` and `n8r-surface 0.1.0-experimental.2`, both exit 0.
-- [ ] Inspect `candidates.json`: both entries have distinct `releaseAsset` names,
-  the same report version/revision, and hashes matching the retained tarballs.
+  `0.1.0-experimental.5` and `n8r-surface 0.1.0-experimental.5`, both exit 0.
+- [ ] Inspect `candidates.json`: one scoped entry has its `releaseAsset` name,
+  the report version/revision, and a hash matching the retained tarball.
   A clean-commit rehearsal must say `dirty: false`.
 - [ ] Read the compatibility table and release/recovery procedure above. Expect
   one permanent Git tag and exact commit for the scoped package; `experimental`

@@ -48,13 +48,13 @@ export function checkRelease(source, directory, release) {
     (url.pathname === `/${repository}/releases/tag/${tag}` ||
       (release.draft && new RegExp(`^/${repository}/releases/tag/untagged-[a-zA-Z0-9]+$`).test(url.pathname))),
   'Release URL must identify the official repository and tag');
-  requireMatch(Array.isArray(report.packages) && report.packages.length === 2, 'Both candidate packages are required');
+  const names = ['0.1.0-experimental.1','0.1.0-experimental.2'].includes(version) ? ['@n8r/surface','n8r-surface'] : ['@n8r/surface'];
+  requireMatch(Array.isArray(report.packages) && report.packages.length === names.length, 'Candidate packages must match the version-specific scope');
   requireMatch(Array.isArray(release.assets), 'Release assets are required');
-  const names = ['@n8r/surface', 'n8r-surface'];
   const base = realpathSync(directory);
   for (const [index, name] of names.entries()) {
     const entry = report.packages[index];
-    requireMatch(entry?.name === name, 'Candidate package names/order must match both official names');
+    requireMatch(entry?.name === name, 'Candidate package names/order must match release scope');
     const assetName = `n8r-surface-${version}-${index === 0 ? 'scoped' : 'unscoped'}.tgz`;
     requireMatch(entry.releaseAsset === assetName, 'Candidate release asset name mismatch');
     requireMatch(typeof entry.filename === 'string' && /^(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9._-]+\.tgz$/.test(entry.filename), 'Unsafe candidate filename');

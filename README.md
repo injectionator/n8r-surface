@@ -8,7 +8,7 @@ detail available or useful. This repository also develops the experimental
 > [!NOTE]
 > **Early draft; experimental tooling.** The model concepts and illustrative
 > fields remain provisional. The library and command are available as the
-> experimental [`@n8r/surface` package](https://www.npmjs.com/package/@n8r/surface/v/0.1.0-experimental.2);
+> experimental [`@n8r/surface` package](https://www.npmjs.com/package/@n8r/surface/v/0.1.0-experimental.5);
 > there is no universal schema, exporter or deployment engine yet. The Researcher
 > skill supports working research through the host. The standalone command now
 > supports bounded Codex research with numbered Markdown saves and fresh-session reopening.
@@ -99,13 +99,18 @@ source access and conversation to produce evidence-backed working notes. The
 [discovery guide](docs/n8r-surface/researcher-discovery.md) focuses on AI-relevant
 graphs, reusable product knowledge and comparing descriptions with evidence. See
 [verification and pending Work-mode checks](docs/n8r-surface/researcher-skill-verification.md).
-[Skill 0.1.14 is available from the repository marketplace](docs/n8r-surface/marketplace-0.1.14.md).
-It saves a [self-contained CycloneDX Surface](docs/n8r-surface/skill-cyclonedx.md)
+Candidate 0.1.16 saves a [self-contained CycloneDX Surface](docs/n8r-surface/skill-cyclonedx.md)
 with a generated brief, connected overview and investigation journal. See the
 [0.1.14 first-use verification](docs/n8r-surface/first-use-overview.md). Follow the [working user manual](docs/n8r-surface/skill-manual.md)
 for multi-component research, saving and continuation.
+The [0.1.14 marketplace record](docs/n8r-surface/marketplace-0.1.14.md)
+preserves the earlier installation evidence and progress-blog draft.
 The [freeform component journey](docs/n8r-surface/guided-journey-verification.md)
 records installed-skill exploration, later source intake and saved continuation.
+Candidate 0.1.15 adds [instance-first research](docs/n8r-surface/instance-first-research.md)
+through the host harness, with configured and observed evidence kept distinct.
+Candidate 0.1.16 adds [progressive first-use access guidance](docs/n8r-surface/first-use-access.md)
+for users starting with a description, document or inaccessible source.
 The accepted delivery order is skill first, standalone CLI second, then separate
 n8r-labs adaptation.
 The [local vault](docs/n8r-surface/researcher-vault.md) holds research notes, intermediate artifacts
@@ -203,3 +208,10 @@ Experiment data. Third-party material retains its applicable terms.
 
 This is an independent Injectionator project, with no claimed OWASP affiliation
 or endorsement.
+
+## Follow the work in practice
+
+The [Injectionator field-notes series plan](docs/field-notes/README.md) starts with
+fresh local LibreChat research, remote sources and a running-instance continuation.
+It tracks actual attempts, mistakes and evidence for articles authored in
+`injectionator-website`; preparation is not a completed walkthrough.

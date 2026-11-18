@@ -9,6 +9,15 @@ from pending human acceptance. The earlier [0.1.12 rehearsal](skill-cyclonedx-ve
 used historical material and a different save format; it was not a neutral fresh
 assessment.
 
+## Start with what you have
+
+Candidate 0.1.16 can begin with a short description or deployment document.
+Researcher should show a provisional map, then help you provide one useful next
+source. You do not need to prepare a Lab, repository or SSH connection first.
+See [first-use examples and checks](first-use-access.md). A web Project can hold
+uploaded sources; it does not automatically connect a laptop folder. Saving and
+live access depend on the tools available in the current chat.
+
 ## Start with your question and sources
 
 Open a fresh chat with the Researcher and explicitly supply a checkout, source
@@ -23,6 +32,23 @@ The Researcher uses this chat's supplied sources. It should not search old chats
 vault research automatically. If the host supplies recognizable historical context,
 it should disclose that context; ask it to exclude it when inappropriate. This
 is not a promise that the host has no memory.
+
+## Start with an existing system
+
+If your question concerns a running composition, identify the instance and the
+read-only access you permit. Supply relevant remote repositories, documents or
+URLs through tools available in your Codex/ChatGPT host. A URL alone does not
+provide private access, and a local checkout may describe only one component.
+Candidate 0.1.15 follows this [instance-first workflow](instance-first-research.md).
+
+> Understand this running system using the host access I have provided. Explain
+> its components and connections, what is configured, what has been observed and
+> what remains untested. Keep inspection read-only and save the Surface here.
+
+Expect partial progress when an integration cannot be inspected. Researcher does
+not start a service, sign in for you or send a test prompt to complete the graph.
+On a later visit, it distinguishes actual target changes from newly learned facts
+and missing access. The existing source-only workflow remains available.
 
 ## Inspect the developing Surface
 

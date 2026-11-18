@@ -1,4 +1,31 @@
-# First public npm release
+# npm release records
+
+## Verified experimental.5 release
+
+Published on 14 November 2026:
+**[`@n8r/surface@0.1.0-experimental.5`](https://www.npmjs.com/package/@n8r/surface/v/0.1.0-experimental.5)**,
+bundling Researcher skill **0.1.16**, from commit
+`b787d091db1c5dcd21f77c97518f05cca08cc665` and permanent annotated tag
+`v0.1.0-experimental.5`. The
+[GitHub prerelease](https://github.com/injectionator/n8r-surface/releases/tag/v0.1.0-experimental.5)
+is finalized and independently read back as `immutable: true`.
+
+The existing stage-only credential submitted the retained scoped archive;
+the maintainer approved it with npm 2FA. Registry bytes match retained SHA-256
+`289db285717580ddfc7ff6b9543198c073f7509ff14e78eb03ae97368793516a`.
+Registry signatures and the package's own signed provenance verified against the
+exact workflow/tag identity, source commit and subject digest. Installed exports,
+assets, skill instruction digest, CLI identity and isolated closed-input startup
+passed on Node 22.23.2, 24.22.2 and 26.13.0. Fresh-cache npm-exec returned the
+exact release version. See the attached
+[registry verification](https://github.com/injectionator/n8r-surface/releases/download/v0.1.0-experimental.5/scoped-registry-verification.json)
+and [workflow readback](https://github.com/injectionator/n8r-surface/actions/runs/43591235030).
+
+Use the exact version or `experimental`; `latest` remains `0.0.0-stage`.
+No unscoped package was published. Trusted publishing remains unexercised.
+The CLI and skill retain distinct save formats. Release checks are agent
+rehearsals, not new human research acceptance; the
+[first-use web delivery limits](first-use-access.md) remain explicit.
 
 ## Verified scoped release
 
@@ -30,12 +57,110 @@ Use the exact version or npm tag `experimental`. `latest` still points to npm's
 before npm staging because of a faulty remote-tag API lookup. Its permanent tag
 and unpublished draft artifacts remain retained.
 
+## Experimental.5 release
+
+The maintainer authorized a new scoped release on 14 November 2026 after accepting
+PR #82. Version `0.1.0-experimental.5` packages the current library/CLI and
+Researcher skill 0.1.16. Earlier `.3`/`.4` candidates remain distinct; their older
+CLI evidence does not establish current release behavior. Only `@n8r/surface`
+is built or submitted. The source stays private and `latest` is unchanged.
+
+This release includes self-contained CycloneDX Surface saves in the skill,
+connected overviews and journals, instance-first investigation and progressive
+source-access guidance. CLI save formats remain separate; bundling the skill does
+not establish CLI/BOM parity. The [first-use evidence](first-use-access.md)
+records useful signed-in web responses but unresolved portable delivery/helper
+execution. Those limits remain; publication does not establish end-to-end web
+acceptance, runtime conformance or consumer compatibility.
+
+### Preparation and publication
+
+Start at the reviewed, clean release commit after Node 22/24/26 tests and installed
+package checks pass. Confirm GitHub account/repository and commit author. Create
+an annotated `v0.1.0-experimental.5` tag and push only that tag. It must be on `main`.
+Do not reuse or move a permanent release tag.
+
+```sh
+gh workflow run npm-release.yml --ref v0.1.0-experimental.5 -f operation=prepare
+```
+
+The workflow builds one fresh publishable scoped archive, records its revision and
+SHA-256, retains a build artifact and creates a draft prerelease. Inspect its
+`candidates.json` and archive manifest: exact version, `@n8r/surface`,
+`private: false`, public registry and `experimental`. The source remains private.
+Download those assets; do not rebuild between preparation and staging.
+
+```sh
+gh workflow run npm-release.yml --ref v0.1.0-experimental.5 -f operation=stage
+```
+
+The existing stage-only `NPM_BOOTSTRAP_TOKEN` route requires valid package write
+access. An expired credential blocks staging; renew it outside tracked files or
+review trusted publishing separately. A stage is not publication. Inspect the
+reported stage ID and validation state, then approve that exact stage with npm
+2FA. [npm's staged-publishing procedure](https://docs.npmjs.com/staged-publishing/)
+was rechecked on 14 November 2026. After approval:
+
+```sh
+gh workflow run npm-release.yml --ref v0.1.0-experimental.5 -f operation=verify
+```
+
+Independently verify registry signatures and the package's own signed provenance,
+workflow/tag identity, source commit and archive digest. Exercise the isolated
+installation below on supported Node majors and a fresh-cache exact-version
+npm-exec route. Attach evidence and release notes before finalizing the immutable
+GitHub prerelease. Verify `immutable: true` afterward. Never promote `latest` as
+part of this procedure. Failed staging/readback leaves the draft incomplete;
+retain its bytes and verify existing registry state before retrying.
+
+### Human verification task list
+
+Maintainer preparation: provide the retained scoped archive from the draft release
+in a temporary directory, with Node 22/24/26 and npm installed. Run from that
+directory; `ARCHIVE` below is the archive's absolute path. No normal installation,
+Codex sign-in or research vault changes are needed.
+
+- [ ] Create an isolated consumer and install the archive:
+
+  ```sh
+  export ARCHIVE="$PWD/n8r-surface-0.1.0-experimental.5-scoped.tgz"
+  mkdir consumer
+  cd consumer
+  npm init --yes
+  npm install --ignore-scripts --no-audit --no-fund --package-lock=false "$ARCHIVE"
+  node --input-type=module -e 'import {decode} from "@n8r/surface"; console.log(typeof decode)'
+  ./node_modules/.bin/n8r-surface --version
+  ```
+
+  Expect exits 0, `function`, and `n8r-surface 0.1.0-experimental.5`.
+- [ ] Inspect `node_modules/@n8r/surface/plugins/n8r-surface/plugin.json`.
+  Expect skill version `0.1.16`. This does not install a plugin into a web host.
+- [ ] Exercise closed-input startup in an isolated home:
+
+  ```sh
+  mkdir empty-home
+  env HOME="$PWD/empty-home" USERPROFILE="$PWD/empty-home" ./node_modules/.bin/n8r-surface </dev/null
+  echo "$?"
+  ls -A empty-home
+  ```
+
+  Expect setup guidance, exit **1**, and an empty home. Missing imports, wrong
+  versions or home writes fail. After publication, repeat installation using
+  `@n8r/surface@0.1.0-experimental.5` in a new consumer and compare the result.
+- [ ] Report **Pass / Fail / Blocked**, Node/npm versions, archive digest and CLI
+  output. Missing archive/authentication is Blocked; any unexpected behavior is
+  Fail. Keep evidence, leave the consumer and remove only these temporary files.
+
+Agent rehearsal and human acceptance are separate. Build/registry evidence is
+attached to the release; see the verified record above. These steps describe the
+completed preparation and must not rebuild or restage its permanent version.
+
 ## Retained preparation procedure
 
 The procedure below records the original dual-package preparation. Its two-name
 acceptance requirement was superseded by the maintainer's scoped-only decision.
-Do not rerun it for the released version. The existing workflow still expects
-both names; remove that legacy behavior before a future scoped release. Future
+Do not rerun it for the released version. The current workflow targets scoped experimental.5; the historical commands
+below are retained as first-release evidence only. Future
 releases require updated version guards, reviewed
 authentication configuration, and a new permanent version/tag. Trusted publishing
 has not been exercised; this release used stage-only token authentication and

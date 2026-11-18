@@ -12,7 +12,7 @@ try {
   const candidates = join(temp, 'candidates');
   const report = packCandidates(candidates);
   for (const packed of report.packages) {
-    const consumer = join(temp, packed.name === '@n8r/surface' ? 'scoped' : 'unscoped');
+    const consumer = join(temp, 'scoped');
     mkdirSync(consumer);
     writeFileSync(join(consumer, 'package.json'), '{"private":true,"type":"module"}\n');
     execFileSync(npm, ['install', '--offline', '--ignore-scripts', '--no-audit', '--no-fund', '--package-lock=false', join(candidates, packed.filename)], {cwd: consumer, stdio: 'pipe'});

@@ -1,4 +1,4 @@
-// First-release publisher: caller must first run check:release on retained assets.
+// Scoped-release publisher: caller must first run check:release on retained assets.
 // Network and registry writes are explicit; imports are side-effect free.
 import {readFileSync, realpathSync, mkdtempSync, readdirSync, rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
@@ -38,7 +38,7 @@ async function readback(entry, version, metadata) {
 
 export async function publishMissing(entries, {lookup, verify, publish}) {
   const pending = [];
-  // Inspect both before changing either. Network errors never mean absent.
+  // Inspect retained packages before changing the registry. Network errors never mean absent.
   for (const entry of entries) {
     const existing = await lookup(entry);
     if (existing) await verify(entry, existing);
@@ -56,7 +56,8 @@ async function main(directory, operation) {
   if (process.env.GITHUB_ACTIONS !== 'true' || process.env.GITHUB_REPOSITORY !== 'injectionator/n8r-surface') throw new Error('Publication requires the official GitHub Actions workflow');
   const root = resolve(import.meta.dirname, '..');
   const report = JSON.parse(readFileSync(join(directory, 'candidates.json'), 'utf8'));
-  if (report.version !== '0.1.0-experimental.2' || process.env.GITHUB_REF !== `refs/tags/v${report.version}` || process.env.GITHUB_SHA !== report.revision) throw new Error('Workflow must run at the exact approved version tag/revision');
+  if (report.version !== '0.1.0-experimental.5' || process.env.GITHUB_REF !== `refs/tags/v${report.version}` || process.env.GITHUB_SHA !== report.revision) throw new Error('Workflow must run at the exact approved version tag/revision');
+  if(report.packages?.length!==1 || report.packages[0].name!=='@n8r/surface') throw new Error('Only @n8r/surface is authorized by this tooling');
   // Revalidate live release mapping immediately before any registry writes.
   execFileSync(process.execPath, [join(root, 'scripts/check-release.mjs'), directory], {stdio:'inherit'});
   for (const entry of report.packages) {
@@ -92,11 +93,11 @@ async function main(directory, operation) {
       }
     },
     publish: entry => {
-      if (operation === 'verify') throw new Error('Both exact versions must be approved before registry verification');
+      if (operation === 'verify') throw new Error('The exact scoped version must be approved before registry verification');
       execFileSync('npm', ['stage', 'publish', realpathSync(join(directory, entry.filename)), '--ignore-scripts', '--access=public', '--tag=experimental', '--provenance', '--registry=https://registry.npmjs.org'], {stdio:'inherit'});
     },
   });
-  console.log(operation === 'stage' ? 'Retained bytes submitted or already present. Staged versions require maintainer 2FA approval; publication is not yet established.' : 'Both registry archives match retained bytes and expose provenance metadata. Independently verify signatures, provenance source and installed behavior before finalizing the draft release.');
+  console.log(operation === 'stage' ? 'Retained bytes submitted or already present. Staged versions require maintainer 2FA approval; publication is not yet established.' : 'The scoped registry archive matches retained bytes and exposes provenance metadata. Independently verify signatures, provenance source and installed behavior before finalizing the draft release.');
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

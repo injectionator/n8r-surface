@@ -1,6 +1,9 @@
 # Making AI system research easier to pick up again
 
-Editorial status: draft for review, not posted. Skill 0.1.14 is available through
+Editorial status: historical draft dated 13 November 2026, not posted.
+It describes the 0.1.14 release at that date; later 0.1.16 and npm releases are
+outside this article. Refresh the release context before any publication.
+Skill 0.1.14 is available through
 the repository marketplace. See the
 [publication record](../n8r-surface/marketplace-0.1.14.md).
 

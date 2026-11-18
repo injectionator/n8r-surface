@@ -1,10 +1,11 @@
 # n8r-surface Researcher: start an investigation
 
-For published skill 0.1.14, use the [marketplace installation guide](marketplace-0.1.14.md)
-and [first-use overview check](first-use-overview.md).
+For skill 0.1.16, see the [progressive first-use guide](first-use-access.md).
+The [0.1.14 marketplace record](marketplace-0.1.14.md) and
+[first-use overview check](first-use-overview.md) preserve earlier release evidence.
 The [0.1.13 tester guide](tester-candidate.md) retains pinned baseline installation
-and host boundaries; use the identified 0.1.14 revision for the new check. Installation versions and
-branch references below describe historical rehearsals, not the current candidate.
+and host boundaries. Version-specific instructions below are historical;
+use their exact revisions when reproducing those rehearsals.
 
 **Previously accepted standalone skill 0.1.11:** produces working notes and checked
 Capability/Bound Surface bundles using the host's source access and conversation.

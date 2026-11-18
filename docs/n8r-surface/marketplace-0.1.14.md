@@ -1,5 +1,10 @@
 # Skill 0.1.14 marketplace publication
 
+Historical record: the repository now contains skill 0.1.16. The commands below
+intentionally pin 0.1.14 to reproduce its dated installation evidence; they are
+not instructions to select the latest skill. See the
+[0.1.16 first-use guide](first-use-access.md) for the later behavior.
+
 Status on 13 November 2026: **published through the repository marketplace and
 verified by a fresh default-branch installation**.
 Related to [#77](https://github.com/injectionator/n8r-surface/issues/77),
@@ -13,7 +18,7 @@ documentation branch starts from that merged default-branch commit.
 The destination is the existing `injectionator/n8r-surface` GitHub repository
 marketplace, named `n8r-surface`. Its
 [catalog](../../.agents/plugins/marketplace.json) points to
-`plugins/n8r-surface`; both plugin manifests identify version 0.1.14.
+`plugins/n8r-surface`; both plugin manifests at the recorded revision identify version 0.1.14.
 No catalog change, npm publish or public Plugins Directory submission is needed.
 [OpenAI's packaging guidance](https://developers.openai.com/plugins/build/plugins)
 distinguishes repository marketplaces from the universal directory.
