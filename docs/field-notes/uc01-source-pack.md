@@ -80,7 +80,18 @@ invented dialogue or a predetermined successful ending.
 
 Website owns drafting, titles, visual selection and publication. No website chat
 has been messaged and no article is published by this task. Host read-only access
-is now available. Atlas management evidence and behavioral
-testing remain distinct gaps. Labs import is separate work and does not block
+is now available. Atlas management reads subsequently became available after user sign-in; exact
+application binding and behavioral testing remain distinct gaps. Labs import is separate work and does not block
 continued node/edge discovery.
 The public reference Surface proposed in #98 remains separate work.
+
+## Further source and access findings
+
+Caller-context tracing connected request/model-spec instructions to message-role
+conversion and the mounted connector's Codex instruction input. Authorization and
+instruction trust are separate questions; source inspection did not demonstrate an
+exploit. Atlas browser management reads became available after human sign-in;
+no credentials, records or settings changes were involved. Private observations
+cover role/network/recovery controls. Revision 008 preserves the growing graph,
+including a distinct management-access edge, and corrects a potentially overstated
+finding title found during readback. No control-effectiveness claim is made.

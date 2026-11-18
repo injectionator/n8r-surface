@@ -17,12 +17,32 @@ concurrent Labs import edits are preserved and outside this investigation.
 
 | Node or edge | What is established | Control significance and remaining question |
 | --- | --- | --- |
-| LibreChat | Identified container filesystem reports v0.8.8. Message route source installs JWT authentication. Mounted YAML selects the private connector and disables title generation and parameter controls. | Application identity and caller context are distinct from connector credentials. Complete ownership checks and who can supply system/developer context remain to be traced. |
+| LibreChat | Identified container filesystem reports v0.8.8. Message route source installs JWT authentication. Mounted YAML selects the private connector and disables title generation and parameter controls. | Application identity and caller context are distinct from connector credentials. Browser JWT, conversation ownership and agent checks have a source trace. Request/model-spec prompt prefixes can become instructions; effective model-spec policy and complete enforcement remain unverified. |
 | LibreChat → private connector | Mounted endpoint selection and default model are established. Connector container has no host-published port; LibreChat is loopback-published. | UI parameter restrictions do not prove API enforcement. Docker publishing is not a full ingress/egress policy audit. |
-| Connector → Codex → managed service | Local source validates bearer authorization, bounded text, catalog membership and serialized requests. Adapter requests ephemeral/read-only execution, checks returned policy and fixes effort low. Mounted bundle and executable hashes identify deployed files. | Source behavior is not proven equal to the running bundle. Current sign-in, Pro entitlement, catalog and inference remain unverified. Model-catalog inspection can start app-server work. |
+| Connector → Codex → managed service | Local source validates bearer authorization, bounded text, catalog membership and serialized requests. Adapter requests ephemeral/read-only execution, checks returned policy and fixes effort low. Mounted bundle and executable hashes identify deployed files. | Mounted bundle inspection confirms bearer, context conversion and returned-policy checks in source; running-memory identity and enforcement remain unproved. Current sign-in, Pro entitlement, catalog and inference remain unverified. Model-catalog inspection can start app-server work. |
 | LibreChat → Atlas | Safe launch-configuration projection selects an Atlas-domain MongoDB target. Deployed connection source uses Mongoose and maps pool options. | Authentication database does not establish database role. Numeric minimum zero is omitted by the inspected option construction; effective driver values remain unknown. TCP socket state does not prove authenticated database use. |
 | LibreChat → local volumes | Writable data, uploads, images and skills mounts exist alongside Atlas. | Restore and retention plans must account for both destinations; contents and successful persistence were not inspected. |
 | Host → containers | Non-root user, read-only root filesystem, capability drops, resource limits and no-new-privileges are configured. | Writable mounts and upstream access remain separate authorities. Configuration is not escape-resistance or availability-test evidence. |
+
+## Caller-context and management boundaries
+
+The source trace is: authenticated browser request → agent/conversation checks →
+parsed endpoint options and model-spec processing → ephemeral instructions →
+system/developer message serialization → separately authenticated connector →
+Codex developer instructions. Persistent agents load instructions from database
+instead. The separate LibreChat Agent API has its own authentication/permission
+chain; browser JWT checks cannot be presumed to cover it.
+
+The connector retains user/assistant history as reference text while combining
+system/developer content into instructions. Authentication authorizes a caller;
+it does not establish that caller text is trusted policy. A controlled test should
+capture synthetic requests at each boundary and verify identity, role conversion,
+policy precedence and rejection before dispatch, using the exact relevant build.
+No prompt-injection exploit or runtime bypass was demonstrated.
+
+Atlas management navigation adds a distinct observed edge from the operator browser.
+It does not grant database connectivity or authorize changes to network policy.
+Management-plane settings and application database behavior need separate evidence.
 
 ## Candidate controlled tests
 
@@ -40,8 +60,10 @@ requires rechecking the applicable source claims.
 | MongoDB options in an isolated matching build | Compare omitted, zero and positive pool minimum with synthetic connection settings | Inspect constructed/effective driver options and bounded connection behavior. Do not assume declared environment text equals an effective option; restore baseline and remove disposable data. |
 | Persistence and recovery after Atlas role/backup policy readback | Synthetic conversation and attachment in a disposable database and volume set | Identify which store receives each artifact, then exercise approved backup/restore and cleanup. No production role or backup changes are preselected. |
 
-Atlas management access, current database roles, network allowlisting, tier,
-backup/retention policy and allowed disposable resources remain gaps. Existing
+Atlas management UI reads are now available after human sign-in and project
+selection. Role, network and cluster recovery settings were observed and retained
+privately. Exact application target/principal correspondence, effective database
+privileges, recovery behavior and permitted disposable resources remain gaps. Existing
 credentials were neither extracted nor used for database queries. Source landmarks
 include `api/db/connect.js` in the identified container, and the local
 `compositions/librechat-vps/provider.ts`, `apps/lab/server/codex.ts`,
@@ -58,9 +80,9 @@ The exact revision 002 BOM selected for the UI attempt has SHA-256:
 Fresh-chat successor revision 003 has SHA-256:
 `4bf3884452b624a8d3db81899cb9fe893782e29964260f838d6703e0457822c7`.
 Neither has passed Labs import and useful-continuation acceptance.
-Current research revision 006 incorporates runtime and node/edge findings;
+Current research revision 008 incorporates runtime and node/edge findings;
 its SHA-256 is
-`f35b12b4c716cf1ea6408a9d6277193ee4080ae4512b6824b513892ff75df2c9`.
+`c4d0c93326305d2991b80aa1f394b4d8216ee30e8e8ab3748fd0b9d395391f3c`.
 
 The running UI became reachable after user startup. The initial upload was
 blocked by browser permission; after the user enabled it, the exact file arrived.
@@ -90,7 +112,7 @@ and appropriate read-only access. A running Labs UI is needed only for the separ
 import acceptance. Use the existing installation;
 do not publish raw research or credentials.
 
-- [ ] Open the saved brief and map. Expect nine nodes and nine
+- [ ] Open the saved brief and map. Expect nine nodes and ten
   paths, preserving the original eight node identities and adding local storage.
   Hosting, connector, Atlas and volume selections have configuration evidence;
   inference and authenticated database use remain unproved. Follow each important

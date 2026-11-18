@@ -219,3 +219,34 @@ This is a bounded architecture/research SBOM, not a complete package inventory.
 See the updated [UC11 handoff](uc11-handoff.md) for candidate tests and their limits.
 
 The full scope of #96 is still incomplete; PR #97 remains draft and related work.
+
+### Caller-context trace and Atlas access
+
+The next read-only increment traced the identified LibreChat filesystem through
+browser JWT authentication, agent/conversation access checks and endpoint option
+construction. Ephemeral-agent instructions can derive from parsed model parameters
+or the request prompt prefix, subject to model-spec processing. Agent context builds
+system messages; provider serialization can map them to developer messages.
+These are conditional source paths, not a captured request or proven bypass.
+
+The mounted connector bundle was inspected beyond lexical indicators. It applies
+its own bearer check, bounds message shapes, combines system/developer text into
+Codex developer instructions and sends conversation history as reference text.
+It requests restricted execution policy and validates the returned policy. This
+narrows the earlier source gap but does not prove loaded-memory identity or tested
+enforcement. Packaged TypeScript source remains distinct from compiled execution.
+
+Atlas initially required sign-in. The user signed in and selected the lab project;
+normal management pages then allowed read-only inspection of database roles,
+network policy and cluster recovery state. Those settings and identifiers remain
+private. Management access is distinct from database access and does not establish
+that the account itself has a read-only role. No database records, credentials,
+connection strings or live changes were involved. Exact application target/principal
+correspondence and recovery behavior remain gaps.
+
+Revision 007 added a separate browser-to-Atlas management edge. Readback caught a
+finding title that could imply tested execution restrictions; revision 008 clarifies
+the title and coverage without changing observations. There are nine stable nodes
+and ten edges. Latest BOM SHA-256:
+`c4d0c93326305d2991b80aa1f394b4d8216ee30e8e8ab3748fd0b9d395391f3c`.
+Predecessor and evidence hashes remain preserved. Labs import stays separate.
