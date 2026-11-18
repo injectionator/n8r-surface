@@ -11,6 +11,10 @@ defines the record and interaction rules used by the installed skill. The
 is the authoritative validator and filesystem implementation. Plugin removal or
 upgrade does not own or remove user workspaces.
 
+For the proposed multi-source system workspace, effort history and discovery
+index, see [the workspace workflow](workspace-workflow.md). That proposal does
+not change the v1 contract or claim installed management features.
+
 ## Public consumer boundary
 
 Import the bundled ESM module using Node.js 22, 24 or 26. It uses built-ins only:
