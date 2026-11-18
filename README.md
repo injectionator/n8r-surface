@@ -103,6 +103,8 @@ Candidate 0.1.16 saves a [self-contained CycloneDX Surface](docs/n8r-surface/ski
 with a generated brief, connected overview and investigation journal. See the
 [0.1.14 first-use verification](docs/n8r-surface/first-use-overview.md). Follow the [working user manual](docs/n8r-surface/skill-manual.md)
 for multi-component research, saving and continuation.
+The [0.1.14 marketplace record](docs/n8r-surface/marketplace-0.1.14.md)
+preserves the earlier installation evidence and progress-blog draft.
 The [freeform component journey](docs/n8r-surface/guided-journey-verification.md)
 records installed-skill exploration, later source intake and saved continuation.
 Candidate 0.1.15 adds [instance-first research](docs/n8r-surface/instance-first-research.md)
