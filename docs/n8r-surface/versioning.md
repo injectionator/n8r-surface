@@ -36,9 +36,11 @@ Use `npm version VERSION --no-git-tag-version` for an approved version change,
 then review both manifests in the issue's PR. `npm run check:version` rejects
 invalid versions and drift in either lockfile version. `npm test` and candidate
 packing run that check. A version bump needs no source-code edit for CLI output.
-The maintainer authorized the next release on 14 November 2026. The current
-release is `0.1.0-experimental.5`; required account actions remain separate. See
-the [release procedure](npm-release.md#experimental5-release).
+The published release is `0.1.0-experimental.5`. The parity candidate is
+`0.1.0-experimental.6`, with skill `0.1.17`: changed prerelease bytes advance the
+experimental suffix; the skill has an independent identity. Preparation is
+authorized; merge and publication remain separate decisions. See the
+[parity preparation](parity-release.md).
 
 npm distribution tags are movable pointers, unlike permanent Git release tags:
 
@@ -141,7 +143,7 @@ No npm credentials, real Git tag, GitHub Release or global-install change is nee
 Keep the current terminal with `candidate_run` set by that guide.
 
 - [ ] From the checkout root run `npm run check:version`. Expect
-  `Version consistent: 0.1.0-experimental.5`, exit 0. Inspect `package.json` and
+  `Version consistent: 0.1.0-experimental.6`, exit 0. Inspect `package.json` and
   both root version fields in `package-lock.json`; they must match.
 - [ ] Follow the [candidate install steps](npm-distribution.md#human-verification)
   for the scoped package. In its consumer directory run:
@@ -152,7 +154,7 @@ Keep the current terminal with `candidate_run` set by that guide.
   ```
 
   Expect
-  `0.1.0-experimental.5` and `n8r-surface 0.1.0-experimental.5`, both exit 0.
+  `0.1.0-experimental.6` and `n8r-surface 0.1.0-experimental.6`, both exit 0.
 - [ ] Inspect `candidates.json`: one scoped entry has its `releaseAsset` name,
   the report version/revision, and a hash matching the retained tarball.
   A clean-commit rehearsal must say `dirty: false`.

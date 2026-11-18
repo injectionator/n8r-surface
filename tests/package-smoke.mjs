@@ -59,9 +59,9 @@ assert.equal(manifest.bin['n8r-surface'], './dist/cli.js');
 console.log(`Verified installed identity: ${manifest.name}@${manifest.version}`);
 const {researcherInstructions} = await import(new URL('dist/codex.js', installedRoot));
 const instructions = researcherInstructions();
-assert.equal(instructions.version, '0.1.16');
-assert.equal(instructions.digest, 'sha256:03fa10cd2c2423563c3e82f86c0324acff6b71906780b191e33a80cf143942f7');
-console.log('Installed Researcher instructions and all references match the reviewed 0.1.16 digest.');
+assert.equal(instructions.version, '0.1.17');
+assert.equal(instructions.digest, 'sha256:3feda9d62d93ede6469ef1a02b883c20293efe050bc78de115f3a0ed4a4f78ad');
+console.log('Installed Researcher instructions and all references match the reviewed 0.1.17 digest.');
 
 const artifactHelper = await import(new URL('plugins/n8r-surface/skills/research/scripts/artifacts.mjs', installedRoot));
 assert.equal(artifactHelper.checkBundle({research: graph('research-r1'), surface: graph('capability'), dependencies: []}).surface.kind, 'capability');

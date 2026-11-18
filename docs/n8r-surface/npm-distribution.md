@@ -15,7 +15,7 @@ reviewed version and updated first-release guards.
 
 ## Build and inspect candidates
 
-These commands prepare the local 0.1.0-experimental.5 candidate without publishing.
+These commands prepare the local 0.1.0-experimental.6 candidate without publishing.
 
 From the checkout root, with Node 22, 24 or 26, npm, Git, POSIX `tar` and Python 3.9+:
 
@@ -37,7 +37,7 @@ payload. Development scripts/dependencies are removed. Existing destinations
 are refused.
 A failed run may leave an incomplete destination; use a new directory on retry.
 
-The tarball is `scoped/n8r-surface-0.1.0-experimental.5.tgz`.
+The tarball is `scoped/n8r-surface-0.1.0-experimental.6.tgz`.
 `candidates.json` records its relative path, SHA-256 digest, version, source HEAD
 and dirty status. This is
 local build evidence, not registry provenance. Each entry also names a unique
@@ -62,13 +62,13 @@ Codex sign-in or existing vault is needed for this distribution check.
   mkdir "$candidate_run/consumer"
   cd "$candidate_run/consumer"
   npm init --yes
-  npm install --offline --ignore-scripts --no-audit --no-fund --package-lock=false "$candidate_run/packages/scoped/n8r-surface-0.1.0-experimental.5.tgz"
+  npm install --offline --ignore-scripts --no-audit --no-fund --package-lock=false "$candidate_run/packages/scoped/n8r-surface-0.1.0-experimental.6.tgz"
   node --input-type=module -e 'import {decode} from "@n8r/surface"; console.log(typeof decode)'
   ./node_modules/.bin/n8r-surface --version
   ```
 
   Expect successful installation, `function`, then
-  `n8r-surface 0.1.0-experimental.5`; each exits 0.
+  `n8r-surface 0.1.0-experimental.6`; each exits 0.
 - [ ] Run bare startup with a fresh isolated home and closed input:
 
   ```sh
