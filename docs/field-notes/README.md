@@ -49,11 +49,34 @@ next unresolved question. Resolve the installment's question honestly, even when
 the answer is Blocked. Earn curiosity through a real next investigation; do not
 manufacture cliffhangers or promise results we have not obtained.
 
+## Current priority — Surface UC01
+
+On 18 November 2026, the agreed next investigation became
+[Surface UC01: discover the existing lab](../use-cases/01-lab-discovery/README.md),
+tracked in [#96](https://github.com/injectionator/n8r-surface/issues/96). Use the
+identified 0.1.17 candidate before Labs UC11, covering DigitalOcean hosting and
+the LibreChat, Codex Pro and Atlas investigation targets. Save and reopen the
+Surface, then open the exact artifact SBOM in n8r-labs Surface and begin work
+with it. Record actual consumer behavior and gaps; helper checks do not prove
+that handoff. Labs retains ownership of live configuration changes.
+
+Keep raw development notes and infrastructure evidence in the private vault;
+retain publication-safe journal summaries and reporting packs here. UC01 testing
+may require candidate fixes before releasing skill 0.1.17 and npm experimental.6.
+Preserve each tested revision and digest and repeat affected verification.
+Prepare separate release facts and investigation reporting packs for the website
+chat; publication follows verified release results. The current
+[UC01 source pack](uc01-source-pack.md) records source discovery, fresh-chat
+continuation, public readback and the blocked external-BOM consumer handoff.
+
+The earlier item 01 preparation remains intact below. Article queue numbers are
+not use-case identifiers; prioritize UC01 without rewriting that history.
+
 ## Starting queue
 
 | Item | Question and scope | Priority / state |
 | --- | --- | --- |
-| 01 | What can a fresh skill setup tell us about a fresh LibreChat checkout? Save, inspect and reopen the result. | First; preparation started. |
+| 01 | What can a fresh skill setup tell us about a fresh LibreChat checkout? Save, inspect and reopen the result. | Earlier preparation retained; resumes after Surface UC01. |
 | 02 | What can we learn from remote LibreChat repository/documentation sources, and what access is missing? | Second; planned. |
 | 03 | What changes when we bring configuration and a running LibreChat instance into the investigation? | Third; planned, runtime prerequisites to establish. |
 | 04 | How do LibreChat, Open WebUI and LobeChat compare under the same questions and evidence budget? | Later. |
@@ -135,6 +158,9 @@ not erase the first failure.
 | Record publication links and corrections against source-pack revision. | Both repositories | After editorial review/publication. |
 
 ## First delivery and acceptance
+
+Surface UC01 is now the immediate investigation; its acceptance checklist is
+maintained in the linked use-case record. The original series checks remain below.
 
 - [x] Record the series charter, queue and reporting responsibilities.
 - [x] Open a GitHub issue and prepare a draft documentation PR.
