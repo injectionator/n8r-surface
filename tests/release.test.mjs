@@ -157,7 +157,7 @@ if (JSON.stringify(args) === JSON.stringify(['release','view',release.tag_name,'
 
 test('next release verifies only scoped bytes and refuses an added unscoped package',async t=>{
  const {checkRelease}=await import('../scripts/check-release.mjs');
- const f=fixture(t,'0.1.0-experimental.5');
+ const f=fixture(t,'0.1.0-experimental.6');
  assert.deepEqual(checkRelease(f.root,f.out,f.release).packages,['@n8r/surface']);
  f.report.packages.push({...f.report.packages[0],name:'n8r-surface'});f.save();
  assert.throws(()=>checkRelease(f.root,f.out,f.release));

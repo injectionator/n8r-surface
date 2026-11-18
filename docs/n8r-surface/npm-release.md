@@ -1,5 +1,12 @@
 # npm release records
 
+## Parity candidate .6
+
+[Preparation of package 0.1.0-experimental.6 and skill 0.1.17](parity-release.md)
+tracks the shared-core parity candidate. The current workflow guard targets `.6`;
+all `.5` instructions below are historical and must not be rerun for that version.
+Merge and publication of `.6` have not been authorized.
+
 ## Verified experimental.5 release
 
 Published on 14 November 2026:
