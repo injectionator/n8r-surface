@@ -95,3 +95,43 @@ no credentials, records or settings changes were involved. Private observations
 cover role/network/recovery controls. Revision 008 preserves the growing graph,
 including a distinct management-access edge, and corrects a potentially overstated
 finding title found during readback. No control-effectiveness claim is made.
+
+## LLM continuation
+
+Safe comparisons confirmed the process-start Atlas target/principal binding;
+this closed the bounded identity question, not a database execution test. The user
+then limited further Atlas depth. Codex research identified short-lived inspection
+and generation workers, distinct model/effort control scopes and completed-output
+SSE framing. The configured model identifier is represented without claiming it
+was available or exercised. Actor-effective caller policy remains a separate readback.
+A nonsecret configuration boolean triggered the helper privacy heuristic; rephrasing
+preserved meaning and passed with unchanged helper bytes. A possible usability fix
+is separately scoped, not implemented or released by UC01.
+
+## Signed-in UI continuation
+
+Revision 010 retains the graph and adds signed-in UI observations and mounted
+worker lifecycle guards. That inspection covered category navigation only; subsequent opening of Chat
+and Data & Privacy exposed user preferences. No effective server-policy payload
+was inspected; a selected display label does not establish an underlying model identity.
+Actor-effective instructions remain unverified. No message was submitted or live
+setting changed. Completion/failure guards are source evidence, not exercised
+controls. Labs import remains a separate acceptance gap.
+
+## Saved memories and selected prompts
+
+Revision 012 traces two source-supported input paths. Selected production prompts
+undergo variable substitution and enter ordinary User-message submission. The
+observed auto-send preference means selecting one can submit immediately; discovery
+did not select a prompt. Saved memories require user-preference, permission and
+resolved-configuration gates, are queried by user and agent partition, and can join
+additional instructions. The connector combines system/developer messages into
+Codex developer instructions while retaining user/assistant history separately.
+
+These are source paths, not captured live transfers. The enabled memory preference
+does not establish stored memory, effective server policy or inclusion in a request.
+Codex's own disabled memory feature does not exclude memory text supplied by its
+caller. No exploit, filtering effectiveness or isolation guarantee was demonstrated.
+The private Surface retains ten nodes and thirteen paths with stable identities;
+new memory and prompt paths have unknown selection and no observed transfer.
+BOM SHA-256: `facb47205f103c4f30e4a972e1a9ed1c4c6c3face4973c51c0f97a77f36fbacb`.

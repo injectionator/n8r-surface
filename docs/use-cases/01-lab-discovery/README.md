@@ -250,3 +250,64 @@ the title and coverage without changing observations. There are nine stable node
 and ten edges. Latest BOM SHA-256:
 `c4d0c93326305d2991b80aa1f394b4d8216ee30e8e8ab3748fd0b9d395391f3c`.
 Predecessor and evidence hashes remain preserved. Labs import stays separate.
+
+### Bounded binding confirmation and LLM focus
+
+The next read-only check matched the configured Atlas SRV members exactly to the
+selected cluster UI and matched the configured principal/database to its role
+display. The identified Node process environment matched the Docker connection
+setting. These comparisons expose no connection string or credential and do not
+prove a successful database operation. The user considers this sufficient Atlas
+depth and directed further discovery toward Codex/LLM.
+
+Caller-policy inspection found that the mounted base file is not sufficient to
+establish actor-effective policy: the source resolves per-principal overrides and
+omits model specs from anonymous startup responses. A signed-in read-only view is
+the next source; missing base-file keys do not establish disabled controls.
+
+Mounted connector source describes separate short-lived catalog-inspection and
+generation workers, command-line policy overrides and returned-policy validation.
+A process snapshot showed only the connector runtime. A bounded telemetry read
+contained no recognized events; this is not evidence of no earlier inference.
+The configured default model is now a node, explicitly distinct from verified
+catalog availability or an exercised model selection. Effort is fixed low in the
+adapter source. SSE framing wraps completed output, rather than forwarding live
+token deltas. Ephemeral Codex threads do not establish application data deletion.
+
+Revision 009 preserves earlier identities and adds the configured-default model:
+ten nodes and eleven edges. BOM SHA-256:
+`33e88126aa7748b4a939cab31e814b3ca138fde9182b797012a2d88ee3afe06f`.
+No catalog/model operation, database query or live configuration change was made.
+
+A save initially triggered the installed privacy heuristic on a nonsecret boolean
+written using credential-refresh field syntax. Equivalent prose passed without
+changing helper bytes. Retain this as a separately scoped usability candidate;
+no skill fix or release is included here.
+
+## Signed-in UI continuation
+
+Revision 010 retains the graph and adds signed-in UI observations and mounted
+worker lifecycle guards. That inspection covered category navigation only; subsequent opening of Chat
+and Data & Privacy exposed user preferences. No effective server-policy payload
+was inspected; a selected display label does not establish an underlying model identity.
+Actor-effective instructions remain unverified. No message was submitted or live
+setting changed. Completion/failure guards are source evidence, not exercised
+controls. Labs import remains a separate acceptance gap.
+
+## Saved memories and selected prompts
+
+Revision 012 traces two source-supported input paths. Selected production prompts
+undergo variable substitution and enter ordinary User-message submission. The
+observed auto-send preference means selecting one can submit immediately; discovery
+did not select a prompt. Saved memories require user-preference, permission and
+resolved-configuration gates, are queried by user and agent partition, and can join
+additional instructions. The connector combines system/developer messages into
+Codex developer instructions while retaining user/assistant history separately.
+
+These are source paths, not captured live transfers. The enabled memory preference
+does not establish stored memory, effective server policy or inclusion in a request.
+Codex's own disabled memory feature does not exclude memory text supplied by its
+caller. No exploit, filtering effectiveness or isolation guarantee was demonstrated.
+The private Surface retains ten nodes and thirteen paths with stable identities;
+new memory and prompt paths have unknown selection and no observed transfer.
+BOM SHA-256: `facb47205f103c4f30e4a972e1a9ed1c4c6c3face4973c51c0f97a77f36fbacb`.

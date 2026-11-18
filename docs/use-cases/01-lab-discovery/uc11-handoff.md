@@ -44,6 +44,29 @@ Atlas management navigation adds a distinct observed edge from the operator brow
 It does not grant database connectivity or authorize changes to network policy.
 Management-plane settings and application database behavior need separate evidence.
 
+## Codex and LLM control scope
+
+The mounted connector source launches app-server workers over stdio with a bounded
+child environment, temporary working directory and command-line policy overrides.
+It reads and validates effective configuration before account/catalog inspection.
+Catalog inspection closes its worker; generation uses another session. These are
+source-described effects, so a model-list GET is not used as a passive diagnostic.
+
+Model selection is per request and checked against the catalog. Reasoning effort
+is fixed in adapter code, rather than established as a writable service setting.
+The configured default identifier does not identify an immutable model artifact.
+Returned policy, event correlation, forbidden tool requests, cancellation and final
+completion are useful isolated-test boundaries. The SSE output is assembled after
+completion; incremental token timing should not be an assumed consumer contract.
+Ephemeral workers/threads are distinct from application storage and provider retention.
+
+The current snapshot showed no app-server process. A bounded log projection found
+no recognized outcome events; neither result establishes no past inference.
+Current sign-in, plan, catalog and inference remain unverified. Caller-effective
+model specs and memory configuration remain unverified because actor-specific
+configuration can differ from the mounted base. Signed-in Settings revealed user
+preferences, but not that complete effective server policy. No live worker was started for these checks.
+
 ## Candidate controlled tests
 
 These are proposals for separately authorized isolated experiments. No target
@@ -62,8 +85,10 @@ requires rechecking the applicable source claims.
 
 Atlas management UI reads are now available after human sign-in and project
 selection. Role, network and cluster recovery settings were observed and retained
-privately. Exact application target/principal correspondence, effective database
-privileges, recovery behavior and permitted disposable resources remain gaps. Existing
+privately. Process-start cluster/principal correspondence is now confirmed through safe
+comparisons and DNS membership. Effective database operations, recovery behavior
+and permitted disposable resources remain untested; further Atlas depth is deferred
+by user direction. Existing
 credentials were neither extracted nor used for database queries. Source landmarks
 include `api/db/connect.js` in the identified container, and the local
 `compositions/librechat-vps/provider.ts`, `apps/lab/server/codex.ts`,
@@ -80,9 +105,9 @@ The exact revision 002 BOM selected for the UI attempt has SHA-256:
 Fresh-chat successor revision 003 has SHA-256:
 `4bf3884452b624a8d3db81899cb9fe893782e29964260f838d6703e0457822c7`.
 Neither has passed Labs import and useful-continuation acceptance.
-Current research revision 008 incorporates runtime and node/edge findings;
+Current research revision 012 incorporates runtime and node/edge findings;
 its SHA-256 is
-`c4d0c93326305d2991b80aa1f394b4d8216ee30e8e8ab3748fd0b9d395391f3c`.
+`facb47205f103c4f30e4a972e1a9ed1c4c6c3face4973c51c0f97a77f36fbacb`.
 
 The running UI became reachable after user startup. The initial upload was
 blocked by browser permission; after the user enabled it, the exact file arrived.
@@ -112,8 +137,9 @@ and appropriate read-only access. A running Labs UI is needed only for the separ
 import acceptance. Use the existing installation;
 do not publish raw research or credentials.
 
-- [ ] Open the saved brief and map. Expect nine nodes and ten
-  paths, preserving the original eight node identities and adding local storage.
+- [ ] Open the saved brief and map. Expect ten nodes and thirteen
+  paths, preserving earlier identities and adding a configured-default model node.
+  Its selection must say configured default, not observed inference or availability.
   Hosting, connector, Atlas and volume selections have configuration evidence;
   inference and authenticated database use remain unproved. Follow each important
   claim to its source/configuration receipt and check the observation time.
@@ -135,3 +161,42 @@ do not publish raw research or credentials.
 
 No cleanup of earlier research is required. Preserve the imported artifact and
 continuation evidence. Any test-only attachment cleanup is a separate user choice.
+
+Signed-in Settings sections expose memory and prompt preferences. The initial
+category-only inspection was incomplete and is corrected in revision 011. The
+actor-effective server policy gap remains; no settings or messages were submitted.
+
+## Saved memories and selected prompts
+
+Revision 012 traces two source-supported input paths. Selected production prompts
+undergo variable substitution and enter ordinary User-message submission. The
+observed auto-send preference means selecting one can submit immediately; discovery
+did not select a prompt. Saved memories require user-preference, permission and
+resolved-configuration gates, are queried by user and agent partition, and can join
+additional instructions. The connector combines system/developer messages into
+Codex developer instructions while retaining user/assistant history separately.
+
+These are source paths, not captured live transfers. The enabled memory preference
+does not establish stored memory, effective server policy or inclusion in a request.
+Codex's own disabled memory feature does not exclude memory text supplied by its
+caller. No exploit, filtering effectiveness or isolation guarantee was demonstrated.
+The private Surface retains ten nodes and thirteen paths with stable identities;
+new memory and prompt paths have unknown selection and no observed transfer.
+BOM SHA-256: `facb47205f103c4f30e4a972e1a9ed1c4c6c3face4973c51c0f97a77f36fbacb`.
+
+### Additional isolated proofs
+
+- Use synthetic memory markers with two users and two agent partitions. Capture
+  outbound context and require markers only from the authorized partition. Vary
+  opt-out, USE permission and disabled configuration; require marker exclusion.
+- Distinguish an empty eligible memory pool from a failed memory read. Verify the
+  memory preamble and failure handling using a test double, without real records.
+- Use a synthetic production prompt with variables. Capture the resulting user
+  message, prompt revision and substituted text; compare auto-send on/off without
+  sending any real prompt to a live provider.
+- Capture both the connector input and Codex thread/turn arguments. Verify role
+  placement, bounds and rejected tool requests. A response alone does not prove
+  exclusion or pre-dispatch rejection. Retain effective settings and exact builds.
+
+These tests are proposals, not executed acceptance. Clean up disposable users,
+records and instances and independently verify the restored baseline.
