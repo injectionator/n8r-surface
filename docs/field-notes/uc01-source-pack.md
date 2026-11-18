@@ -21,6 +21,8 @@ reopened, and carry that exact description into Labs for useful work?
 | Retry after user starts Labs | Normal UI opened; initial file upload blocked by extension permission. | Environment blocker retained, then resolved by user. |
 | Retry after user enables local-file permission | Exact BOM uploaded; preview digest matched. Assistant recovered the graph but refused identity-replacing save. | Reference-file reading passed; external Surface opening and continuation remain Blocked. |
 | Read public application fields | Health/configuration returned 200; independent repeat agreed on allowlisted fields. | Dated public response evidence, not database/inference or full effective configuration proof. |
+| Recover SSH and inspect the identified deployment | Existing key authenticated; independent repeats retained container, image and mounted-file identities. | Configuration selection and presence, not inference or database success. |
+| Deepen node and edge descriptions | Revision 006 adds local persistence and separates application, connector, upstream and database authority boundaries. | A research SBOM helps locate controls and formulate tests; it is not a complete dependency inventory or control certification. |
 
 ## Decision diary and mistakes
 
@@ -77,6 +79,8 @@ not establish a consumer opening workflow. These are editorial suggestions, not
 invented dialogue or a predetermined successful ending.
 
 Website owns drafting, titles, visual selection and publication. No website chat
-has been messaged and no article is published by this task. Further factual updates
-require current host/Atlas access or a supported external-BOM consumer continuation.
+has been messaged and no article is published by this task. Host read-only access
+is now available. Atlas management evidence and behavioral
+testing remain distinct gaps. Labs import is separate work and does not block
+continued node/edge discovery.
 The public reference Surface proposed in #98 remains separate work.

@@ -1,7 +1,7 @@
 # Surface UC01 — Discover the existing lab
 
 Agreed 18 November 2026. [Issue #96](https://github.com/injectionator/n8r-surface/issues/96).
-State: **Discovery underway; installed skill and fresh-chat continuation verified by agents. Runtime and Labs consumer acceptance remain incomplete.**
+State: **Discovery underway; installed skill and fresh-chat continuation verified by agents. Runtime evidence is captured; deeper node/edge investigation continues. Labs import is separate work.**
 
 ## Intent and boundaries
 
@@ -145,7 +145,8 @@ this is a source-level investigation lead, not a demonstrated vulnerability.
 Serial identity, component identities and all predecessor files were preserved.
 This passes the bounded agent reopening rehearsal, not human acceptance.
 
-Runtime access remains incomplete. Noninteractive SSH with strict host-key checking
+At the initial attempt, runtime access was incomplete. Noninteractive SSH with
+strict host-key checking
 returned permission denied. The first normal Labs browser attempt refused the
 connection; after the user started Labs, the same address opened successfully.
 Surface collection and the existing Lab's Files and notes were inspected. A normal
@@ -155,7 +156,8 @@ that permission, retry attached the exact 29,093-byte
 BOM. File preview showed the matching digest; the Lab assistant recovered its
 graph and uncertainty. It reported no external-BOM opening operation and refused
 a new save that would replace identity. The answer was saved in chat; no successor
-Surface was created. Exact Surface opening and continuation remain **Blocked**.
+Surface was created. Exact Surface opening and continuation were **Blocked** at
+that attempt; later import implementation is separate work.
 Earlier research surfaced by the existing Lab UI remains
 historical context, not this run's findings.
 
@@ -180,5 +182,40 @@ Final readback found stale description wording and two competing active actions;
 revision 005 corrects them and retains consumer runtime metadata (Bun 1.4.4).
 Its BOM SHA-256 is
 `7cbdf82608c490feba1945dca353cc8fc97022ba1d23fab44b508e043d30fa5b`.
+
+### Runtime continuation and node/edge focus
+
+The user clarified that UC01 should deepen understanding of component configuration,
+operation and connections to identify controls, tests and controlled changes.
+Labs import implementation proceeds separately and does not block this discovery;
+its earlier acceptance result remains recorded, not reclassified as a pass.
+
+SSH subsequently authenticated using the existing agent key with strict host-key
+checking. No server or SSH configuration was changed. Read-only inspection and an
+independent repeat identified the same LibreChat and connector containers, images
+and mounted configuration hashes. Both containers were running and healthy.
+The identified LibreChat filesystem reports package version `v0.8.8`.
+
+Revision 006 preserves all earlier component IDs and adds local persistent volumes:
+nine nodes and nine paths. Configuration evidence now selects hosting, the private
+connector endpoint, Atlas and local storage. Atlas is not the only persistence
+location. Mounted settings, container launch configuration and passive state are
+kept separate from loaded values and exercised behavior. No target inference,
+database query, service restart or live change was performed.
+
+A bounded deployed-source read clarified MongoDB pool configuration: numeric zero
+is omitted by a truthiness guard when constructing options. This does not prove
+the effective driver minimum or establish a defect. Separate application JWT,
+connector bearer, managed ChatGPT and Atlas identity boundaries guide subsequent
+control tests. Current local adapter source is not silently equated with the
+identified deployed bundle. Atlas management policy and current Codex entitlement
+remain unknown.
+
+The installed helper saved and read back revision 006. Independent inspection
+checked retained receipt hashes, stable identities and generated views. Its BOM
+SHA-256 is
+`f35b12b4c716cf1ea6408a9d6277193ee4080ae4512b6824b513892ff75df2c9`.
+This is a bounded architecture/research SBOM, not a complete package inventory.
+See the updated [UC11 handoff](uc11-handoff.md) for candidate tests and their limits.
 
 The full scope of #96 is still incomplete; PR #97 remains draft and related work.
