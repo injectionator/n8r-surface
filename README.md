@@ -217,3 +217,7 @@ The [Injectionator field-notes series plan](docs/field-notes/README.md) starts w
 fresh local LibreChat research, remote sources and a running-instance continuation.
 It tracks actual attempts, mistakes and evidence for articles authored in
 `injectionator-website`; preparation is not a completed walkthrough.
+
+The current field investigation is [Surface UC01: discover the existing lab](docs/use-cases/01-lab-discovery/README.md),
+including a verified SBOM handoff to n8r-labs before its UC11 work. Discovery and
+consumer acceptance are pending; installation evidence is recorded separately.

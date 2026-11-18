@@ -4,6 +4,10 @@ Date: 15 November 2026. State: **Preparation verified; research and article pend
 Part of the [field-notes series](README.md), tracked in
 [#85](https://github.com/injectionator/n8r-surface/issues/85).
 
+Current priority: [Surface UC01](../use-cases/01-lab-discovery/README.md) precedes
+this walkthrough as agreed on 18 November. The 0.1.16 preparation below is a
+historical receipt, not the current candidate installation.
+
 ## Question and intended result
 
 Can someone start with an identified skill installation and a fresh LibreChat
