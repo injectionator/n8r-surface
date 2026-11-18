@@ -21,7 +21,7 @@ From the checkout root, with Node 22, 24 or 26, npm, Git, POSIX `tar` and Python
 
 ```sh
 npm ci
-npm cache add yaml@2.9.1
+npm run cache:runtime
 npm test
 npm run check:package
 candidate_run=$(mktemp -d)

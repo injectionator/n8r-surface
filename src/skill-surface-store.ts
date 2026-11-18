@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import {resolve,dirname,join,basename} from 'node:path';
 import {createHash} from 'node:crypto';
 import {canonical} from './portable.js';
-import {decodeJsonValue} from './codec.js';
+import {decodeJsonValue} from './encoded-value.js';
 import {checkSurfaceBom,prefix,type Surface} from './surface-bom.js';
 import {renderSurface} from './surface-view.js';
 export const byteDigest=(bytes:string|Buffer)=>'sha256:'+createHash('sha256').update(bytes).digest('hex');

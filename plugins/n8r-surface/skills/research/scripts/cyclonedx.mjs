@@ -9807,9 +9807,9 @@ var require_validate = __commonJS({
       }
     }
     function returnResults(it) {
-      const { gen, schemaEnv, validateName, ValidationError, opts } = it;
+      const { gen, schemaEnv, validateName, ValidationError: ValidationError2, opts } = it;
       if (schemaEnv.$async) {
-        gen.if((0, codegen_1._)`${names_1.default.errors} === 0`, () => gen.return(names_1.default.data), () => gen.throw((0, codegen_1._)`new ${ValidationError}(${names_1.default.vErrors})`));
+        gen.if((0, codegen_1._)`${names_1.default.errors} === 0`, () => gen.return(names_1.default.data), () => gen.throw((0, codegen_1._)`new ${ValidationError2}(${names_1.default.vErrors})`));
       } else {
         gen.assign((0, codegen_1._)`${validateName}.errors`, names_1.default.vErrors);
         if (opts.unevaluated)
@@ -10161,14 +10161,14 @@ var require_validation_error = __commonJS({
   "node_modules/ajv/dist/runtime/validation_error.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var ValidationError = class extends Error {
+    var ValidationError2 = class extends Error {
       constructor(errors) {
         super("validation failed");
         this.errors = errors;
         this.ajv = this.validation = true;
       }
     };
-    exports.default = ValidationError;
+    exports.default = ValidationError2;
   }
 });
 
@@ -11129,7 +11129,7 @@ var require_schemes = __commonJS({
         serialize: ws.serialize
       }
     );
-    var urn = (
+    var urn2 = (
       /** @type {SchemeHandler} */
       {
         scheme: "urn",
@@ -11154,7 +11154,7 @@ var require_schemes = __commonJS({
         https,
         ws,
         wss,
-        urn,
+        urn: urn2,
         "urn:uuid": urnuuid
       }
     );
@@ -15069,14 +15069,14 @@ var require_uri_all = __commonJS({
           var isLastFieldIPv4Address = protocol.IPV4ADDRESS.test(lastFields[lastFields.length - 1]);
           var fieldCount = isLastFieldIPv4Address ? 7 : 8;
           var lastFieldsStart = lastFields.length - fieldCount;
-          var fields = Array(fieldCount);
+          var fields2 = Array(fieldCount);
           for (var x = 0; x < fieldCount; ++x) {
-            fields[x] = firstFields[x] || lastFields[lastFieldsStart + x] || "";
+            fields2[x] = firstFields[x] || lastFields[lastFieldsStart + x] || "";
           }
           if (isLastFieldIPv4Address) {
-            fields[fieldCount - 1] = _normalizeIPv4(fields[fieldCount - 1], protocol);
+            fields2[fieldCount - 1] = _normalizeIPv4(fields2[fieldCount - 1], protocol);
           }
-          var allZeroFields = fields.reduce(function(acc, field, index) {
+          var allZeroFields = fields2.reduce(function(acc, field, index) {
             if (!field || field === "0") {
               var lastLongest = acc[acc.length - 1];
               if (lastLongest && lastLongest.index + lastLongest.length === index) {
@@ -15092,11 +15092,11 @@ var require_uri_all = __commonJS({
           })[0];
           var newHost = void 0;
           if (longestZeroFields && longestZeroFields.length > 1) {
-            var newFirst = fields.slice(0, longestZeroFields.index);
-            var newLast = fields.slice(longestZeroFields.index + longestZeroFields.length);
+            var newFirst = fields2.slice(0, longestZeroFields.index);
+            var newLast = fields2.slice(longestZeroFields.index + longestZeroFields.length);
             newHost = newFirst.join(":") + "::" + newLast.join(":");
           } else {
-            newHost = fields.join(":");
+            newHost = fields2.join(":");
           }
           if (zone) {
             newHost += "%" + zone;
@@ -15511,14 +15511,14 @@ var require_uri_all = __commonJS({
           var headers = mailtoComponents.headers = mailtoComponents.headers || {};
           if (mailtoComponents.subject) headers["subject"] = mailtoComponents.subject;
           if (mailtoComponents.body) headers["body"] = mailtoComponents.body;
-          var fields = [];
+          var fields2 = [];
           for (var name in headers) {
             if (headers[name] !== O[name]) {
-              fields.push(name.replace(PCT_ENCODED, decodeUnreserved).replace(PCT_ENCODED, toUpperCase).replace(NOT_HFNAME, pctEncChar) + "=" + headers[name].replace(PCT_ENCODED, decodeUnreserved).replace(PCT_ENCODED, toUpperCase).replace(NOT_HFVALUE, pctEncChar));
+              fields2.push(name.replace(PCT_ENCODED, decodeUnreserved).replace(PCT_ENCODED, toUpperCase).replace(NOT_HFNAME, pctEncChar) + "=" + headers[name].replace(PCT_ENCODED, decodeUnreserved).replace(PCT_ENCODED, toUpperCase).replace(NOT_HFVALUE, pctEncChar));
             }
           }
-          if (fields.length) {
-            components.query = fields.join("&");
+          if (fields2.length) {
+            components.query = fields2.join("&");
           }
           return components;
         }
@@ -18638,14 +18638,6 @@ import { resolve as resolve2, dirname as dirname2, join as join2 } from "node:pa
 import { pathToFileURL } from "node:url";
 import { createHash as createHash3 } from "node:crypto";
 
-// src/skill-artifacts.ts
-import fs from "node:fs";
-import { resolve, dirname, join } from "node:path";
-import { createHash as createHash2 } from "node:crypto";
-
-// src/codec.ts
-var import_yaml = __toESM(require_dist(), 1);
-
 // src/portable.ts
 import { createHash } from "node:crypto";
 var MAX_BYTES = 2 * 1024 * 1024;
@@ -18702,6 +18694,23 @@ function canonical(value2) {
 function digest(value2) {
   return `sha256:${createHash("sha256").update(canonical(value2), "utf8").digest("hex")}`;
 }
+
+// src/surface-privacy.ts
+var fail2 = (code) => {
+  throw new Error(`Surface operation refused: ${code}. No input values are included.`);
+};
+function privacy(value2) {
+  const text2 = canonical(value2);
+  if (/(?:https?|mongodb(?:\+srv)?|postgres(?:ql)?):\/\/|\b(?:\d{1,3}\.){3}\d{1,3}\b|\b(?:[a-f0-9]{1,4}:){2,}[a-f0-9:]+\b|(?:password|passwd|token|secret|username|api[_-]?key)\s*[=:]\s*[^\s"},]+|(?:\/Users\/|\/home\/|[A-Z]:\\\\)|[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text2)) fail2("privacy review required");
+}
+
+// src/skill-artifacts.ts
+import fs from "node:fs";
+import { resolve, dirname, join } from "node:path";
+import { createHash as createHash2 } from "node:crypto";
+
+// src/codec.ts
+var import_yaml2 = __toESM(require_dist(), 1);
 
 // src/validate.ts
 var text = (v, p) => {
@@ -19164,7 +19173,8 @@ function verifyRelationshipDetails(a, research2) {
   }
 }
 
-// src/codec.ts
+// src/encoded-value.ts
+var import_yaml = __toESM(require_dist(), 1);
 function formatCheck(format) {
   if (format !== "json" && format !== "yaml") fail("$format", "unsupported encoding");
 }
@@ -19196,6 +19206,8 @@ function decodeValue(text2, format) {
 function decodeJsonValue(text2) {
   return decodeValue(text2, "json");
 }
+
+// src/codec.ts
 function decode(text2, format) {
   const a = validateArtefact(decodeValue(text2, format));
   if ((a.contract === "n8r.surface/0.2" || a.contract === "n8r.surface/0.3") && format !== "json") fail("$format", "Surface descriptions require JSON");
@@ -19205,7 +19217,7 @@ function encode(value2, format) {
   formatCheck(format);
   const a = validateArtefact(value2);
   if ((a.contract === "n8r.surface/0.2" || a.contract === "n8r.surface/0.3") && format !== "json") fail("$format", "Surface descriptions require JSON");
-  const text2 = format === "json" ? JSON.stringify(a, null, 2) + "\n" : (0, import_yaml.stringify)(a, { version: "1.2", aliasDuplicateObjects: false, lineWidth: 0, defaultKeyType: "QUOTE_DOUBLE" });
+  const text2 = format === "json" ? JSON.stringify(a, null, 2) + "\n" : (0, import_yaml2.stringify)(a, { version: "1.2", aliasDuplicateObjects: false, lineWidth: 0, defaultKeyType: "QUOTE_DOUBLE" });
   checkSize(text2);
   return text2;
 }
@@ -19434,35 +19446,31 @@ function verifySuccessor(previous, next) {
 // src/skill-artifacts.ts
 var members = ["research.html", "surface.json", "dependencies.json", "brief.md"];
 var hash2 = (s) => `sha256:${createHash2("sha256").update(s).digest("hex")}`;
-function fail2(code) {
+function fail3(code) {
   throw new Error(`Surface operation refused: ${code}. No input values are included.`);
 }
 function guarded(code, fn) {
   try {
     return fn();
   } catch {
-    return fail2(code);
+    return fail3(code);
   }
-}
-function privacy(value2) {
-  const text2 = canonical(value2);
-  if (/(?:https?|mongodb(?:\+srv)?|postgres(?:ql)?):\/\/|\b(?:\d{1,3}\.){3}\d{1,3}\b|\b(?:[a-f0-9]{1,4}:){2,}[a-f0-9:]+\b|(?:password|passwd|token|secret|username|api[_-]?key)\s*[=:]\s*[^\s"},]+|(?:\/Users\/|\/home\/|[A-Z]:\\\\)|[\w.+-]+@[\w.-]+\.[a-z]{2,}/i.test(text2)) fail2("privacy review required");
 }
 function checkBundle(input) {
   return guarded("bundle validation or privacy check", () => {
-    if (!input || typeof input !== "object" || Object.keys(input).sort().join(",") !== "dependencies,research,surface") fail2("bundle shape");
+    if (!input || typeof input !== "object" || Object.keys(input).sort().join(",") !== "dependencies,research,surface") fail3("bundle shape");
     const b = input;
     privacy(b);
     const research2 = validateArtefact(b.research), surface2 = validateArtefact(b.surface);
-    if (research2.contract !== "n8r.research/0.1" || surface2.contract !== "n8r.surface/0.3" || !Array.isArray(b.dependencies) || b.dependencies.length > 100) fail2("contracts");
+    if (research2.contract !== "n8r.research/0.1" || surface2.contract !== "n8r.surface/0.3" || !Array.isArray(b.dependencies) || b.dependencies.length > 100) fail3("contracts");
     const context = [];
     for (const a of [research2, surface2, ...b.dependencies.map(validateArtefact)]) {
-      if (Object.keys(a.extensions).length) fail2("opaque extensions unsupported by this host");
+      if (Object.keys(a.extensions).length) fail3("opaque extensions unsupported by this host");
       const old = context.find((x) => x.id === a.id && x.revision.id === a.revision.id);
-      if (old && digest2(old) !== digest2(a)) fail2("ambiguous revision");
+      if (old && digest2(old) !== digest2(a)) fail3("ambiguous revision");
       if (!old) context.push(a);
     }
-    if (!surface2.records.some((r) => r.id === research2.id && r.revision === research2.revision.id && r.digest === digest2(research2))) fail2("unlinked research");
+    if (!surface2.records.some((r) => r.id === research2.id && r.revision === research2.revision.id && r.digest === digest2(research2))) fail3("unlinked research");
     for (const a of context) verifyReferences(a, context);
     return { research: research2, surface: surface2, dependencies: b.dependencies };
   });
@@ -19471,11 +19479,11 @@ function directories(dir) {
   for (let p = resolve(dir); ; p = dirname(p)) {
     if (fs.existsSync(p)) {
       const s = fs.lstatSync(p);
-      if (s.isSymbolicLink() || !s.isDirectory()) fail2("unsafe directory");
+      if (s.isSymbolicLink() || !s.isDirectory()) fail3("unsafe directory");
     } else {
       try {
         fs.lstatSync(p);
-        fail2("unsafe directory");
+        fail3("unsafe directory");
       } catch (e) {
         if (e.code !== "ENOENT") throw e;
       }
@@ -19487,7 +19495,7 @@ function read(path) {
   const fd = fs.openSync(path, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW);
   try {
     const stat = fs.fstatSync(fd);
-    if (!stat.isFile() || stat.size > 8 * 1024 * 1024) fail2("file size/type");
+    if (!stat.isFile() || stat.size > 8 * 1024 * 1024) fail3("file size/type");
     return new TextDecoder("utf-8", { fatal: true }).decode(fs.readFileSync(fd));
   } finally {
     fs.closeSync(fd);
@@ -19528,16 +19536,16 @@ function readBundle(directory) {
     directory = resolve(directory);
     directories(directory);
     const m = JSON.parse(read(join(directory, "manifest.json")));
-    if (![1, 2].includes(m.version) || Object.keys(m.files ?? {}).sort().join(",") !== [...members].sort().join(",")) fail2("manifest");
-    if (fs.readdirSync(directory).sort().join(",") !== [...members, "manifest.json"].sort().join(",")) fail2("unexpected members");
+    if (![1, 2].includes(m.version) || Object.keys(m.files ?? {}).sort().join(",") !== [...members].sort().join(",")) fail3("manifest");
+    if (fs.readdirSync(directory).sort().join(",") !== [...members, "manifest.json"].sort().join(",")) fail3("unexpected members");
     const data = Object.fromEntries(members.map((n) => {
       const text2 = read(join(directory, n));
-      if (hash2(text2) !== m.files[n]) fail2("changed bytes");
+      if (hash2(text2) !== m.files[n]) fail3("changed bytes");
       return [n, text2];
     }));
     const b = checkBundle({ research: readResearchHtml(data["research.html"]), surface: decode(data["surface.json"], "json"), dependencies: decodeJsonValue(data["dependencies.json"]) });
-    if (data["brief.md"] !== (m.version === 1 ? brief(b) : renderBrief(b))) fail2("brief conflict");
-    if (data["research.html"] !== (m.version === 1 ? renderResearchHtml(b.research) : renderBundleHtml(b))) fail2("presentation context conflict");
+    if (data["brief.md"] !== (m.version === 1 ? brief(b) : renderBrief(b))) fail3("brief conflict");
+    if (data["research.html"] !== (m.version === 1 ? renderResearchHtml(b.research) : renderBundleHtml(b))) fail3("presentation context conflict");
     return b;
   });
 }
@@ -27870,36 +27878,60 @@ var jsf_0_82_schema_default = {
 };
 
 // src/cyclonedx-validation.ts
-function refuse() {
-  throw Error("CycloneDX 1.7 schema/reference validation failed. Input values withheld.");
+var ValidationError = class extends Error {
+};
+function refuse(detail = "") {
+  throw new ValidationError(`CycloneDX 1.7 schema/reference validation failed${detail ? `: ${detail}` : "."} Input values withheld.`);
 }
 function guard(fn) {
   try {
     return fn();
-  } catch {
+  } catch (error) {
+    if (error instanceof ValidationError) throw error;
     return refuse();
   }
+}
+var fields = /* @__PURE__ */ new Set();
+function collectFields(value2) {
+  if (!value2 || typeof value2 !== "object") return;
+  for (const key of Object.keys(value2.properties ?? {})) fields.add(key);
+  for (const child of Object.values(value2)) collectFields(child);
+}
+for (const schema of [bom_1_7_schema_default, cryptography_defs_schema_default, spdx_schema_default, jsf_0_82_schema_default]) collectFields(schema);
+function safePath(pointer) {
+  return pointer.split("/").map((part) => fields.has(part) || /^[0-9]+$/.test(part) ? part : part ? "[field]" : "").join("/") || "/";
 }
 var ajv = new import_ajv.Ajv({ strict: false, allErrors: false, validateFormats: true });
 (0, import_ajv_formats.default)(ajv);
 (0, import_ajv_formats_draft2019.default)(ajv);
-var iriReference = ajv.formats["iri-reference"];
-ajv.addFormat("iri-reference", (value2) => /^urn:cdx:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/[1-9][0-9]*(?:#[^\s]+)?$/.test(value2) || iriReference(value2));
+var pchar = "(?:[A-Za-z0-9._~!$&'()*+,;=:@-]|%[0-9A-Fa-f]{2})";
+var urn = new RegExp(`^urn:[A-Za-z0-9][A-Za-z0-9-]{0,30}[A-Za-z0-9]:${pchar}(?:${pchar}|/)*(?:\\?\\+${pchar}(?:${pchar}|[/?])*)?(?:\\?=${pchar}(?:${pchar}|[/?])*)?(?:#(?:${pchar}|[/?])*)?$`, "i");
+for (const name of ["iri", "iri-reference"]) {
+  const original = ajv.formats[name];
+  ajv.addFormat(name, (value2) => /^urn:/i.test(value2) ? urn.test(value2) : original(value2));
+}
 ajv.addSchema(spdx_schema_default);
 ajv.addSchema(jsf_0_82_schema_default);
 ajv.addSchema(cryptography_defs_schema_default);
 var schemaCheck = ajv.compile(bom_1_7_schema_default);
 function validateBom(bom) {
   guard(() => {
-    if (!schemaCheck(bom)) refuse();
+    if (!schemaCheck(bom)) {
+      const error = schemaCheck.errors?.[0];
+      refuse(error ? `${safePath(error.instancePath)}: ${error.keyword}${error.keyword === "format" ? " (expected " + error.params.format + ")" : ""}` : "");
+    }
     const b = bom;
     if (b.bomFormat !== "CycloneDX" || b.specVersion !== "1.7") refuse();
     const refs = /* @__PURE__ */ new Set();
-    for (const n of [...b.components ?? [], ...b.services ?? []]) {
-      if (typeof n["bom-ref"] !== "string" || refs.has(n["bom-ref"])) refuse();
+    for (const kind of ["components", "services"]) for (const [i, n] of (b[kind] ?? []).entries()) {
+      if (typeof n["bom-ref"] !== "string") refuse(`/${kind}/${i}/bom-ref: required reference`);
+      if (refs.has(n["bom-ref"])) refuse(`/${kind}/${i}/bom-ref: duplicate reference`);
       refs.add(n["bom-ref"]);
     }
-    for (const d of b.dependencies ?? []) if (!refs.has(d.ref) || d.dependsOn?.some((r) => !refs.has(r))) refuse();
+    for (const [i, d] of (b.dependencies ?? []).entries()) {
+      if (!refs.has(d.ref)) refuse(`/dependencies/${i}/ref: unresolved reference`);
+      for (const [j, r] of (d.dependsOn ?? []).entries()) if (!refs.has(r)) refuse(`/dependencies/${i}/dependsOn/${j}: unresolved reference`);
+    }
   });
 }
 
