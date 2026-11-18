@@ -337,14 +337,15 @@ Contributor commands:
 
 ```sh
 npm ci
-npm cache add yaml@2.9.1
+npm run cache:runtime
 npm test
 npm run check:package
 git diff --check
 ```
 
-`npm ci` uses the registry and creates `node_modules/`. `npm cache add yaml@2.9.1`
-uses the registry to cache the runtime dependency's metadata and tarball; a fresh
+`npm ci` uses the registry and creates `node_modules/`. `npm run cache:runtime`
+uses the registry to cache metadata and tarballs for every direct and transitive
+runtime dependency pinned in the lockfile; a fresh
 `npm ci` cache alone is insufficient for the later offline consumer install. Keep
 this cache command and the CI step aligned with runtime dependency changes.
 `npm test` compiles strict
